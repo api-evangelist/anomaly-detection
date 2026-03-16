@@ -1,4 +1,4 @@
-name: Anomaly Detection APIs
+name: Anomaly Detection
 description: A collection of APIs for detecting anomalies in data streams, time series, and patterns
 image: https://example.com/anomaly-detection-logo.png
 created: 2024-01-15 00:00:00+00:00
