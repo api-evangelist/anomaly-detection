@@ -1,103 +1,108 @@
 name: Anomaly Detection
-description: A collection of APIs for detecting anomalies in data streams, time series, and patterns
+description: >-
+  A collection of APIs for detecting anomalies in data streams, time series, and patterns.
 image: https://example.com/anomaly-detection-logo.png
 created: 2024-01-15 00:00:00+00:00
 modified: 2024-01-15 00:00:00+00:00
 specificationVersion: '0.16'
 url: https://example.com/apis.json
 apis:
-- name: Anomaly Detection API
-  description: Real-time anomaly detection service for time series data and streaming analytics
-  image: https://example.com/anomaly-api-logo.png
-  humanURL: https://anomaly-api.example.com
-  baseURL: https://api.anomaly-api.example.com/v1
-  tags:
+  - name: Anomaly Detection API
+    description: >-
+      Real-time anomaly detection service for time series data and streaming analytics.
+    image: https://example.com/anomaly-api-logo.png
+    humanURL: https://anomaly-api.example.com
+    baseURL: https://api.anomaly-api.example.com/v1
+    tags:
+      - anomaly detection
+      - machine learning
+      - time series
+      - monitoring
+      - outlier detection
+    properties:
+      - type: X-documentation
+        url: https://anomaly-api.example.com/docs
+      - type: X-openapi
+        url: https://api.anomaly-api.example.com/openapi.json
+      - type: X-pricing
+        url: https://anomaly-api.example.com/pricing
+      - type: X-authentication
+        url: https://anomaly-api.example.com/docs/authentication
+    contact:
+      - FN: API Support
+        email: support@anomaly-api.example.com
+        X-twitter: anomalyapi
+  - name: Pattern Recognition Service
+    description: >-
+      Advanced pattern recognition and behavioral anomaly detection for security and
+      fraud prevention.
+    image: https://example.com/pattern-api-logo.png
+    humanURL: https://pattern-service.example.com
+    baseURL: https://api.pattern-service.example.com/v2
+    tags:
+      - pattern recognition
+      - fraud detection
+      - security
+      - behavioral analysis
+      - anomaly detection
+    properties:
+      - type: X-documentation
+        url: https://pattern-service.example.com/documentation
+      - type: X-openapi
+        url: https://api.pattern-service.example.com/openapi.yaml
+      - type: X-pricing
+        url: https://pattern-service.example.com/plans
+      - type: X-status
+        url: https://status.pattern-service.example.com
+    contact:
+      - FN: Developer Relations
+        email: developers@pattern-service.example.com
+        url: https://pattern-service.example.com/contact
+  - name: Statistical Outlier Detection API
+    description: >-
+      Statistical methods for identifying outliers in datasets using various algorithms.
+    image: https://example.com/outlier-api-logo.png
+    humanURL: https://outlier-detection.example.com
+    baseURL: https://api.outlier-detection.example.com/v1
+    tags:
+      - outlier detection
+      - statistics
+      - data analysis
+      - anomaly detection
+      - data science
+    properties:
+      - type: X-documentation
+        url: https://outlier-detection.example.com/docs
+      - type: X-openapi
+        url: https://api.outlier-detection.example.com/swagger.json
+      - type: X-sandbox
+        url: https://sandbox.outlier-detection.example.com
+      - type: X-rate-limits
+        url: https://outlier-detection.example.com/docs/rate-limits
+    contact:
+      - FN: Technical Support
+        email: tech@outlier-detection.example.com
+maintainers:
+  - FN: Anomaly Detection Directory Maintainer
+    email: maintainer@example.com
+    X-twitter: anomalyapis
+    X-github: anomaly-apis
+tags:
   - anomaly detection
   - machine learning
-  - time series
+  - artificial intelligence
+  - data science
   - monitoring
-  - outlier detection
-  properties:
-  - type: X-documentation
-    url: https://anomaly-api.example.com/docs
-  - type: X-openapi
-    url: https://api.anomaly-api.example.com/openapi.json
-  - type: X-pricing
-    url: https://anomaly-api.example.com/pricing
-  - type: X-authentication
-    url: https://anomaly-api.example.com/docs/authentication
-  contact:
-  - FN: API Support
-    email: support@anomaly-api.example.com
-    X-twitter: anomalyapi
-- name: Pattern Recognition Service
-  description: Advanced pattern recognition and behavioral anomaly detection for security and fraud prevention
-  image: https://example.com/pattern-api-logo.png
-  humanURL: https://pattern-service.example.com
-  baseURL: https://api.pattern-service.example.com/v2
-  tags:
-  - pattern recognition
   - fraud detection
   - security
-  - behavioral analysis
-  - anomaly detection
-  properties:
-  - type: X-documentation
-    url: https://pattern-service.example.com/documentation
-  - type: X-openapi
-    url: https://api.pattern-service.example.com/openapi.yaml
-  - type: X-pricing
-    url: https://pattern-service.example.com/plans
-  - type: X-status
-    url: https://status.pattern-service.example.com
-  contact:
-  - FN: Developer Relations
-    email: developers@pattern-service.example.com
-    url: https://pattern-service.example.com/contact
-- name: Statistical Outlier Detection API
-  description: Statistical methods for identifying outliers in datasets using various algorithms
-  image: https://example.com/outlier-api-logo.png
-  humanURL: https://outlier-detection.example.com
-  baseURL: https://api.outlier-detection.example.com/v1
-  tags:
+  - time series
   - outlier detection
-  - statistics
-  - data analysis
-  - anomaly detection
-  - data science
-  properties:
-  - type: X-documentation
-    url: https://outlier-detection.example.com/docs
-  - type: X-openapi
-    url: https://api.outlier-detection.example.com/swagger.json
-  - type: X-sandbox
-    url: https://sandbox.outlier-detection.example.com
-  - type: X-rate-limits
-    url: https://outlier-detection.example.com/docs/rate-limits
-  contact:
-  - FN: Technical Support
-    email: tech@outlier-detection.example.com
-maintainers:
-- FN: Anomaly Detection Directory Maintainer
-  email: maintainer@example.com
-  X-twitter: anomalyapis
-  X-github: anomaly-apis
-tags:
-- anomaly detection
-- machine learning
-- artificial intelligence
-- data science
-- monitoring
-- fraud detection
-- security
-- time series
-- outlier detection
-- pattern recognition
+  - pattern recognition
 include: []
 common:
-- type: X-best-practices
-  url: https://example.com/anomaly-detection-best-practices
-- type: X-tutorials
-  url: https://example.com/tutorials
-- type: X-blog
-  url: https://example.com/blog
+  - type: X-best-practices
+    url: https://example.com/anomaly-detection-best-practices
+  - type: X-tutorials
+    url: https://example.com/tutorials
+  - type: X-blog
+    url: https://example.com/blog
