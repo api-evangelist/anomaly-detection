@@ -14,11 +14,11 @@ apis:
     humanURL: https://anomaly-api.example.com
     baseURL: https://api.anomaly-api.example.com/v1
     tags:
-      - anomaly detection
-      - machine learning
-      - time series
-      - monitoring
-      - outlier detection
+      - Anomaly Detection
+      - Machine Learning
+      - Monitoring
+      - Outlier Detection
+      - Time Series
     properties:
       - type: X-documentation
         url: https://anomaly-api.example.com/docs
@@ -40,11 +40,11 @@ apis:
     humanURL: https://pattern-service.example.com
     baseURL: https://api.pattern-service.example.com/v2
     tags:
-      - pattern recognition
-      - fraud detection
-      - security
-      - behavioral analysis
-      - anomaly detection
+      - Anomaly Detection
+      - Behavioral Analysis
+      - Fraud Detection
+      - Pattern Recognition
+      - Security
     properties:
       - type: X-documentation
         url: https://pattern-service.example.com/documentation
@@ -65,11 +65,11 @@ apis:
     humanURL: https://outlier-detection.example.com
     baseURL: https://api.outlier-detection.example.com/v1
     tags:
-      - outlier detection
-      - statistics
-      - data analysis
-      - anomaly detection
-      - data science
+      - Anomaly Detection
+      - Data Analysis
+      - Data Science
+      - Outlier Detection
+      - Statistics
     properties:
       - type: X-documentation
         url: https://outlier-detection.example.com/docs
@@ -88,16 +88,16 @@ maintainers:
     X-twitter: anomalyapis
     X-github: anomaly-apis
 tags:
-  - anomaly detection
-  - machine learning
-  - artificial intelligence
-  - data science
-  - monitoring
-  - fraud detection
-  - security
-  - time series
-  - outlier detection
-  - pattern recognition
+  - Anomaly Detection
+  - Artificial Intelligence
+  - Data Science
+  - Fraud Detection
+  - Machine Learning
+  - Monitoring
+  - Outlier Detection
+  - Pattern Recognition
+  - Security
+  - Time Series
 include: []
 common:
   - type: X-best-practices
