@@ -1,0 +1,19 @@
+{
+  "id": "anom-500123",
+  "metric_name": "cpu_utilization",
+  "timestamp": "2026-04-19T14:30:00Z",
+  "value": 98.7,
+  "expected_value": 62.3,
+  "anomaly_score": 0.94,
+  "severity": "high",
+  "direction": "above",
+  "algorithm": "SARIMA",
+  "status": "active",
+  "series_id": "ts-prod-cluster-01",
+  "dimensions": {
+    "region": "us-east-1",
+    "host": "web-server-42",
+    "service": "api-gateway"
+  },
+  "related_anomalies": ["anom-500124", "anom-500125"]
+}

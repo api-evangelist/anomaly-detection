@@ -1,0 +1,112 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "anom": "https://api-evangelist.github.io/anomaly-detection/schema/",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Anomaly": "anom:Anomaly",
+    "TimeSeries": "anom:TimeSeries",
+    "DetectionJob": "anom:DetectionJob",
+    "DataPoint": "anom:DataPoint",
+
+    "id": {
+      "@id": "dcterms:identifier",
+      "@type": "xsd:string"
+    },
+    "name": "schema:name",
+    "description": "schema:description",
+    "timestamp": {
+      "@id": "anom:timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "createdAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "modifiedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+    "metricName": {
+      "@id": "anom:metric_name",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "anom:value",
+      "@type": "xsd:decimal"
+    },
+    "expectedValue": {
+      "@id": "anom:expected_value",
+      "@type": "xsd:decimal"
+    },
+    "anomalyScore": {
+      "@id": "anom:anomaly_score",
+      "@type": "xsd:decimal"
+    },
+    "severity": {
+      "@id": "anom:severity",
+      "@type": "xsd:string"
+    },
+    "direction": {
+      "@id": "anom:direction",
+      "@type": "xsd:string"
+    },
+    "algorithm": {
+      "@id": "anom:algorithm",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "anom:status",
+      "@type": "xsd:string"
+    },
+    "seriesId": {
+      "@id": "anom:series_id",
+      "@type": "xsd:string"
+    },
+    "dimensions": {
+      "@id": "anom:dimensions",
+      "@type": "@id"
+    },
+    "relatedAnomalies": {
+      "@id": "anom:related_anomalies",
+      "@container": "@set",
+      "@type": "xsd:string"
+    },
+    "metric": {
+      "@id": "anom:metric",
+      "@type": "xsd:string"
+    },
+    "unit": {
+      "@id": "anom:unit",
+      "@type": "xsd:string"
+    },
+    "granularity": {
+      "@id": "anom:granularity",
+      "@type": "xsd:string"
+    },
+    "seasonality": {
+      "@id": "anom:seasonality",
+      "@type": "xsd:string"
+    },
+    "dataPoints": {
+      "@id": "anom:data_points",
+      "@container": "@set",
+      "@type": "@id"
+    },
+    "mode": {
+      "@id": "anom:mode",
+      "@type": "xsd:string"
+    },
+    "sensitivity": {
+      "@id": "anom:sensitivity",
+      "@type": "xsd:decimal"
+    },
+    "seriesIds": {
+      "@id": "anom:series_ids",
+      "@container": "@set",
+      "@type": "xsd:string"
+    }
+  }
+}

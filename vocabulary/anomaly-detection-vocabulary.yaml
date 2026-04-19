@@ -1,0 +1,293 @@
+vocabulary: "1.0.0"
+
+info:
+  provider: Anomaly Detection
+  description: >-
+    Unified vocabulary covering the operational and conceptual dimensions of the
+    anomaly detection landscape, including key data entities, detection
+    algorithms, action verbs, parameters, enumerations, and provider
+    integrations.
+  created: "2026-04-19"
+  modified: "2026-04-19"
+
+operational:
+  apis:
+    - name: Azure AI Anomaly Detector
+      namespace: azure-anomaly-detector
+      version: "v1.1"
+      baseUrl: https://api.cognitive.microsoft.com
+      status: deprecated
+    - name: Elasticsearch Anomaly Detection API
+      namespace: elasticsearch-ml
+      version: "8.x"
+      baseUrl: https://your-elasticsearch-host:9200
+      status: active
+    - name: Datadog Anomaly Monitor API
+      namespace: datadog-monitors
+      version: "v1"
+      baseUrl: https://api.datadoghq.com
+      status: active
+    - name: AWS Lookout for Metrics
+      namespace: aws-lookout-metrics
+      version: "2021-04-01"
+      baseUrl: https://lookoutmetrics.us-east-1.amazonaws.com
+      status: active
+    - name: PyOD
+      namespace: pyod
+      version: "2.x"
+      baseUrl: https://pypi.org/project/pyod/
+      status: active
+
+  resources:
+    - name: anomalies
+      description: Detected anomaly events with scores, severity, and contextual metadata.
+      apis:
+        - azure-anomaly-detector
+        - elasticsearch-ml
+        - datadog-monitors
+        - aws-lookout-metrics
+      actions:
+        - detect
+        - list
+        - get
+        - acknowledge
+        - resolve
+    - name: time-series
+      description: Ordered sequences of timestamped metric values used as detection input.
+      apis:
+        - azure-anomaly-detector
+        - elasticsearch-ml
+        - aws-lookout-metrics
+      actions:
+        - create
+        - get
+        - list
+        - delete
+        - forecast
+    - name: detection-jobs
+      description: Configured anomaly detection jobs that analyze one or more time series continuously or in batch.
+      apis:
+        - elasticsearch-ml
+        - aws-lookout-metrics
+      actions:
+        - create
+        - get
+        - list
+        - update
+        - delete
+        - open
+        - close
+        - reset
+    - name: datafeeds
+      description: Elasticsearch ML datafeeds that continuously retrieve data from indices for analysis by detection jobs.
+      apis:
+        - elasticsearch-ml
+      actions:
+        - create
+        - get
+        - start
+        - stop
+        - delete
+        - preview
+    - name: monitors
+      description: Datadog monitors configured with anomaly detection queries.
+      apis:
+        - datadog-monitors
+      actions:
+        - create
+        - get
+        - list
+        - update
+        - delete
+    - name: model-snapshots
+      description: Snapshots of trained ML model state for an anomaly detection job at a point in time.
+      apis:
+        - elasticsearch-ml
+      actions:
+        - get
+        - list
+        - delete
+        - revert
+
+  actions:
+    - name: detect
+      description: Submit time series data and receive anomaly detection results.
+      http_method: POST
+      pattern: write
+    - name: list
+      description: Retrieve a collection of resources (jobs, anomalies, series).
+      http_method: GET
+      pattern: read
+    - name: get
+      description: Retrieve a single resource by identifier.
+      http_method: GET
+      pattern: read
+    - name: create
+      description: Create a new resource (job, datafeed, monitor, series).
+      http_method: POST
+      pattern: write
+    - name: update
+      description: Modify an existing resource.
+      http_method: PUT
+      pattern: write
+    - name: delete
+      description: Remove a resource permanently.
+      http_method: DELETE
+      pattern: destructive
+    - name: open
+      description: Open or activate an anomaly detection job to begin processing.
+      http_method: POST
+      pattern: write
+    - name: close
+      description: Stop and close an active anomaly detection job.
+      http_method: POST
+      pattern: write
+    - name: reset
+      description: Reset a detection job to its initial state, clearing results.
+      http_method: POST
+      pattern: destructive
+    - name: forecast
+      description: Generate a forecast for future values of a time series.
+      http_method: POST
+      pattern: query
+    - name: acknowledge
+      description: Acknowledge an active anomaly alert to indicate it has been reviewed.
+      http_method: POST
+      pattern: write
+    - name: resolve
+      description: Mark an anomaly as resolved after remediation.
+      http_method: POST
+      pattern: write
+
+  schemas:
+    core:
+      - name: Anomaly
+        description: A detected data point or range that deviates significantly from expected patterns.
+        key_properties:
+          - id
+          - metric_name
+          - timestamp
+          - value
+          - anomaly_score
+          - severity
+          - status
+      - name: TimeSeries
+        description: An ordered sequence of timestamped numeric measurements for a single metric.
+        key_properties:
+          - id
+          - name
+          - metric
+          - granularity
+          - seasonality
+          - data_points
+      - name: DetectionJob
+        description: Configuration for an anomaly detection analysis job.
+        key_properties:
+          - id
+          - name
+          - algorithm
+          - mode
+          - sensitivity
+          - series_ids
+          - status
+    reporting:
+      - name: AnomalyBucket
+        description: Aggregated anomaly result for a time interval bucket.
+        key_properties:
+          - timestamp
+          - bucket_span
+          - anomaly_score
+          - record_count
+      - name: DetectionResult
+        description: Result set returned from a batch anomaly detection request.
+        key_properties:
+          - series_id
+          - anomalies
+          - detection_time
+
+  parameters:
+    identifiers:
+      - name: job_id
+        description: Unique identifier for an anomaly detection job.
+        type: string
+      - name: series_id
+        description: Unique identifier for a time series.
+        type: string
+      - name: anomaly_id
+        description: Unique identifier for a detected anomaly.
+        type: string
+    filters:
+      - name: start_time
+        description: Filter results to anomalies after this ISO 8601 timestamp.
+        type: string
+      - name: end_time
+        description: Filter results to anomalies before this ISO 8601 timestamp.
+        type: string
+      - name: severity
+        description: Filter anomalies by severity level.
+        type: string
+      - name: status
+        description: Filter by anomaly or job status.
+        type: string
+    pagination:
+      - name: from
+        description: Starting offset for paginated result sets.
+        type: integer
+      - name: size
+        description: Number of results to return per page.
+        type: integer
+      - name: page
+        description: Page number for paginated results.
+        type: integer
+
+  enums:
+    severity:
+      - low
+      - medium
+      - high
+      - critical
+    anomaly_status:
+      - active
+      - resolved
+      - acknowledged
+      - suppressed
+    job_status:
+      - pending
+      - running
+      - paused
+      - closed
+      - failed
+    direction:
+      - above
+      - below
+      - both
+    mode:
+      - batch
+      - streaming
+      - multivariate
+    seasonality:
+      - hourly
+      - daily
+      - weekly
+      - none
+      - auto
+    algorithms:
+      - basic
+      - agile
+      - robust
+      - iforest
+      - lof
+      - ocsvm
+      - autoencoder
+      - sr-cnn
+      - sarima
+      - graph-attention-network
+
+  authentication:
+    schemes:
+      - type: apikey
+        description: API key passed as a header or query parameter; used by Azure, Datadog, and AWS APIs.
+      - type: bearer
+        description: Bearer token authentication using JWT or access tokens.
+      - type: aws-sigv4
+        description: AWS Signature Version 4 signing for AWS Lookout for Metrics.

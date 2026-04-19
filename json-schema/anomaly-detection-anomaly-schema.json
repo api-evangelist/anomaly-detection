@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-anomaly-schema.json",
+  "title": "Anomaly",
+  "description": "A detected anomaly in a time series or multivariate data stream, including the affected metric, timestamp, severity score, and contextual metadata.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the detected anomaly.",
+      "example": "anom-500123"
+    },
+    "metric_name": {
+      "type": "string",
+      "description": "Name of the metric or signal in which the anomaly was detected.",
+      "example": "cpu_utilization"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the anomaly was detected.",
+      "example": "2026-04-19T14:30:00Z"
+    },
+    "value": {
+      "type": "number",
+      "description": "The observed metric value at the time of the anomaly.",
+      "example": 98.7
+    },
+    "expected_value": {
+      "type": "number",
+      "description": "The expected metric value based on historical patterns.",
+      "example": 62.3
+    },
+    "anomaly_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Normalized anomaly severity score between 0 (normal) and 1 (highly anomalous).",
+      "example": 0.94
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Categorical severity level of the anomaly.",
+      "example": "high"
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["above", "below", "both"],
+      "description": "Whether the anomaly is a spike above expected, a dip below, or bidirectional.",
+      "example": "above"
+    },
+    "algorithm": {
+      "type": "string",
+      "description": "The detection algorithm that identified this anomaly.",
+      "example": "SARIMA"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "resolved", "acknowledged", "suppressed"],
+      "description": "Current status of the anomaly alert.",
+      "example": "active"
+    },
+    "series_id": {
+      "type": "string",
+      "description": "Identifier of the time series or data stream this anomaly belongs to.",
+      "example": "ts-prod-cluster-01"
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Key-value pairs providing additional context dimensions for the anomaly (e.g., region, service, host).",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "example": {"region": "us-east-1", "host": "web-server-42"}
+    },
+    "related_anomalies": {
+      "type": "array",
+      "description": "List of related anomaly IDs grouped in the same root cause cluster.",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["id", "metric_name", "timestamp", "value", "anomaly_score", "severity", "status"]
+}

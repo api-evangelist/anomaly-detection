@@ -1,0 +1,20 @@
+{
+  "id": "ts-prod-cluster-01",
+  "name": "Production Cluster CPU Utilization",
+  "description": "Average CPU utilization across production web cluster nodes.",
+  "metric": "cpu_utilization",
+  "unit": "percent",
+  "granularity": "PT1M",
+  "seasonality": "daily",
+  "created_at": "2026-01-01T00:00:00Z",
+  "dimensions": {
+    "region": "us-east-1",
+    "cluster": "prod-web"
+  },
+  "data_points": [
+    {"timestamp": "2026-04-19T14:00:00Z", "value": 62.5},
+    {"timestamp": "2026-04-19T14:01:00Z", "value": 63.1},
+    {"timestamp": "2026-04-19T14:02:00Z", "value": 98.7},
+    {"timestamp": "2026-04-19T14:03:00Z", "value": 97.2}
+  ]
+}

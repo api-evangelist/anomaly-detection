@@ -1,0 +1,13 @@
+{
+  "id": "job-500456",
+  "name": "Production API Latency Anomaly Detector",
+  "description": "Monitors API p99 latency for anomalies using daily seasonality.",
+  "status": "running",
+  "algorithm": "agile",
+  "mode": "streaming",
+  "sensitivity": 3,
+  "seasonality": "daily",
+  "series_ids": ["ts-api-latency-p99", "ts-api-error-rate"],
+  "created_at": "2026-04-01T00:00:00Z",
+  "modified_at": "2026-04-19T00:00:00Z"
+}

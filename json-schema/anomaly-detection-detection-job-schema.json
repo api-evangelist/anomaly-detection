@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-detection-job-schema.json",
+  "title": "DetectionJob",
+  "description": "Configuration for an anomaly detection job that analyzes one or more time series using a specified algorithm and detection settings.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the detection job.",
+      "example": "job-500456"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the detection job.",
+      "example": "Production API Latency Anomaly Detector"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this detection job monitors and why.",
+      "example": "Monitors API p99 latency for anomalies using daily seasonality."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "running", "paused", "closed", "failed"],
+      "description": "Current operational status of the detection job.",
+      "example": "running"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": ["basic", "agile", "robust", "iforest", "lof", "ocsvm", "autoencoder", "sr-cnn", "sarima", "graph-attention-network"],
+      "description": "The anomaly detection algorithm used by this job.",
+      "example": "agile"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["batch", "streaming", "multivariate"],
+      "description": "Detection mode — batch retrospective, streaming real-time, or multivariate correlation-based.",
+      "example": "streaming"
+    },
+    "sensitivity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Sensitivity level controlling the anomaly detection threshold. Higher values detect more subtle anomalies.",
+      "example": 3
+    },
+    "seasonality": {
+      "type": "string",
+      "enum": ["hourly", "daily", "weekly", "none", "auto"],
+      "description": "Seasonality pattern used for baseline modeling.",
+      "example": "daily"
+    },
+    "series_ids": {
+      "type": "array",
+      "description": "List of time series identifiers analyzed by this job.",
+      "items": {
+        "type": "string"
+      },
+      "example": ["ts-api-latency-p99", "ts-api-error-rate"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the job was created.",
+      "example": "2026-04-01T00:00:00Z"
+    },
+    "modified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the job was last modified.",
+      "example": "2026-04-19T00:00:00Z"
+    }
+  },
+  "required": ["id", "name", "status", "algorithm", "mode"]
+}

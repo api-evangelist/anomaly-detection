@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-structure/anomaly-detection-time-series-structure.json",
+  "description": "A named time series used as input for anomaly detection, containing an ordered sequence of timestamped metric values.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the time series.",
+      "example": "ts-prod-cluster-01"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the time series.",
+      "example": "Production Cluster CPU Utilization"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this time series measures.",
+      "example": "Average CPU utilization across production web cluster nodes."
+    },
+    "metric": {
+      "type": "string",
+      "description": "The metric being tracked in this series.",
+      "example": "cpu_utilization"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement for the metric values.",
+      "example": "percent"
+    },
+    "granularity": {
+      "type": "string",
+      "description": "Time granularity between data points (ISO 8601 duration).",
+      "example": "PT1M"
+    },
+    "seasonality": {
+      "type": "string",
+      "enum": [
+        "hourly",
+        "daily",
+        "weekly",
+        "none"
+      ],
+      "description": "The dominant seasonality pattern observed in this series.",
+      "example": "daily"
+    },
+    "data_points": {
+      "type": "array",
+      "description": "Ordered list of timestamped data points.",
+      "items": {
+        "$ref": "#/$defs/DataPoint"
+      }
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "Timestamp when this time series was created.",
+      "example": "2026-01-01T00:00:00Z"
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Dimensional metadata tags for this series.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "metric"
+  ],
+  "name": "TimeSeries",
+  "definitions": {
+    "DataPoint": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "datetime",
+          "description": "Timestamp of the data point.",
+          "example": "2026-04-19T14:00:00Z"
+        },
+        "value": {
+          "type": "double",
+          "description": "Metric value at this timestamp.",
+          "example": 72.5
+        }
+      },
+      "required": [
+        "timestamp",
+        "value"
+      ],
+      "name": "DataPoint"
+    }
+  }
+}
