@@ -1,0 +1,1232 @@
+{
+  "item": [
+    {
+      "id": "47e83503-97c9-4c69-8855-efe469335989",
+      "name": "Univariate",
+      "description": {
+        "content": "Anomaly detection on a single time series.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "14adcec3-11db-45de-859d-a76118166092",
+          "name": "Detect anomalies for entire series (batch)",
+          "request": {
+            "name": "Detect anomalies for entire series (batch)",
+            "description": {
+              "content": "Detects anomalies across an entire series of data points as a batch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "timeseries",
+                "entire",
+                "detect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"series\": [\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    },\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d00f3099-79e5-4ae3-b342-2c30dd8a31c6",
+              "name": "Batch detection result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "entire",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 8686.38000875396,\n      \"timestamp\": \"1952-06-07T03:08:05.126Z\"\n    },\n    {\n      \"value\": 8302.255686235909,\n      \"timestamp\": \"2021-12-02T00:16:35.073Z\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"period\": 9435,\n  \"expectedValues\": [\n    3705.1618081745664,\n    8478.57801892056\n  ],\n  \"upperMargins\": [\n    3897.167814596034,\n    4841.084969670753\n  ],\n  \"lowerMargins\": [\n    1909.1602156962806,\n    9735.339065468292\n  ],\n  \"isAnomaly\": [\n    true,\n    false\n  ],\n  \"isNegativeAnomaly\": [\n    false,\n    false\n  ],\n  \"isPositiveAnomaly\": [\n    true,\n    false\n  ],\n  \"severity\": [\n    9204.886620105799,\n    702.44679846869\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c569aab-2af3-4762-99c0-5279be637566",
+              "name": "An error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "entire",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 8686.38000875396,\n      \"timestamp\": \"1952-06-07T03:08:05.126Z\"\n    },\n    {\n      \"value\": 8302.255686235909,\n      \"timestamp\": \"2021-12-02T00:16:35.073Z\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2406323c-bc55-41a0-aca5-0ace4f52aea3",
+              "name": "An error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "entire",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 8686.38000875396,\n      \"timestamp\": \"1952-06-07T03:08:05.126Z\"\n    },\n    {\n      \"value\": 8302.255686235909,\n      \"timestamp\": \"2021-12-02T00:16:35.073Z\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "410c8060-ce40-4b10-937b-9a0bcd04a00d",
+          "name": "Detect anomaly status of the latest point (streaming)",
+          "request": {
+            "name": "Detect anomaly status of the latest point (streaming)",
+            "description": {
+              "content": "Detects whether the most recent point of a time series is an anomaly.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "timeseries",
+                "last",
+                "detect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"series\": [\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    },\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5f2867fd-552c-4b3d-857a-d3ec5e5ed33e",
+              "name": "Last-point detection result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "last",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 8686.38000875396,\n      \"timestamp\": \"1952-06-07T03:08:05.126Z\"\n    },\n    {\n      \"value\": 8302.255686235909,\n      \"timestamp\": \"2021-12-02T00:16:35.073Z\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"period\": 3888,\n  \"suggestedWindow\": 4921,\n  \"expectedValue\": 7262.264007952095,\n  \"upperMargin\": 4496.7914089996075,\n  \"lowerMargin\": 862.3756985622044,\n  \"isAnomaly\": false,\n  \"isNegativeAnomaly\": false,\n  \"isPositiveAnomaly\": true,\n  \"severity\": 4526.7478843843755\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad599723-562e-4645-ab84-27c8cb08cc2a",
+              "name": "An error response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "last",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 8686.38000875396,\n      \"timestamp\": \"1952-06-07T03:08:05.126Z\"\n    },\n    {\n      \"value\": 8302.255686235909,\n      \"timestamp\": \"2021-12-02T00:16:35.073Z\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "c53469ce-c194-44a0-8620-a8c2479a7d0c",
+      "name": "ChangePoint",
+      "description": {
+        "content": "Trend change-point detection.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2becd90a-c598-4360-9a6e-1bcdb9374f5c",
+          "name": "Detect trend change points",
+          "request": {
+            "name": "Detect trend change points",
+            "description": {
+              "content": "Detects trend change points across a series of data points.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "timeseries",
+                "changepoint",
+                "detect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"series\": [\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    },\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\",\n  \"threshold\": \"<number>\",\n  \"stableTrendWindow\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d761ef6f-ebe3-433f-9053-79823bfd20bf",
+              "name": "Change-point detection result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "changepoint",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 7982.784772292849,\n      \"timestamp\": \"2004-08-05T22:13:20.406Z\"\n    },\n    {\n      \"value\": 2029.509117594449,\n      \"timestamp\": \"1990-05-06T09:56:44.944Z\"\n    }\n  ],\n  \"granularity\": \"weekly\",\n  \"customInterval\": 9098,\n  \"period\": 8995,\n  \"maxAnomalyRatio\": 3232.7802480567316,\n  \"sensitivity\": 9308,\n  \"imputeMode\": \"auto\",\n  \"imputeFixedValue\": 3288.3532705517937,\n  \"threshold\": \"<number>\",\n  \"stableTrendWindow\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"period\": 7636,\n  \"isChangePoint\": [\n    true,\n    false\n  ],\n  \"confidenceScores\": [\n    1816.2780025570403,\n    6426.050522236589\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "273389b8-32f9-46f0-9639-640ff819f151",
+      "name": "Multivariate",
+      "description": {
+        "content": "Multivariate anomaly detection across correlated signals.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b183417f-f201-42b5-8555-821d80fdc327",
+          "name": "List multivariate models",
+          "request": {
+            "name": "List multivariate models",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "disabled": false,
+                  "key": "top",
+                  "value": "5"
+                }
+              ],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cb62b4c8-8ff6-48a0-81dc-6b075180870c",
+              "name": "List of multivariate models.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "skip",
+                      "value": "0"
+                    },
+                    {
+                      "key": "top",
+                      "value": "5"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ddc10811-b492-4859-ab06-3bcda46511a3",
+          "name": "Train a multivariate model",
+          "request": {
+            "name": "Train a multivariate model",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataSource\": \"<string>\",\n  \"startTime\": \"<dateTime>\",\n  \"endTime\": \"<dateTime>\",\n  \"dataSchema\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"slidingWindow\": \"<integer>\",\n  \"alignPolicy\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9cf54292-1dbf-49e3-b734-3a11a87bf6a5",
+              "name": "Model training accepted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dataSource\": \"<string>\",\n  \"startTime\": \"<dateTime>\",\n  \"endTime\": \"<dateTime>\",\n  \"dataSchema\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"slidingWindow\": \"<integer>\",\n  \"alignPolicy\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "88f2f154-89b8-4a3a-81d3-f2b033997c24",
+          "name": "Get model info",
+          "request": {
+            "name": "Get model info",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models",
+                ":modelId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "modelId",
+                  "description": "(Required) "
+                },
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c7e7537b-c0e4-4730-bf79-d431358c5f95",
+              "name": "Model metadata and training state.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models",
+                    ":modelId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "modelId",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c7ff78a2-8322-4397-9c3d-109843385b5f",
+          "name": "Delete a multivariate model",
+          "request": {
+            "name": "Delete a multivariate model",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models",
+                ":modelId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "modelId",
+                  "description": "(Required) "
+                },
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "766915e4-a196-4c67-8184-bfbde7603bea",
+              "name": "Model deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models",
+                    ":modelId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "modelId",
+                      "description": "(Required) "
+                    },
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "792529ba-7804-43e5-aa7e-3acb4af99213",
+          "name": "Run batch multivariate inference",
+          "request": {
+            "name": "Run batch multivariate inference",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models",
+                "{{modelId}}:detect-batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataSource\": \"<string>\",\n  \"startTime\": \"<dateTime>\",\n  \"endTime\": \"<dateTime>\",\n  \"topContributorCount\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9e47629e-07d9-4c9c-952a-68aec59175cb",
+              "name": "Inference accepted; poll the returned operation for results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models",
+                    "{{modelId}}:detect-batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"dataSource\": \"<string>\",\n  \"startTime\": \"<dateTime>\",\n  \"endTime\": \"<dateTime>\",\n  \"topContributorCount\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6547a1f-033a-4080-8794-29a5cf1e4327",
+          "name": "Run last-point multivariate inference (synchronous)",
+          "request": {
+            "name": "Run last-point multivariate inference (synchronous)",
+            "description": {},
+            "url": {
+              "path": [
+                "multivariate",
+                "models",
+                "{{modelId}}:detect-last"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variables\": [\n    {\n      \"variable\": \"<string>\",\n      \"timestamps\": [\n        \"<dateTime>\",\n        \"<dateTime>\"\n      ],\n      \"values\": [\n        \"<number>\",\n        \"<number>\"\n      ]\n    },\n    {\n      \"variable\": \"<string>\",\n      \"timestamps\": [\n        \"<dateTime>\",\n        \"<dateTime>\"\n      ],\n      \"values\": [\n        \"<number>\",\n        \"<number>\"\n      ]\n    }\n  ],\n  \"topContributorCount\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3a779a85-acaa-4215-bf72-1f62add4ac81",
+              "name": "Synchronous last-point multivariate detection result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "multivariate",
+                    "models",
+                    "{{modelId}}:detect-last"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"variables\": [\n    {\n      \"variable\": \"<string>\",\n      \"timestamps\": [\n        \"<dateTime>\",\n        \"<dateTime>\"\n      ],\n      \"values\": [\n        \"<number>\",\n        \"<number>\"\n      ]\n    },\n    {\n      \"variable\": \"<string>\",\n      \"timestamps\": [\n        \"<dateTime>\",\n        \"<dateTime>\"\n      ],\n      \"values\": [\n        \"<number>\",\n        \"<number>\"\n      ]\n    }\n  ],\n  \"topContributorCount\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Name of the Azure AI resource provisioned in the Azure portal.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "my-resource",
+      "key": "resource-name"
+    },
+    {
+      "type": "string",
+      "value": "https://{{resource-name}}.cognitiveservices.azure.com/anomalydetector/v1.0",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "modelId"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Ocp-Apim-Subscription-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6fb9f65b-37ec-46cc-9d0c-89851f220630",
+    "name": "Azure AI Anomaly Detector API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Managed REST API service from Azure AI Services that monitors and detects\nanomalies in time series data without requiring machine learning expertise.\nSupports univariate batch detection across an entire series, last-point\ndetection for streaming, and change-point detection. The multivariate API\nenables anomaly detection across up to 300 correlated signals.\n\nNOTE: The service is being retired on 1 October 2026 in favor of Microsoft\nFabric real-time intelligence.\n\n\nContact Support:\n Name: Azure Anomaly Detector Support",
+      "type": "text/plain"
+    }
+  }
+}

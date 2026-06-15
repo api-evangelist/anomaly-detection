@@ -1,0 +1,205 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Azure AI Anomaly Detector API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Ocp-Apim-Subscription-Key",
+      "value": "{{Ocp-Apim-Subscription-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Univariate",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Detect anomalies for entire series (batch)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/entire/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects anomalies across an entire series of data points as a batch."
+        },
+        {
+          "info": {
+            "name": "Detect anomaly status of the latest point (streaming)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/last/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects whether the most recent point of a time series is an anomaly."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "ChangePoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Detect trend change points",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/changepoint/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects trend change points across a series of data points."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Multivariate",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List multivariate models",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models",
+            "params": [
+              {
+                "name": "skip",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "top",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List multivariate models"
+        },
+        {
+          "info": {
+            "name": "Train a multivariate model",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Train a multivariate model"
+        },
+        {
+          "info": {
+            "name": "Get model info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models/:modelId",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get model info"
+        },
+        {
+          "info": {
+            "name": "Delete a multivariate model",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models/:modelId",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a multivariate model"
+        },
+        {
+          "info": {
+            "name": "Run batch multivariate inference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models/:modelId:detect-batch",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run batch multivariate inference"
+        },
+        {
+          "info": {
+            "name": "Run last-point multivariate inference (synchronous)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/multivariate/models/:modelId:detect-last",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run last-point multivariate inference (synchronous)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
