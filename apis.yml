@@ -4,7 +4,7 @@ description: >-
   data streams, time series, and multivariate metrics. Covers cloud ML services,
   observability platforms, and open-source frameworks used for fraud detection,
   predictive maintenance, IoT monitoring, and security analytics.
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 created: 2024-01-15 00:00:00+00:00
 modified: 2026-04-19 00:00:00+00:00
 specificationVersion: '0.16'
@@ -19,7 +19,7 @@ apis:
       300 correlated signals, and change-point detection. The service is being
       retired on 1 October 2026 in favor of Microsoft Fabric real-time
       intelligence.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
     baseURL: https://api.cognitive.microsoft.com
     tags:
@@ -53,7 +53,7 @@ apis:
       datafeeds, accessing bucket, record, category, and influencer results,
       model snapshots, calendars, scheduled events, and forecasting. Part of the
       Elastic Stack ML feature set available in subscriptions.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
     baseURL: https://your-elasticsearch-host:9200
     tags:
@@ -83,7 +83,7 @@ apis:
       algorithms — Basic, Agile (SARIMA), and Robust (seasonal-trend
       decomposition) — configurable via REST API. Available across regional
       endpoints for US, EU, AP1, AP2, GOV, US3, and US5 deployments.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://docs.datadoghq.com/monitors/types/anomaly/
     baseURL: https://api.datadoghq.com
     tags:
@@ -113,7 +113,7 @@ apis:
       CloudWatch, and SaaS applications, learns each metric's normal behavior,
       and sends alerts when anomalies are detected. Provides root cause analysis
       grouping related anomalies for faster diagnosis.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://aws.amazon.com/lookout-for-metrics/
     baseURL: https://lookoutmetrics.us-east-1.amazonaws.com
     tags:
@@ -144,7 +144,7 @@ apis:
       and ensemble methods (IForest, LOCI). Widely used in research and
       production for fraud detection, intrusion detection, medical anomaly
       detection, and data quality monitoring.
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://pyod.readthedocs.io/
     baseURL: https://pypi.org/project/pyod/
     tags:
