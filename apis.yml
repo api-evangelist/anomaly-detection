@@ -35,7 +35,7 @@ apis:
         url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
       - type: APIReference
         url: https://learn.microsoft.com/en-us/rest/api/anomalydetector/
-      - type: Quickstart
+      - type: GettingStarted
         url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/quickstarts/client-libraries
       - type: Tutorials
         url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/tutorials/batch-anomaly-detection-powerbi
@@ -161,7 +161,7 @@ apis:
         url: https://pyod.readthedocs.io/en/latest/pyod.html
       - type: GitHubRepository
         url: https://github.com/yzhao062/pyod
-      - type: SDK
+      - type: SDKs
         url: https://pypi.org/project/pyod/
     contact:
       - FN: PyOD Maintainers
