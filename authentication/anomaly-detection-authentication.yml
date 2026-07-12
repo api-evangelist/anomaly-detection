@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/anomaly-detection-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: SubscriptionKey
+  type: apiKey
+  in: header
+  parameter: Ocp-Apim-Subscription-Key
+  description: Azure Cognitive Services subscription key for the Anomaly Detector resource.
+  sources:
+  - openapi/anomaly-detection-openapi.yml

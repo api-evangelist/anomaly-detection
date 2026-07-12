@@ -186,6 +186,12 @@ tags:
   - Time Series
 include: []
 common:
+  - type: VulnerabilityDisclosure
+    url: security/anomaly-detection-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/anomaly-detection-domain-security.yml
+  - type: Authentication
+    url: authentication/anomaly-detection-authentication.yml
   - type: GitHubOrganization
     url: https://github.com/api-evangelist/anomaly-detection
   - type: BestPractices
