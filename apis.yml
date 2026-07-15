@@ -186,6 +186,8 @@ tags:
   - Time Series
 include: []
 common:
+  - type: AgenticAccess
+    url: agentic-access/anomaly-detection-agentic-access.yml
   - type: VulnerabilityDisclosure
     url: security/anomaly-detection-vulnerability-disclosure.yml
   - type: DomainSecurity
