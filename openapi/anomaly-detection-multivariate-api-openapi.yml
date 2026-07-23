@@ -1,0 +1,213 @@
+openapi: 3.1.0
+info:
+  title: Azure AI Anomaly Detector ChangePoint Multivariate API
+  version: '1.0'
+  description: 'Managed REST API service from Azure AI Services that monitors and detects
+
+    anomalies in time series data without requiring machine learning expertise.
+
+    Supports univariate batch detection across an entire series, last-point
+
+    detection for streaming, and change-point detection. The multivariate API
+
+    enables anomaly detection across up to 300 correlated signals.
+
+
+    NOTE: The service is being retired on 1 October 2026 in favor of Microsoft
+
+    Fabric real-time intelligence.
+
+    '
+  contact:
+    name: Azure Anomaly Detector Support
+    url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/
+servers:
+- url: https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0
+  description: Univariate Anomaly Detector v1.0 endpoint
+  variables:
+    resource-name:
+      default: my-resource
+      description: Name of the Azure AI resource provisioned in the Azure portal.
+- url: https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.1
+  description: Anomaly Detector v1.1 (includes multivariate)
+  variables:
+    resource-name:
+      default: my-resource
+      description: Name of the Azure AI resource provisioned in the Azure portal.
+security:
+- SubscriptionKey: []
+tags:
+- name: Multivariate
+  description: Multivariate anomaly detection across correlated signals.
+paths:
+  /multivariate/models:
+    get:
+      tags:
+      - Multivariate
+      summary: List multivariate models
+      operationId: listMultivariateModels
+      parameters:
+      - name: skip
+        in: query
+        schema:
+          type: integer
+          default: 0
+      - name: top
+        in: query
+        schema:
+          type: integer
+          default: 5
+      responses:
+        '200':
+          description: List of multivariate models.
+    post:
+      tags:
+      - Multivariate
+      summary: Train a multivariate model
+      operationId: trainMultivariateModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelInfo'
+      responses:
+        '201':
+          description: Model training accepted.
+  /multivariate/models/{modelId}:
+    get:
+      tags:
+      - Multivariate
+      summary: Get model info
+      operationId: getMultivariateModel
+      parameters:
+      - $ref: '#/components/parameters/ModelId'
+      responses:
+        '200':
+          description: Model metadata and training state.
+    delete:
+      tags:
+      - Multivariate
+      summary: Delete a multivariate model
+      operationId: deleteMultivariateModel
+      parameters:
+      - $ref: '#/components/parameters/ModelId'
+      responses:
+        '204':
+          description: Model deleted.
+  /multivariate/models/{modelId}:detect-batch:
+    post:
+      tags:
+      - Multivariate
+      summary: Run batch multivariate inference
+      operationId: detectMultivariateBatchAnomaly
+      parameters:
+      - $ref: '#/components/parameters/ModelId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultivariateBatchDetectionOptions'
+      responses:
+        '202':
+          description: Inference accepted; poll the returned operation for results.
+  /multivariate/models/{modelId}:detect-last:
+    post:
+      tags:
+      - Multivariate
+      summary: Run last-point multivariate inference (synchronous)
+      operationId: detectMultivariateLastAnomaly
+      parameters:
+      - $ref: '#/components/parameters/ModelId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultivariateLastDetectionOptions'
+      responses:
+        '200':
+          description: Synchronous last-point multivariate detection result.
+components:
+  parameters:
+    ModelId:
+      name: modelId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    MultivariateBatchDetectionOptions:
+      type: object
+      required:
+      - dataSource
+      - startTime
+      - endTime
+      properties:
+        dataSource:
+          type: string
+        topContributorCount:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+    MultivariateLastDetectionOptions:
+      type: object
+      required:
+      - variables
+      properties:
+        variables:
+          type: array
+          items:
+            type: object
+            properties:
+              variable:
+                type: string
+              timestamps:
+                type: array
+                items:
+                  type: string
+                  format: date-time
+              values:
+                type: array
+                items:
+                  type: number
+        topContributorCount:
+          type: integer
+    ModelInfo:
+      type: object
+      required:
+      - dataSource
+      - startTime
+      - endTime
+      properties:
+        dataSource:
+          type: string
+          description: Source path to the time series data (e.g., Azure blob URL).
+        dataSchema:
+          type: string
+          enum:
+          - OneTable
+          - MultiTable
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        displayName:
+          type: string
+        slidingWindow:
+          type: integer
+        alignPolicy:
+          type: object
+  securitySchemes:
+    SubscriptionKey:
+      type: apiKey
+      in: header
+      name: Ocp-Apim-Subscription-Key
+      description: Azure Cognitive Services subscription key for the Anomaly Detector resource.
