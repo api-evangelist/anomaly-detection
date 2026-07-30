@@ -4,169 +4,199 @@ description: >-
   data streams, time series, and multivariate metrics. Covers cloud ML services,
   observability platforms, and open-source frameworks used for fraud detection,
   predictive maintenance, IoT monitoring, and security analytics.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/anomaly-detection.png
 created: 2024-01-15 00:00:00+00:00
 modified: 2026-04-19 00:00:00+00:00
 specificationVersion: '0.16'
 url: https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml
 apis:
-  - name: Azure AI Anomaly Detector
-    description: >-
-      Azure AI Anomaly Detector is a managed REST API service that enables
-      monitoring and detection of anomalies in time series data without requiring
-      machine learning expertise. Supports univariate batch and streaming
-      detection, multivariate detection using Graph Attention Networks for up to
-      300 correlated signals, and change-point detection. The service is being
-      retired on 1 October 2026 in favor of Microsoft Fabric real-time
-      intelligence.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
-    baseURL: https://api.cognitive.microsoft.com
-    tags:
-      - Anomaly Detection
-      - Azure
-      - Machine Learning
-      - Microsoft
-      - Multivariate
-      - Time Series
-      - Univariate
-    properties:
-      - type: Documentation
-        url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
-      - type: APIReference
-        url: https://learn.microsoft.com/en-us/rest/api/anomalydetector/
-      - type: GettingStarted
-        url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/quickstarts/client-libraries
-      - type: Tutorials
-        url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/tutorials/batch-anomaly-detection-powerbi
-      - type: GitHubRepository
-        url: https://github.com/microsoft/anomaly-detector
-    contact:
-      - FN: Microsoft Azure Support
-        url: https://azure.microsoft.com/en-us/support/
-
-  - name: Elasticsearch Anomaly Detection API
-    description: >-
-      Elasticsearch Machine Learning APIs provide a comprehensive suite of
-      anomaly detection capabilities for time series data stored in Elasticsearch
-      indices. Supports creating and managing anomaly detection jobs and
-      datafeeds, accessing bucket, record, category, and influencer results,
-      model snapshots, calendars, scheduled events, and forecasting. Part of the
-      Elastic Stack ML feature set available in subscriptions.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
-    baseURL: https://your-elasticsearch-host:9200
-    tags:
-      - Anomaly Detection
-      - Elasticsearch
-      - Machine Learning
-      - Monitoring
-      - Time Series
-    properties:
-      - type: Documentation
-        url: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
-      - type: APIReference
-        url: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-ad-apis.html
-      - type: GettingStarted
-        url: https://www.elastic.co/guide/en/machine-learning/current/ml-ad-overview.html
-      - type: GitHubOrganization
-        url: https://github.com/elastic
-    contact:
-      - FN: Elastic Support
-        url: https://www.elastic.co/support
-
-  - name: Datadog Anomaly Monitor API
-    description: >-
-      Datadog's Monitors API supports anomaly detection monitors that identify
-      unusual metric behavior using historical pattern analysis including trends,
-      day-of-week, and time-of-day seasonality. Offers three detection
-      algorithms — Basic, Agile (SARIMA), and Robust (seasonal-trend
-      decomposition) — configurable via REST API. Available across regional
-      endpoints for US, EU, AP1, AP2, GOV, US3, and US5 deployments.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://docs.datadoghq.com/monitors/types/anomaly/
-    baseURL: https://api.datadoghq.com
-    tags:
-      - Anomaly Detection
-      - Datadog
-      - Monitoring
-      - Observability
-      - Time Series
-    properties:
-      - type: Documentation
-        url: https://docs.datadoghq.com/monitors/types/anomaly/
-      - type: APIReference
-        url: https://docs.datadoghq.com/api/latest/monitors/
-      - type: Authentication
-        url: https://docs.datadoghq.com/api/latest/authentication/
-      - type: GitHubOrganization
-        url: https://github.com/DataDog
-    contact:
-      - FN: Datadog Support
-        url: https://www.datadoghq.com/support/
-
-  - name: AWS Lookout for Metrics
-    description: >-
-      Amazon Lookout for Metrics is a fully managed ML service that
-      automatically detects anomalies in business and operational data. It
-      connects to data sources including Amazon S3, Amazon Redshift, Amazon
-      CloudWatch, and SaaS applications, learns each metric's normal behavior,
-      and sends alerts when anomalies are detected. Provides root cause analysis
-      grouping related anomalies for faster diagnosis.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://aws.amazon.com/lookout-for-metrics/
-    baseURL: https://lookoutmetrics.us-east-1.amazonaws.com
-    tags:
-      - Amazon Web Services
-      - Anomaly Detection
-      - AWS
-      - Business Metrics
-      - Machine Learning
-    properties:
-      - type: Documentation
-        url: https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-welcome.html
-      - type: APIReference
-        url: https://docs.aws.amazon.com/lookoutmetrics/latest/api/Welcome.html
-      - type: GettingStarted
-        url: https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-gettingstarted.html
-      - type: Pricing
-        url: https://aws.amazon.com/lookout-for-metrics/pricing/
-    contact:
-      - FN: AWS Support
-        url: https://aws.amazon.com/contact-us/
-
-  - name: PyOD (Python Outlier Detection)
-    description: >-
-      PyOD is a comprehensive and scalable Python library for detecting
-      outliers/anomalies in multivariate data. It includes more than 40
-      detection algorithms including deep learning approaches (AutoEncoder,
-      VAE), proximity-based methods (LOF, CBLOF), linear models (PCA, OCSVM),
-      and ensemble methods (IForest, LOCI). Widely used in research and
-      production for fraud detection, intrusion detection, medical anomaly
-      detection, and data quality monitoring.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://pyod.readthedocs.io/
-    baseURL: https://pypi.org/project/pyod/
-    tags:
-      - Anomaly Detection
-      - Data Science
-      - Machine Learning
-      - Open Source
-      - Outlier Detection
-      - Python
-    properties:
-      - type: Documentation
-        url: https://pyod.readthedocs.io/en/latest/
-      - type: APIReference
-        url: https://pyod.readthedocs.io/en/latest/pyod.html
-      - type: GitHubRepository
-        url: https://github.com/yzhao062/pyod
-      - type: SDKs
-        url: https://pypi.org/project/pyod/
-    contact:
-      - FN: PyOD Maintainers
-        url: https://github.com/yzhao062/pyod/issues
-
+- name: Azure AI Anomaly Detector
+  description: >-
+    Azure AI Anomaly Detector is a managed REST API service that enables monitoring and detection of anomalies
+    in time series data without requiring machine learning expertise. Supports univariate batch and streaming
+    detection, multivariate detection using Graph Attention Networks for up to 300 correlated signals,
+    and change-point detection. The service is being retired on 1 October 2026 in favor of Microsoft Fabric
+    real-time intelligence.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - Anomaly Detection
+  - Azure
+  - Machine Learning
+  - Microsoft
+  - Multivariate
+  - Time Series
+  - Univariate
+  properties:
+  - type: Documentation
+    url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  - type: APIReference
+    url: https://learn.microsoft.com/en-us/rest/api/anomalydetector/
+  - type: GettingStarted
+    url: >-
+      https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/quickstarts/client-libraries
+  - type: Tutorials
+    url: >-
+      https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/tutorials/batch-anomaly-detection-powerbi
+  - type: GitHubRepository
+    url: https://github.com/microsoft/anomaly-detector
+  contact:
+  - FN: Microsoft Azure Support
+    url: https://azure.microsoft.com/en-us/support/
+- name: Elasticsearch Anomaly Detection API
+  description: >-
+    Elasticsearch Machine Learning APIs provide a comprehensive suite of anomaly detection capabilities
+    for time series data stored in Elasticsearch indices. Supports creating and managing anomaly detection
+    jobs and datafeeds, accessing bucket, record, category, and influencer results, model snapshots, calendars,
+    scheduled events, and forecasting. Part of the Elastic Stack ML feature set available in subscriptions.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
+  baseURL: https://your-elasticsearch-host:9200
+  tags:
+  - Anomaly Detection
+  - Elasticsearch
+  - Machine Learning
+  - Monitoring
+  - Time Series
+  properties:
+  - type: Documentation
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
+  - type: APIReference
+    url: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-ad-apis.html
+  - type: GettingStarted
+    url: https://www.elastic.co/guide/en/machine-learning/current/ml-ad-overview.html
+  - type: GitHubOrganization
+    url: https://github.com/elastic
+  contact:
+  - FN: Elastic Support
+    url: https://www.elastic.co/support
+- name: Datadog Anomaly Monitor API
+  description: >-
+    Datadog's Monitors API supports anomaly detection monitors that identify unusual metric behavior using
+    historical pattern analysis including trends, day-of-week, and time-of-day seasonality. Offers three
+    detection algorithms — Basic, Agile (SARIMA), and Robust (seasonal-trend decomposition) — configurable
+    via REST API. Available across regional endpoints for US, EU, AP1, AP2, GOV, US3, and US5 deployments.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.datadoghq.com/monitors/types/anomaly/
+  baseURL: https://api.datadoghq.com
+  tags:
+  - Anomaly Detection
+  - Datadog
+  - Monitoring
+  - Observability
+  - Time Series
+  properties:
+  - type: Documentation
+    url: https://docs.datadoghq.com/monitors/types/anomaly/
+  - type: APIReference
+    url: https://docs.datadoghq.com/api/latest/monitors/
+  - type: Authentication
+    url: https://docs.datadoghq.com/api/latest/authentication/
+  - type: GitHubOrganization
+    url: https://github.com/DataDog
+  contact:
+  - FN: Datadog Support
+    url: https://www.datadoghq.com/support/
+- name: AWS Lookout for Metrics
+  description: >-
+    Amazon Lookout for Metrics is a fully managed ML service that automatically detects anomalies in business
+    and operational data. It connects to data sources including Amazon S3, Amazon Redshift, Amazon CloudWatch,
+    and SaaS applications, learns each metric's normal behavior, and sends alerts when anomalies are detected.
+    Provides root cause analysis grouping related anomalies for faster diagnosis.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://aws.amazon.com/lookout-for-metrics/
+  baseURL: https://lookoutmetrics.us-east-1.amazonaws.com
+  tags:
+  - Amazon Web Services
+  - Anomaly Detection
+  - AWS
+  - Business Metrics
+  - Machine Learning
+  properties:
+  - type: Documentation
+    url: https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-welcome.html
+  - type: APIReference
+    url: https://docs.aws.amazon.com/lookoutmetrics/latest/api/Welcome.html
+  - type: GettingStarted
+    url: https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-gettingstarted.html
+  - type: Pricing
+    url: https://aws.amazon.com/lookout-for-metrics/pricing/
+  contact:
+  - FN: AWS Support
+    url: https://aws.amazon.com/contact-us/
+- name: PyOD (Python Outlier Detection)
+  description: >-
+    PyOD is a comprehensive and scalable Python library for detecting outliers/anomalies in multivariate
+    data. It includes more than 40 detection algorithms including deep learning approaches (AutoEncoder,
+    VAE), proximity-based methods (LOF, CBLOF), linear models (PCA, OCSVM), and ensemble methods (IForest,
+    LOCI). Widely used in research and production for fraud detection, intrusion detection, medical anomaly
+    detection, and data quality monitoring.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://pyod.readthedocs.io/
+  baseURL: https://pypi.org/project/pyod/
+  tags:
+  - Anomaly Detection
+  - Data Science
+  - Machine Learning
+  - Open Source
+  - Outlier Detection
+  - Python
+  properties:
+  - type: Documentation
+    url: https://pyod.readthedocs.io/en/latest/
+  - type: APIReference
+    url: https://pyod.readthedocs.io/en/latest/pyod.html
+  - type: GitHubRepository
+    url: https://github.com/yzhao062/pyod
+  - type: SDKs
+    url: https://pypi.org/project/pyod/
+  contact:
+  - FN: PyOD Maintainers
+    url: https://github.com/yzhao062/pyod/issues
+- aid: anomaly-detection:anomaly-detection-changepoint-api
+  name: Anomaly Detection ChangePoint API
+  description: Trend change-point detection.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ChangePoint
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-changepoint-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-multivariate-api
+  name: Anomaly Detection Multivariate API
+  description: Multivariate anomaly detection across correlated signals.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - Multivariate
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-multivariate-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-univariate-api
+  name: Anomaly Detection Univariate API
+  description: Anomaly detection on a single time series.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - Univariate
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-univariate-api-openapi.yml
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
