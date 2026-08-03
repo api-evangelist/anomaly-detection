@@ -1,0 +1,390 @@
+openapi: 3.1.0
+info:
+  title: Azure AI Anomaly Detector API
+  version: "1.0"
+  description: |
+    Managed REST API service from Azure AI Services that monitors and detects
+    anomalies in time series data without requiring machine learning expertise.
+    Supports univariate batch detection across an entire series, last-point
+    detection for streaming, and change-point detection. The multivariate API
+    enables anomaly detection across up to 300 correlated signals.
+
+    NOTE: The service is being retired on 1 October 2026 in favor of Microsoft
+    Fabric real-time intelligence.
+  contact:
+    name: Azure Anomaly Detector Support
+    url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/
+servers:
+  - url: https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0
+    description: Univariate Anomaly Detector v1.0 endpoint
+    variables:
+      resource-name:
+        default: my-resource
+        description: Name of the Azure AI resource provisioned in the Azure portal.
+  - url: https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.1
+    description: Anomaly Detector v1.1 (includes multivariate)
+    variables:
+      resource-name:
+        default: my-resource
+        description: Name of the Azure AI resource provisioned in the Azure portal.
+tags:
+  - name: Univariate
+    description: Anomaly detection on a single time series.
+  - name: ChangePoint
+    description: Trend change-point detection.
+  - name: Multivariate
+    description: Multivariate anomaly detection across correlated signals.
+paths:
+  /timeseries/entire/detect:
+    post:
+      tags:
+        - Univariate
+      summary: Detect anomalies for entire series (batch)
+      description: Detects anomalies across an entire series of data points as a batch.
+      operationId: detectUnivariateEntireSeries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnivariateDetectionOptions'
+      responses:
+        '200':
+          description: Batch detection result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnivariateEntireDetectionResult'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+  /timeseries/last/detect:
+    post:
+      tags:
+        - Univariate
+      summary: Detect anomaly status of the latest point (streaming)
+      description: Detects whether the most recent point of a time series is an anomaly.
+      operationId: detectUnivariateLastPoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnivariateDetectionOptions'
+      responses:
+        '200':
+          description: Last-point detection result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnivariateLastDetectionResult'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /timeseries/changepoint/detect:
+    post:
+      tags:
+        - ChangePoint
+      summary: Detect trend change points
+      description: Detects trend change points across a series of data points.
+      operationId: detectUnivariateChangePoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnivariateChangePointDetectionOptions'
+      responses:
+        '200':
+          description: Change-point detection result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnivariateChangePointDetectionResult'
+  /multivariate/models:
+    get:
+      tags:
+        - Multivariate
+      summary: List multivariate models
+      operationId: listMultivariateModels
+      parameters:
+        - name: skip
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: top
+          in: query
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: List of multivariate models.
+    post:
+      tags:
+        - Multivariate
+      summary: Train a multivariate model
+      operationId: trainMultivariateModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelInfo'
+      responses:
+        '201':
+          description: Model training accepted.
+  /multivariate/models/{modelId}:
+    get:
+      tags:
+        - Multivariate
+      summary: Get model info
+      operationId: getMultivariateModel
+      parameters:
+        - $ref: '#/components/parameters/ModelId'
+      responses:
+        '200':
+          description: Model metadata and training state.
+    delete:
+      tags:
+        - Multivariate
+      summary: Delete a multivariate model
+      operationId: deleteMultivariateModel
+      parameters:
+        - $ref: '#/components/parameters/ModelId'
+      responses:
+        '204':
+          description: Model deleted.
+  /multivariate/models/{modelId}:detect-batch:
+    post:
+      tags:
+        - Multivariate
+      summary: Run batch multivariate inference
+      operationId: detectMultivariateBatchAnomaly
+      parameters:
+        - $ref: '#/components/parameters/ModelId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultivariateBatchDetectionOptions'
+      responses:
+        '202':
+          description: Inference accepted; poll the returned operation for results.
+  /multivariate/models/{modelId}:detect-last:
+    post:
+      tags:
+        - Multivariate
+      summary: Run last-point multivariate inference (synchronous)
+      operationId: detectMultivariateLastAnomaly
+      parameters:
+        - $ref: '#/components/parameters/ModelId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultivariateLastDetectionOptions'
+      responses:
+        '200':
+          description: Synchronous last-point multivariate detection result.
+components:
+  securitySchemes:
+    SubscriptionKey:
+      type: apiKey
+      in: header
+      name: Ocp-Apim-Subscription-Key
+      description: Azure Cognitive Services subscription key for the Anomaly Detector resource.
+  parameters:
+    ModelId:
+      name: modelId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    TimeSeriesPoint:
+      type: object
+      required: [value]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+    UnivariateDetectionOptions:
+      type: object
+      required: [series]
+      properties:
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+        granularity:
+          type: string
+          enum: [yearly, monthly, weekly, daily, hourly, minutely, secondly, microsecond, none]
+        customInterval:
+          type: integer
+        period:
+          type: integer
+        maxAnomalyRatio:
+          type: number
+        sensitivity:
+          type: integer
+        imputeMode:
+          type: string
+          enum: [auto, previous, linear, fixed, zero, notFill]
+        imputeFixedValue:
+          type: number
+    UnivariateChangePointDetectionOptions:
+      allOf:
+        - $ref: '#/components/schemas/UnivariateDetectionOptions'
+        - type: object
+          properties:
+            threshold:
+              type: number
+            stableTrendWindow:
+              type: integer
+    UnivariateEntireDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        expectedValues:
+          type: array
+          items:
+            type: number
+        upperMargins:
+          type: array
+          items:
+            type: number
+        lowerMargins:
+          type: array
+          items:
+            type: number
+        isAnomaly:
+          type: array
+          items:
+            type: boolean
+        isNegativeAnomaly:
+          type: array
+          items:
+            type: boolean
+        isPositiveAnomaly:
+          type: array
+          items:
+            type: boolean
+        severity:
+          type: array
+          items:
+            type: number
+    UnivariateLastDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        suggestedWindow:
+          type: integer
+        expectedValue:
+          type: number
+        upperMargin:
+          type: number
+        lowerMargin:
+          type: number
+        isAnomaly:
+          type: boolean
+        isNegativeAnomaly:
+          type: boolean
+        isPositiveAnomaly:
+          type: boolean
+        severity:
+          type: number
+    UnivariateChangePointDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        isChangePoint:
+          type: array
+          items:
+            type: boolean
+        confidenceScores:
+          type: array
+          items:
+            type: number
+    ModelInfo:
+      type: object
+      required: [dataSource, startTime, endTime]
+      properties:
+        dataSource:
+          type: string
+          description: Source path to the time series data (e.g., Azure blob URL).
+        dataSchema:
+          type: string
+          enum: [OneTable, MultiTable]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        displayName:
+          type: string
+        slidingWindow:
+          type: integer
+        alignPolicy:
+          type: object
+    MultivariateBatchDetectionOptions:
+      type: object
+      required: [dataSource, startTime, endTime]
+      properties:
+        dataSource:
+          type: string
+        topContributorCount:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+    MultivariateLastDetectionOptions:
+      type: object
+      required: [variables]
+      properties:
+        variables:
+          type: array
+          items:
+            type: object
+            properties:
+              variable:
+                type: string
+              timestamps:
+                type: array
+                items:
+                  type: string
+                  format: date-time
+              values:
+                type: array
+                items:
+                  type: number
+        topContributorCount:
+          type: integer
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  responses:
+    ErrorResponse:
+      description: An error response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+security:
+  - SubscriptionKey: []

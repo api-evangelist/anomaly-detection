@@ -1,0 +1,18 @@
+{
+  "provider": "anomaly-detection",
+  "sources": [
+    "anomaly-detection-changepoint-api-openapi.yml",
+    "anomaly-detection-multivariate-api-openapi.yml",
+    "anomaly-detection-univariate-api-openapi.yml"
+  ],
+  "outputs": [
+    "anomaly-detection-changepoint-api-openapi.yml",
+    "anomaly-detection-multivariate-api-openapi.yml",
+    "anomaly-detection-univariate-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
