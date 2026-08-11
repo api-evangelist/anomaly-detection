@@ -216,6 +216,17 @@ tags:
   - Time Series
 include: []
 common:
+  - type: IssueTracker
+    url: https://github.com/microsoft/anomaly-detector/issues
+  - type: Releases
+    url: https://github.com/microsoft/anomaly-detector/releases
+  - type: SecurityPolicy
+    url: https://github.com/microsoft/anomaly-detector/blob/main/SECURITY.md
+  - type: CodeOfConduct
+    url: https://github.com/microsoft/anomaly-detector/blob/main/CODE_OF_CONDUCT.md
+  - type: License
+    name: MIT
+    url: https://github.com/microsoft/anomaly-detector/blob/main/LICENSE
   - type: AgenticAccess
     url: agentic-access/anomaly-detection-agentic-access.yml
   - type: VulnerabilityDisclosure
