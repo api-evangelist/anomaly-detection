@@ -1,0 +1,175 @@
+{
+  "item": [
+    {
+      "id": "8f766a5b-c8c4-48d6-8c83-203547e109ae",
+      "name": "ChangePoint",
+      "description": {
+        "content": "Trend change-point detection.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d4eac589-0e3f-47fb-a54a-9da4c9040494",
+          "name": "Detect trend change points",
+          "request": {
+            "name": "Detect trend change points",
+            "description": {
+              "content": "Detects trend change points across a series of data points.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "timeseries",
+                "changepoint",
+                "detect"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                  "type": "any",
+                  "value": "{{resource-name}}",
+                  "key": "resource-name"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"series\": [\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    },\n    {\n      \"value\": \"<number>\",\n      \"timestamp\": \"<dateTime>\"\n    }\n  ],\n  \"granularity\": \"<string>\",\n  \"customInterval\": \"<integer>\",\n  \"period\": \"<integer>\",\n  \"maxAnomalyRatio\": \"<number>\",\n  \"sensitivity\": \"<integer>\",\n  \"imputeMode\": \"<string>\",\n  \"imputeFixedValue\": \"<number>\",\n  \"threshold\": \"<number>\",\n  \"stableTrendWindow\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5766c7aa-5721-424a-92ca-897b254f7764",
+              "name": "Change-point detection result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "timeseries",
+                    "changepoint",
+                    "detect"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Name of the Azure AI resource provisioned in the Azure portal.",
+                      "type": "any",
+                      "value": "{{resource-name}}",
+                      "key": "resource-name"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"series\": [\n    {\n      \"value\": 3663.386118421649,\n      \"timestamp\": \"2013-03-11T16:09:03.549Z\"\n    },\n    {\n      \"value\": 1341.7211902852343,\n      \"timestamp\": \"1971-02-04T19:45:38.435Z\"\n    }\n  ],\n  \"granularity\": \"microsecond\",\n  \"customInterval\": 4873,\n  \"period\": 8823,\n  \"maxAnomalyRatio\": 1711.339559425693,\n  \"sensitivity\": 9204,\n  \"imputeMode\": \"fixed\",\n  \"imputeFixedValue\": 4581.059975730838,\n  \"threshold\": \"<number>\",\n  \"stableTrendWindow\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"period\": 6345,\n  \"isChangePoint\": [\n    false,\n    true\n  ],\n  \"confidenceScores\": [\n    6531.276840350969,\n    6638.637041749708\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Name of the Azure AI resource provisioned in the Azure portal.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "my-resource",
+      "key": "resource-name"
+    },
+    {
+      "type": "string",
+      "value": "https://{{resource-name}}.cognitiveservices.azure.com/anomalydetector/v1.0",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Ocp-Apim-Subscription-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "57a69523-f4fb-4518-8686-ba61ac389419",
+    "name": "Azure AI Anomaly Detector ChangePoint API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Managed REST API service from Azure AI Services that monitors and detects\nanomalies in time series data without requiring machine learning expertise.\nSupports univariate batch detection across an entire series, last-point\ndetection for streaming, and change-point detection. The multivariate API\nenables anomaly detection across up to 300 correlated signals.\n\nNOTE: The service is being retired on 1 October 2026 in favor of Microsoft\nFabric real-time intelligence.\n\n\nContact Support:\n Name: Azure Anomaly Detector Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Azure AI Anomaly Detector ChangePoint API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Ocp-Apim-Subscription-Key",
+      "value": "{{Ocp-Apim-Subscription-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ChangePoint",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Detect trend change points",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/changepoint/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects trend change points across a series of data points."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Azure AI Anomaly Detector ChangePoint Univariate API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Ocp-Apim-Subscription-Key",
+      "value": "{{Ocp-Apim-Subscription-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Univariate",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Detect anomalies for entire series (batch)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/entire/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects anomalies across an entire series of data points as a batch."
+        },
+        {
+          "info": {
+            "name": "Detect anomaly status of the latest point (streaming)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{resource-name}.cognitiveservices.azure.com/anomalydetector/v1.0/timeseries/last/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detects whether the most recent point of a time series is an anomaly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
