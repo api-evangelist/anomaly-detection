@@ -20,7 +20,7 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/anomaly-detection.png
 created: 2024-01-15 00:00:00+00:00
 modified: 2026-04-19 00:00:00+00:00
-specificationVersion: '0.16'
+specificationVersion: '0.23'
 url: https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml
 apis:
 - name: Azure AI Anomaly Detector
