@@ -36,6 +36,14 @@ apis:
   tags:
   - Anomaly Detection
   - Azure
+  - Machine-Learning
+  - Microsoft
+  - Multivariate
+  - Time Series
+  - Univariate
+  tags_raw:
+  - Anomaly Detection
+  - Azure
   - Machine Learning
   - Microsoft
   - Multivariate
@@ -67,6 +75,12 @@ apis:
   humanURL: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
   baseURL: https://your-elasticsearch-host:9200
   tags:
+  - Anomaly Detection
+  - Elasticsearch
+  - Machine-Learning
+  - Monitoring
+  - Time Series
+  tags_raw:
   - Anomaly Detection
   - Elasticsearch
   - Machine Learning
@@ -125,6 +139,12 @@ apis:
   - Anomaly Detection
   - AWS
   - Business Metrics
+  - Machine-Learning
+  tags_raw:
+  - Amazon Web Services
+  - Anomaly Detection
+  - AWS
+  - Business Metrics
   - Machine Learning
   properties:
   - type: Documentation
@@ -149,6 +169,13 @@ apis:
   humanURL: https://pyod.readthedocs.io/
   baseURL: https://pypi.org/project/pyod/
   tags:
+  - Anomaly Detection
+  - Data Science
+  - Machine-Learning
+  - Open-Source
+  - Outlier Detection
+  - Python
+  tags_raw:
   - Anomaly Detection
   - Data Science
   - Machine Learning
@@ -203,6 +230,18 @@ maintainers:
     X: apievangelist
     url: https://apievangelist.com
 tags:
+  - Anomaly Detection
+  - Artificial Intelligence
+  - Data Science
+  - Fraud Detection
+  - Machine-Learning
+  - Monitoring
+  - Observability
+  - Outlier Detection
+  - Pattern Recognition
+  - Security
+  - Time Series
+tags_raw:
   - Anomaly Detection
   - Artificial Intelligence
   - Data Science
