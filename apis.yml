@@ -4,6 +4,20 @@ description: >-
   data streams, time series, and multivariate metrics. Covers cloud ML services,
   observability platforms, and open-source frameworks used for fraud detection,
   predictive maintenance, IoT monitoring, and security analytics.
+deliveryModel:
+  model: open-core
+  license: MIT
+  open_source: true
+  commercial: true
+  callable_host: true
+  label: Open core · an OSS project plus a commercial hosted product
+  confidence: high
+  source:
+  - license
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
