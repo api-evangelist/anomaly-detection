@@ -51,7 +51,7 @@ apis:
   tags:
   - Anomaly Detection
   - Azure
-  - Machine-Learning
+  - Machine Learning
   - Microsoft
   - Multivariate
   - Time Series
@@ -64,6 +64,7 @@ apis:
   - Multivariate
   - Time Series
   - Univariate
+  - Machine-Learning
   properties:
   - type: Documentation
     url: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
@@ -92,7 +93,7 @@ apis:
   tags:
   - Anomaly Detection
   - Elasticsearch
-  - Machine-Learning
+  - Machine Learning
   - Monitoring
   - Time Series
   tags_raw:
@@ -101,6 +102,7 @@ apis:
   - Machine Learning
   - Monitoring
   - Time Series
+  - Machine-Learning
   properties:
   - type: Documentation
     url: https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html
@@ -154,13 +156,14 @@ apis:
   - Anomaly Detection
   - AWS
   - Business Metrics
-  - Machine-Learning
+  - Machine Learning
   tags_raw:
   - Amazon Web Services
   - Anomaly Detection
   - AWS
   - Business Metrics
   - Machine Learning
+  - Machine-Learning
   properties:
   - type: Documentation
     url: https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-welcome.html
@@ -186,8 +189,8 @@ apis:
   tags:
   - Anomaly Detection
   - Data Science
-  - Machine-Learning
-  - Open-Source
+  - Machine Learning
+  - Open Source
   - Outlier Detection
   - Python
   tags_raw:
@@ -197,6 +200,8 @@ apis:
   - Open Source
   - Outlier Detection
   - Python
+  - Machine-Learning
+  - Open-Source
   properties:
   - type: Documentation
     url: https://pyod.readthedocs.io/en/latest/
@@ -248,8 +253,8 @@ tags:
   - Anomaly Detection
   - Artificial Intelligence
   - Data Science
-  - Fraud Detection
-  - Machine-Learning
+  - Fraud Prevention
+  - Machine Learning
   - Monitoring
   - Observability
   - Outlier Detection
@@ -268,6 +273,7 @@ tags_raw:
   - Pattern Recognition
   - Security
   - Time Series
+  - Machine-Learning
 include: []
 common:
   - type: IssueTracker

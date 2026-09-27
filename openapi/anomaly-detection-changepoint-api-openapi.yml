@@ -60,28 +60,6 @@ paths:
                 $ref: '#/components/schemas/UnivariateChangePointDetectionResult'
 components:
   schemas:
-    UnivariateChangePointDetectionResult:
-      type: object
-      properties:
-        period:
-          type: integer
-        isChangePoint:
-          type: array
-          items:
-            type: boolean
-        confidenceScores:
-          type: array
-          items:
-            type: number
-    UnivariateChangePointDetectionOptions:
-      allOf:
-      - $ref: '#/components/schemas/UnivariateDetectionOptions'
-      - type: object
-        properties:
-          threshold:
-            type: number
-          stableTrendWindow:
-            type: integer
     TimeSeriesPoint:
       type: object
       required:
@@ -92,6 +70,15 @@ components:
           format: date-time
         value:
           type: number
+    UnivariateChangePointDetectionOptions:
+      allOf:
+      - $ref: '#/components/schemas/UnivariateDetectionOptions'
+      - type: object
+        properties:
+          threshold:
+            type: number
+          stableTrendWindow:
+            type: integer
     UnivariateDetectionOptions:
       type: object
       required:
@@ -132,6 +119,19 @@ components:
           - notFill
         imputeFixedValue:
           type: number
+    UnivariateChangePointDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        isChangePoint:
+          type: array
+          items:
+            type: boolean
+        confidenceScores:
+          type: array
+          items:
+            type: number
   securitySchemes:
     SubscriptionKey:
       type: apiKey

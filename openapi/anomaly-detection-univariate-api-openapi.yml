@@ -85,78 +85,7 @@ paths:
         '400':
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    ErrorResponse:
-      description: An error response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    UnivariateEntireDetectionResult:
-      type: object
-      properties:
-        period:
-          type: integer
-        expectedValues:
-          type: array
-          items:
-            type: number
-        upperMargins:
-          type: array
-          items:
-            type: number
-        lowerMargins:
-          type: array
-          items:
-            type: number
-        isAnomaly:
-          type: array
-          items:
-            type: boolean
-        isNegativeAnomaly:
-          type: array
-          items:
-            type: boolean
-        isPositiveAnomaly:
-          type: array
-          items:
-            type: boolean
-        severity:
-          type: array
-          items:
-            type: number
-    UnivariateLastDetectionResult:
-      type: object
-      properties:
-        period:
-          type: integer
-        suggestedWindow:
-          type: integer
-        expectedValue:
-          type: number
-        upperMargin:
-          type: number
-        lowerMargin:
-          type: number
-        isAnomaly:
-          type: boolean
-        isNegativeAnomaly:
-          type: boolean
-        isPositiveAnomaly:
-          type: boolean
-        severity:
-          type: number
-    TimeSeriesPoint:
-      type: object
-      required:
-      - value
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        value:
-          type: number
     UnivariateDetectionOptions:
       type: object
       required:
@@ -204,6 +133,77 @@ components:
           type: string
         message:
           type: string
+    UnivariateLastDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        suggestedWindow:
+          type: integer
+        expectedValue:
+          type: number
+        upperMargin:
+          type: number
+        lowerMargin:
+          type: number
+        isAnomaly:
+          type: boolean
+        isNegativeAnomaly:
+          type: boolean
+        isPositiveAnomaly:
+          type: boolean
+        severity:
+          type: number
+    TimeSeriesPoint:
+      type: object
+      required:
+      - value
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+    UnivariateEntireDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        expectedValues:
+          type: array
+          items:
+            type: number
+        upperMargins:
+          type: array
+          items:
+            type: number
+        lowerMargins:
+          type: array
+          items:
+            type: number
+        isAnomaly:
+          type: array
+          items:
+            type: boolean
+        isNegativeAnomaly:
+          type: array
+          items:
+            type: boolean
+        isPositiveAnomaly:
+          type: array
+          items:
+            type: boolean
+        severity:
+          type: array
+          items:
+            type: number
+  responses:
+    ErrorResponse:
+      description: An error response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     SubscriptionKey:
       type: apiKey
