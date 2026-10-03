@@ -60,16 +60,6 @@ paths:
                 $ref: '#/components/schemas/UnivariateChangePointDetectionResult'
 components:
   schemas:
-    TimeSeriesPoint:
-      type: object
-      required:
-      - value
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        value:
-          type: number
     UnivariateChangePointDetectionOptions:
       allOf:
       - $ref: '#/components/schemas/UnivariateDetectionOptions'
@@ -132,6 +122,16 @@ components:
           type: array
           items:
             type: number
+    TimeSeriesPoint:
+      type: object
+      required:
+      - value
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
   securitySchemes:
     SubscriptionKey:
       type: apiKey

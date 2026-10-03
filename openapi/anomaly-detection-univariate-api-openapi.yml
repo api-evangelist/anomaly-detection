@@ -126,6 +126,16 @@ components:
           - notFill
         imputeFixedValue:
           type: number
+    TimeSeriesPoint:
+      type: object
+      required:
+      - value
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
     Error:
       type: object
       properties:
@@ -153,16 +163,6 @@ components:
         isPositiveAnomaly:
           type: boolean
         severity:
-          type: number
-    TimeSeriesPoint:
-      type: object
-      required:
-      - value
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        value:
           type: number
     UnivariateEntireDetectionResult:
       type: object

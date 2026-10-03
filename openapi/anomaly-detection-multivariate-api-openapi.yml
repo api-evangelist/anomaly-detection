@@ -129,29 +129,6 @@ paths:
           description: Synchronous last-point multivariate detection result.
 components:
   schemas:
-    MultivariateLastDetectionOptions:
-      type: object
-      required:
-      - variables
-      properties:
-        variables:
-          type: array
-          items:
-            type: object
-            properties:
-              variable:
-                type: string
-              timestamps:
-                type: array
-                items:
-                  type: string
-                  format: date-time
-              values:
-                type: array
-                items:
-                  type: number
-        topContributorCount:
-          type: integer
     ModelInfo:
       type: object
       required:
@@ -179,6 +156,29 @@ components:
           type: integer
         alignPolicy:
           type: object
+    MultivariateLastDetectionOptions:
+      type: object
+      required:
+      - variables
+      properties:
+        variables:
+          type: array
+          items:
+            type: object
+            properties:
+              variable:
+                type: string
+              timestamps:
+                type: array
+                items:
+                  type: string
+                  format: date-time
+              values:
+                type: array
+                items:
+                  type: number
+        topContributorCount:
+          type: integer
     MultivariateBatchDetectionOptions:
       type: object
       required:
