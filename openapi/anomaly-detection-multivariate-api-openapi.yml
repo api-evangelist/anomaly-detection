@@ -128,7 +128,54 @@ paths:
         '200':
           description: Synchronous last-point multivariate detection result.
 components:
+  parameters:
+    ModelId:
+      name: modelId
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
+    MultivariateBatchDetectionOptions:
+      type: object
+      required:
+      - dataSource
+      - startTime
+      - endTime
+      properties:
+        dataSource:
+          type: string
+        topContributorCount:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+    MultivariateLastDetectionOptions:
+      type: object
+      required:
+      - variables
+      properties:
+        variables:
+          type: array
+          items:
+            type: object
+            properties:
+              variable:
+                type: string
+              timestamps:
+                type: array
+                items:
+                  type: string
+                  format: date-time
+              values:
+                type: array
+                items:
+                  type: number
+        topContributorCount:
+          type: integer
     ModelInfo:
       type: object
       required:
@@ -156,53 +203,6 @@ components:
           type: integer
         alignPolicy:
           type: object
-    MultivariateLastDetectionOptions:
-      type: object
-      required:
-      - variables
-      properties:
-        variables:
-          type: array
-          items:
-            type: object
-            properties:
-              variable:
-                type: string
-              timestamps:
-                type: array
-                items:
-                  type: string
-                  format: date-time
-              values:
-                type: array
-                items:
-                  type: number
-        topContributorCount:
-          type: integer
-    MultivariateBatchDetectionOptions:
-      type: object
-      required:
-      - dataSource
-      - startTime
-      - endTime
-      properties:
-        dataSource:
-          type: string
-        topContributorCount:
-          type: integer
-        startTime:
-          type: string
-          format: date-time
-        endTime:
-          type: string
-          format: date-time
-  parameters:
-    ModelId:
-      name: modelId
-      in: path
-      required: true
-      schema:
-        type: string
   securitySchemes:
     SubscriptionKey:
       type: apiKey

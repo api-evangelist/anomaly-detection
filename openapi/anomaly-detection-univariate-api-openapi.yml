@@ -86,6 +86,39 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    UnivariateEntireDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        expectedValues:
+          type: array
+          items:
+            type: number
+        upperMargins:
+          type: array
+          items:
+            type: number
+        lowerMargins:
+          type: array
+          items:
+            type: number
+        isAnomaly:
+          type: array
+          items:
+            type: boolean
+        isNegativeAnomaly:
+          type: array
+          items:
+            type: boolean
+        isPositiveAnomaly:
+          type: array
+          items:
+            type: boolean
+        severity:
+          type: array
+          items:
+            type: number
     UnivariateDetectionOptions:
       type: object
       required:
@@ -126,23 +159,6 @@ components:
           - notFill
         imputeFixedValue:
           type: number
-    TimeSeriesPoint:
-      type: object
-      required:
-      - value
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        value:
-          type: number
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
     UnivariateLastDetectionResult:
       type: object
       properties:
@@ -164,39 +180,23 @@ components:
           type: boolean
         severity:
           type: number
-    UnivariateEntireDetectionResult:
+    TimeSeriesPoint:
+      type: object
+      required:
+      - value
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+    Error:
       type: object
       properties:
-        period:
-          type: integer
-        expectedValues:
-          type: array
-          items:
-            type: number
-        upperMargins:
-          type: array
-          items:
-            type: number
-        lowerMargins:
-          type: array
-          items:
-            type: number
-        isAnomaly:
-          type: array
-          items:
-            type: boolean
-        isNegativeAnomaly:
-          type: array
-          items:
-            type: boolean
-        isPositiveAnomaly:
-          type: array
-          items:
-            type: boolean
-        severity:
-          type: array
-          items:
-            type: number
+        code:
+          type: string
+        message:
+          type: string
   responses:
     ErrorResponse:
       description: An error response.

@@ -60,6 +60,19 @@ paths:
                 $ref: '#/components/schemas/UnivariateChangePointDetectionResult'
 components:
   schemas:
+    UnivariateChangePointDetectionResult:
+      type: object
+      properties:
+        period:
+          type: integer
+        isChangePoint:
+          type: array
+          items:
+            type: boolean
+        confidenceScores:
+          type: array
+          items:
+            type: number
     UnivariateChangePointDetectionOptions:
       allOf:
       - $ref: '#/components/schemas/UnivariateDetectionOptions'
@@ -109,19 +122,6 @@ components:
           - notFill
         imputeFixedValue:
           type: number
-    UnivariateChangePointDetectionResult:
-      type: object
-      properties:
-        period:
-          type: integer
-        isChangePoint:
-          type: array
-          items:
-            type: boolean
-        confidenceScores:
-          type: array
-          items:
-            type: number
     TimeSeriesPoint:
       type: object
       required:
