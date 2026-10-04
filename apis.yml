@@ -276,6 +276,9 @@ tags_raw:
   - Machine-Learning
 include: []
 common:
+  - type: CapabilityMap
+    url: capabilities/anomaly-detection-capability-edges.yml
+    name: Anomaly Detection Business Capability Map
   - type: IssueTracker
     url: https://github.com/microsoft/anomaly-detector/issues
   - type: Releases

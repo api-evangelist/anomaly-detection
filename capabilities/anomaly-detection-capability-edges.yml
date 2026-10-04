@@ -1,0 +1,25 @@
+slug: anomaly-detection
+provider: Anomaly Detection
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Multivariate
+  spec_file: anomaly-detection-multivariate-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.78
+  evidence: POST /multivariate/models  'Train a multivariate model'; DELETE /multivariate/models/{modelId}  'Delete
+    a multivariate model'; POST /multivariate/models/{modelId}:detect-batch  'Run batch multivariate inference'
+  reason: Train, list, get, delete and run inference on models is explicit ML model lifecycle management
+    (MLOps), mapping to Artificial Intelligence Management.
