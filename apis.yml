@@ -276,6 +276,12 @@ tags_raw:
   - Machine-Learning
 include: []
 common:
+  - type: Plans
+    url: plans/anomaly-detection-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/anomaly-detection-rate-limits.yml
+  - type: FinOps
+    url: finops/anomaly-detection-finops.yml
   - type: CapabilityMap
     url: capabilities/anomaly-detection-capability-edges.yml
     name: Anomaly Detection Business Capability Map
