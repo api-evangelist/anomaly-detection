@@ -2,6 +2,13 @@
   "repo": "anomaly-detection",
   "feeds": [
     {
+      "source": "https://techcommunity.microsoft.com/t5/AI-Customer-Engineering-Team/Introducing-Azure-Anomaly-Detector-API/ba-p/490162",
+      "feed_url": "https://techcommunity.microsoft.com/t5/AI-Customer-Engineering-Team/Introducing-Azure-Anomaly-Detector-API/ba-p/490162",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
       "source": "https://pyod.readthedocs.io/en/latest/faq.html",
       "feed_url": "https://pyod.readthedocs.io/en/latest/faq.html",
       "title": "",
@@ -10,6 +17,6 @@
     }
   ],
   "post_count": 0,
-  "fetched": "2026-10-03T12:30:02Z",
+  "fetched": "2026-10-10T13:15:00Z",
   "agent_pulled": "2026-06-27"
 }
