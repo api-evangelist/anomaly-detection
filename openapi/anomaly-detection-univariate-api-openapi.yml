@@ -119,6 +119,16 @@ components:
           type: array
           items:
             type: number
+    TimeSeriesPoint:
+      type: object
+      required:
+      - value
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
     UnivariateDetectionOptions:
       type: object
       required:
@@ -179,16 +189,6 @@ components:
         isPositiveAnomaly:
           type: boolean
         severity:
-          type: number
-    TimeSeriesPoint:
-      type: object
-      required:
-      - value
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        value:
           type: number
     Error:
       type: object

@@ -128,31 +128,7 @@ paths:
         '200':
           description: Synchronous last-point multivariate detection result.
 components:
-  parameters:
-    ModelId:
-      name: modelId
-      in: path
-      required: true
-      schema:
-        type: string
   schemas:
-    MultivariateBatchDetectionOptions:
-      type: object
-      required:
-      - dataSource
-      - startTime
-      - endTime
-      properties:
-        dataSource:
-          type: string
-        topContributorCount:
-          type: integer
-        startTime:
-          type: string
-          format: date-time
-        endTime:
-          type: string
-          format: date-time
     MultivariateLastDetectionOptions:
       type: object
       required:
@@ -203,6 +179,30 @@ components:
           type: integer
         alignPolicy:
           type: object
+    MultivariateBatchDetectionOptions:
+      type: object
+      required:
+      - dataSource
+      - startTime
+      - endTime
+      properties:
+        dataSource:
+          type: string
+        topContributorCount:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+  parameters:
+    ModelId:
+      name: modelId
+      in: path
+      required: true
+      schema:
+        type: string
   securitySchemes:
     SubscriptionKey:
       type: apiKey
