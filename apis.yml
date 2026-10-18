@@ -50,7 +50,7 @@ apis:
   baseURL: https://api.cognitive.microsoft.com
   tags:
   - Anomaly Detection
-  - Azure
+  - Microsoft Azure
   - Machine Learning
   - Microsoft
   - Multivariate
