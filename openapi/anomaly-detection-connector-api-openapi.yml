@@ -1,0 +1,2657 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Connector API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: Connector
+  x-displayName: Connector
+  description: 'The connector and sync jobs APIs provide a convenient way to create and manage Elastic connectors and sync jobs in an internal index.
+
+    Connectors are Elasticsearch integrations for syncing content from third-party data sources, which can be deployed on Elastic Cloud or hosted on your own infrastructure.
+
+    This API provides an alternative to relying solely on Kibana UI for connector and sync job management. The API comes with a set of validations and assertions to ensure that the state representation in the internal index remains valid.
+
+    This API requires the `manage_connector` privilege or, for read-only endpoints, the `monitor_connector` privilege.'
+  externalDocs:
+    url: https://www.elastic.co/docs/reference/search-connectors/api-tutorial
+    description: Check out the connector API tutorial.
+paths:
+  /_connector/{connector_id}/_check_in:
+    put:
+      tags:
+      - Connector
+      summary: Check in a connector
+      description: Update the `last_seen` field in the connector and set it to the current timestamp.
+      operationId: connector-check-in
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be checked in
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorCheckInResponseExample1:
+                  value: "{\n    \"result\": \"updated\"\n}"
+      x-state: Experimental; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'PUT _connector/my-connector/_check_in
+
+          '
+      - lang: Python
+        source: "resp = client.connector.check_in(\n    connector_id=\"my-connector\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.checkIn({\n  connector_id: \"my-connector\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.check_in(\n  connector_id: \"my-connector\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->checkIn([\n    \"connector_id\" => \"my-connector\",\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/my-connector/_check_in"'
+      - lang: Java
+        source: "client.connector().checkIn(c -> c\n    .connectorId(\"my-connector\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}:
+    get:
+      tags:
+      - Connector
+      summary: Get a connector
+      description: Get the details about a connector.
+      operationId: connector-get
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: query
+        name: include_deleted
+        description: A flag to indicate if the desired connector should be fetched, even if it was soft-deleted.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connector._types.Connector'
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _connector/my-connector-id
+
+          '
+      - lang: Python
+        source: "resp = client.connector.get(\n    connector_id=\"my-connector-id\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.get({\n  connector_id: \"my-connector-id\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.get(\n  connector_id: \"my-connector-id\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->get([\n    \"connector_id\" => \"my-connector-id\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/my-connector-id"'
+      - lang: Java
+        source: "client.connector().get(g -> g\n    .connectorId(\"my-connector-id\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - Connector
+      summary: Create or update a connector
+      description: '**All methods and paths for this operation:**
+
+
+        PUT
+
+        /_connector
+
+
+        PUT
+
+        /_connector/{connector_id}'
+      operationId: connector-put
+      parameters:
+      - $ref: '#/components/parameters/connector.put-connector_id'
+      requestBody:
+        $ref: '#/components/requestBodies/connector.put'
+      responses:
+        '200':
+          $ref: '#/components/responses/connector.put-200'
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector\n{\n  \"index_name\": \"search-google-drive\",\n  \"name\": \"My Connector\",\n  \"service_type\": \"google_drive\"\n}"
+      - lang: Python
+        source: "resp = client.connector.put(\n    connector_id=\"my-connector\",\n    index_name=\"search-google-drive\",\n    name=\"My Connector\",\n    service_type=\"google_drive\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.put({\n  connector_id: \"my-connector\",\n  index_name: \"search-google-drive\",\n  name: \"My Connector\",\n  service_type: \"google_drive\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.put(\n  connector_id: \"my-connector\",\n  body: {\n    \"index_name\": \"search-google-drive\",\n    \"name\": \"My Connector\",\n    \"service_type\": \"google_drive\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->put([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"index_name\" => \"search-google-drive\",\n        \"name\" => \"My Connector\",\n        \"service_type\" => \"google_drive\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"index_name":"search-google-drive","name":"My Connector","service_type":"google_drive"}'' "$ELASTICSEARCH_URL/_connector/my-connector"'
+      - lang: Java
+        source: "client.connector().put(p -> p\n    .connectorId(\"my-connector\")\n    .indexName(\"search-google-drive\")\n    .name(\"My Connector\")\n    .serviceType(\"google_drive\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - Connector
+      summary: Delete a connector
+      description: 'Removes a connector and associated sync jobs.
+
+        This is a destructive action that is not recoverable.
+
+        NOTE: This action doesn’t delete any API keys, ingest pipelines, or data indices associated with the connector.
+
+        These need to be removed manually.'
+      operationId: connector-delete
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be deleted
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      - in: query
+        name: delete_sync_jobs
+        description: A flag indicating if associated sync jobs should be also removed.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: hard
+        description: A flag indicating if the connector should be hard deleted.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                ConnectorDeleteResponseExample1:
+                  value: "{\n    \"acknowledged\": true\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE _connector/my-connector-id&delete_sync_jobs=true
+
+          '
+      - lang: Python
+        source: "resp = client.connector.delete(\n    connector_id=\"my-connector-id&delete_sync_jobs=true\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.delete({\n  connector_id: \"my-connector-id&delete_sync_jobs=true\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.delete(\n  connector_id: \"my-connector-id&delete_sync_jobs=true\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->delete([\n    \"connector_id\" => \"my-connector-id&delete_sync_jobs=true\",\n]);"
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/my-connector-id&delete_sync_jobs=true"'
+      - lang: Java
+        source: "client.connector().delete(d -> d\n    .connectorId(\"my-connector-id&delete_sync_jobs=true\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector:
+    get:
+      tags:
+      - Connector
+      summary: Get all connectors
+      description: Get information about all connectors.
+      operationId: connector-list
+      parameters:
+      - in: query
+        name: from
+        description: Starting offset
+        deprecated: false
+        schema:
+          default: 0
+          type: number
+        style: form
+      - in: query
+        name: size
+        description: Specifies a max number of results to get
+        deprecated: false
+        schema:
+          default: 100
+          type: number
+        style: form
+      - in: query
+        name: index_name
+        description: A comma-separated list of connector index names to fetch connector documents for
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Indices'
+        style: form
+      - in: query
+        name: connector_name
+        description: A comma-separated list of connector names to fetch connector documents for
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Names'
+        style: form
+      - in: query
+        name: service_type
+        description: A comma-separated list of connector service types to fetch connector documents for
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Names'
+        style: form
+      - in: query
+        name: include_deleted
+        description: A flag to indicate if the desired connector should be fetched, even if it was soft-deleted.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: query
+        description: A wildcard query string that filters connectors with matching name, description or index name
+        deprecated: false
+        schema:
+          type: string
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/connector._types.Connector'
+                required:
+                - count
+                - results
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _connector
+
+          '
+      - lang: Python
+        source: resp = client.connector.list()
+      - lang: JavaScript
+        source: const response = await client.connector.list();
+      - lang: Ruby
+        source: response = client.connector.list
+      - lang: PHP
+        source: $resp = $client->connector()->list();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector"'
+      - lang: Java
+        source: 'client.connector().list(l -> l);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    post:
+      tags:
+      - Connector
+      summary: Create a connector
+      description: 'Connectors are Elasticsearch integrations that bring content from third-party data sources, which can be deployed on Elastic Cloud or hosted on your own infrastructure.
+
+        Elastic managed connectors (Native connectors) are a managed service on Elastic Cloud.
+
+        Self-managed connectors (Connector clients) are self-managed on your infrastructure.'
+      operationId: connector-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                index_name:
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                is_native:
+                  type: boolean
+                language:
+                  type: string
+                name:
+                  type: string
+                service_type:
+                  type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                  id:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Id'
+                required:
+                - result
+                - id
+      x-state: Beta; Added in 8.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}/_cancel:
+    put:
+      tags:
+      - Connector
+      summary: Cancel a connector sync job
+      description: 'Cancel a connector sync job, which sets the status to cancelling and updates `cancellation_requested_at` to the current time.
+
+        The connector service is then responsible for setting the status of connector sync jobs to cancelled.'
+      operationId: connector-sync-job-cancel
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'PUT _connector/_sync_job/my-connector-sync-job-id/_cancel
+
+          '
+      - lang: Python
+        source: "resp = client.connector.sync_job_cancel(\n    connector_sync_job_id=\"my-connector-sync-job-id\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobCancel({\n  connector_sync_job_id: \"my-connector-sync-job-id\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_cancel(\n  connector_sync_job_id: \"my-connector-sync-job-id\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobCancel([\n    \"connector_sync_job_id\" => \"my-connector-sync-job-id\",\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job-id/_cancel"'
+      - lang: Java
+        source: "client.connector().syncJobCancel(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job-id\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}/_check_in:
+    put:
+      tags:
+      - Connector
+      summary: Check in a connector sync job
+      description: 'Check in a connector sync job and set the `last_seen` field to the current time before updating it in the internal index.
+
+
+        To sync data using self-managed connectors, you need to deploy the Elastic connector service on your own infrastructure.
+
+        This service runs automatically on Elastic Cloud for Elastic managed connectors.'
+      operationId: connector-sync-job-check-in
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job to be checked in.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      x-state: Experimental
+      x-codeSamples:
+      - lang: Console
+        source: 'PUT _connector/_sync_job/my-connector-sync-job/_check_in
+
+          '
+      - lang: Python
+        source: "resp = client.connector.sync_job_check_in(\n    connector_sync_job_id=\"my-connector-sync-job\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobCheckIn({\n  connector_sync_job_id: \"my-connector-sync-job\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_check_in(\n  connector_sync_job_id: \"my-connector-sync-job\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobCheckIn([\n    \"connector_sync_job_id\" => \"my-connector-sync-job\",\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job/_check_in"'
+      - lang: Java
+        source: "client.connector().syncJobCheckIn(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}/_claim:
+    put:
+      tags:
+      - Connector
+      summary: Claim a connector sync job
+      description: 'This action updates the job status to `in_progress` and sets the `last_seen` and `started_at` timestamps to the current time.
+
+        Additionally, it can set the `sync_cursor` property for the sync job.
+
+
+        This API is not intended for direct connector management by users.
+
+        It supports the implementation of services that utilize the connector protocol to communicate with Elasticsearch.
+
+
+        To sync data using self-managed connectors, you need to deploy the Elastic connector service on your own infrastructure.
+
+        This service runs automatically on Elastic Cloud for Elastic managed connectors.'
+      operationId: connector-sync-job-claim
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sync_cursor:
+                  description: 'The cursor object from the last incremental sync job.
+
+                    This should reference the `sync_cursor` field in the connector state for which the job runs.'
+                  type: object
+                worker_hostname:
+                  description: The host name of the current system that will run the job.
+                  type: string
+              required:
+              - worker_hostname
+            examples:
+              ConnectorSyncJobClaimExample1:
+                description: An example body for a `PUT _connector/_sync_job/my-connector-sync-job-id/_claim` request.
+                value: "{\n  \"worker_hostname\": \"some-machine\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      x-state: Experimental
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/_sync_job/my-connector-sync-job-id/_claim\n{\n  \"worker_hostname\": \"some-machine\"\n}"
+      - lang: Python
+        source: "resp = client.connector.sync_job_claim(\n    connector_sync_job_id=\"my-connector-sync-job-id\",\n    worker_hostname=\"some-machine\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobClaim({\n  connector_sync_job_id: \"my-connector-sync-job-id\",\n  worker_hostname: \"some-machine\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_claim(\n  connector_sync_job_id: \"my-connector-sync-job-id\",\n  body: {\n    \"worker_hostname\": \"some-machine\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobClaim([\n    \"connector_sync_job_id\" => \"my-connector-sync-job-id\",\n    \"body\" => [\n        \"worker_hostname\" => \"some-machine\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"worker_hostname":"some-machine"}'' "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job-id/_claim"'
+      - lang: Java
+        source: "client.connector().syncJobClaim(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job-id\")\n    .workerHostname(\"some-machine\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}:
+    get:
+      tags:
+      - Connector
+      summary: Get a connector sync job
+      operationId: connector-sync-job-get
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connector._types.ConnectorSyncJob'
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _connector/_sync_job/my-connector-sync-job
+
+          '
+      - lang: Python
+        source: "resp = client.connector.sync_job_get(\n    connector_sync_job_id=\"my-connector-sync-job\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobGet({\n  connector_sync_job_id: \"my-connector-sync-job\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_get(\n  connector_sync_job_id: \"my-connector-sync-job\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobGet([\n    \"connector_sync_job_id\" => \"my-connector-sync-job\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job"'
+      - lang: Java
+        source: "client.connector().syncJobGet(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - Connector
+      summary: Delete a connector sync job
+      description: 'Remove a connector sync job and its associated data.
+
+        This is a destructive action that is not recoverable.'
+      operationId: connector-sync-job-delete
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job to be deleted
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                SyncJobDeleteResponseExample1:
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE _connector/_sync_job/my-connector-sync-job-id
+
+          '
+      - lang: Python
+        source: "resp = client.connector.sync_job_delete(\n    connector_sync_job_id=\"my-connector-sync-job-id\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobDelete({\n  connector_sync_job_id: \"my-connector-sync-job-id\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_delete(\n  connector_sync_job_id: \"my-connector-sync-job-id\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobDelete([\n    \"connector_sync_job_id\" => \"my-connector-sync-job-id\",\n]);"
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job-id"'
+      - lang: Java
+        source: "client.connector().syncJobDelete(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job-id\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}/_error:
+    put:
+      tags:
+      - Connector
+      summary: Set a connector sync job error
+      description: 'Set the `error` field for a connector sync job and set its `status` to `error`.
+
+
+        To sync data using self-managed connectors, you need to deploy the Elastic connector service on your own infrastructure.
+
+        This service runs automatically on Elastic Cloud for Elastic managed connectors.'
+      operationId: connector-sync-job-error
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier for the connector sync job.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  description: The error for the connector sync job error field.
+                  type: string
+              required:
+              - error
+            examples:
+              SyncJobErrorRequestExample1:
+                value: "{\n    \"error\": \"some-error\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      x-state: Experimental
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/_sync_job/my-connector-sync-job/_error\n{\n    \"error\": \"some-error\"\n}"
+      - lang: Python
+        source: "resp = client.connector.sync_job_error(\n    connector_sync_job_id=\"my-connector-sync-job\",\n    error=\"some-error\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobError({\n  connector_sync_job_id: \"my-connector-sync-job\",\n  error: \"some-error\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_error(\n  connector_sync_job_id: \"my-connector-sync-job\",\n  body: {\n    \"error\": \"some-error\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobError([\n    \"connector_sync_job_id\" => \"my-connector-sync-job\",\n    \"body\" => [\n        \"error\" => \"some-error\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"error":"some-error"}'' "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job/_error"'
+      - lang: Java
+        source: "client.connector().syncJobError(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job\")\n    .error(\"some-error\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job:
+    get:
+      tags:
+      - Connector
+      summary: Get all connector sync jobs
+      description: Get information about all stored connector sync jobs listed by their creation date in ascending order.
+      operationId: connector-sync-job-list
+      parameters:
+      - in: query
+        name: from
+        description: Starting offset
+        deprecated: false
+        schema:
+          default: 0
+          type: number
+        style: form
+      - in: query
+        name: size
+        description: Specifies a max number of results to get
+        deprecated: false
+        schema:
+          default: 100
+          type: number
+        style: form
+      - in: query
+        name: status
+        description: A sync job status to fetch connector sync jobs for
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/connector._types.SyncStatus'
+        style: form
+      - in: query
+        name: connector_id
+        description: A connector id to fetch connector sync jobs for
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: form
+      - in: query
+        name: job_type
+        description: 'A comma-separated list of job types to fetch the sync jobs for
+
+
+          Supported values include: `full`, `incremental`, `access_control`
+
+
+          '
+        deprecated: false
+        schema:
+          oneOf:
+          - $ref: '#/components/schemas/connector._types.SyncJobType'
+          - type: array
+            items:
+              $ref: '#/components/schemas/connector._types.SyncJobType'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/connector._types.ConnectorSyncJob'
+                required:
+                - count
+                - results
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _connector/_sync_job?connector_id=my-connector-id&size=1
+
+          '
+      - lang: Python
+        source: "resp = client.connector.sync_job_list(\n    connector_id=\"my-connector-id\",\n    size=\"1\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobList({\n  connector_id: \"my-connector-id\",\n  size: 1,\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_list(\n  connector_id: \"my-connector-id\",\n  size: \"1\"\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobList([\n    \"connector_id\" => \"my-connector-id\",\n    \"size\" => \"1\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_connector/_sync_job?connector_id=my-connector-id&size=1"'
+      - lang: Java
+        source: "client.connector().syncJobList(s -> s\n    .connectorId(\"my-connector-id\")\n    .size(1)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    post:
+      tags:
+      - Connector
+      summary: Create a connector sync job
+      description: Create a connector sync job document in the internal index and initialize its counters and timestamps with default values.
+      operationId: connector-sync-job-post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  description: The id of the associated connector
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Id'
+                job_type:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.SyncJobType'
+                trigger_method:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.SyncJobTriggerMethod'
+              required:
+              - id
+            examples:
+              SyncJobPostRequestExample1:
+                value: "{\n  \"id\": \"connector-id\",\n  \"job_type\": \"full\",\n  \"trigger_method\": \"on_demand\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Id'
+                required:
+                - id
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST _connector/_sync_job\n{\n  \"id\": \"connector-id\",\n  \"job_type\": \"full\",\n  \"trigger_method\": \"on_demand\"\n}"
+      - lang: Python
+        source: "resp = client.connector.sync_job_post(\n    id=\"connector-id\",\n    job_type=\"full\",\n    trigger_method=\"on_demand\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobPost({\n  id: \"connector-id\",\n  job_type: \"full\",\n  trigger_method: \"on_demand\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_post(\n  body: {\n    \"id\": \"connector-id\",\n    \"job_type\": \"full\",\n    \"trigger_method\": \"on_demand\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobPost([\n    \"body\" => [\n        \"id\" => \"connector-id\",\n        \"job_type\" => \"full\",\n        \"trigger_method\" => \"on_demand\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"id":"connector-id","job_type":"full","trigger_method":"on_demand"}'' "$ELASTICSEARCH_URL/_connector/_sync_job"'
+      - lang: Java
+        source: "client.connector().syncJobPost(s -> s\n    .id(\"connector-id\")\n    .jobType(SyncJobType.Full)\n    .triggerMethod(SyncJobTriggerMethod.OnDemand)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/_sync_job/{connector_sync_job_id}/_stats:
+    put:
+      tags:
+      - Connector
+      summary: Set the connector sync job stats
+      description: 'Stats include: `deleted_document_count`, `indexed_document_count`, `indexed_document_volume`, and `total_document_count`.
+
+        You can also update `last_seen`.
+
+        This API is mainly used by the connector service for updating sync job information.
+
+
+        To sync data using self-managed connectors, you need to deploy the Elastic connector service on your own infrastructure.
+
+        This service runs automatically on Elastic Cloud for Elastic managed connectors.'
+      operationId: connector-sync-job-update-stats
+      parameters:
+      - in: path
+        name: connector_sync_job_id
+        description: The unique identifier of the connector sync job.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deleted_document_count:
+                  description: The number of documents the sync job deleted.
+                  type: number
+                indexed_document_count:
+                  description: The number of documents the sync job indexed.
+                  type: number
+                indexed_document_volume:
+                  description: The total size of the data (in MiB) the sync job indexed.
+                  type: number
+                last_seen:
+                  description: The timestamp to use in the `last_seen` property for the connector sync job.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                metadata:
+                  description: The connector-specific metadata.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Metadata'
+                total_document_count:
+                  description: The total number of documents in the target index after the sync job finished.
+                  type: number
+              required:
+              - deleted_document_count
+              - indexed_document_count
+              - indexed_document_volume
+            examples:
+              ConnectorSyncJobUpdateStatsExample1:
+                description: An example body for a `PUT _connector/_sync_job/my-connector-sync-job/_stats` request.
+                value: "{\n    \"deleted_document_count\": 10,\n    \"indexed_document_count\": 20,\n    \"indexed_document_volume\": 1000,\n    \"total_document_count\": 2000,\n    \"last_seen\": \"2023-01-02T10:00:00Z\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      x-state: Experimental
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/_sync_job/my-connector-sync-job/_stats\n{\n    \"deleted_document_count\": 10,\n    \"indexed_document_count\": 20,\n    \"indexed_document_volume\": 1000,\n    \"total_document_count\": 2000,\n    \"last_seen\": \"2023-01-02T10:00:00Z\"\n}"
+      - lang: Python
+        source: "resp = client.connector.sync_job_update_stats(\n    connector_sync_job_id=\"my-connector-sync-job\",\n    deleted_document_count=10,\n    indexed_document_count=20,\n    indexed_document_volume=1000,\n    total_document_count=2000,\n    last_seen=\"2023-01-02T10:00:00Z\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.syncJobUpdateStats({\n  connector_sync_job_id: \"my-connector-sync-job\",\n  deleted_document_count: 10,\n  indexed_document_count: 20,\n  indexed_document_volume: 1000,\n  total_document_count: 2000,\n  last_seen: \"2023-01-02T10:00:00Z\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.sync_job_update_stats(\n  connector_sync_job_id: \"my-connector-sync-job\",\n  body: {\n    \"deleted_document_count\": 10,\n    \"indexed_document_count\": 20,\n    \"indexed_document_volume\": 1000,\n    \"total_document_count\": 2000,\n    \"last_seen\": \"2023-01-02T10:00:00Z\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->syncJobUpdateStats([\n    \"connector_sync_job_id\" => \"my-connector-sync-job\",\n    \"body\" => [\n        \"deleted_document_count\" => 10,\n        \"indexed_document_count\" => 20,\n        \"indexed_document_volume\" => 1000,\n        \"total_document_count\" => 2000,\n        \"last_seen\" => \"2023-01-02T10:00:00Z\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"deleted_document_count":10,"indexed_document_count":20,"indexed_document_volume":1000,"total_document_count":2000,"last_seen":"2023-01-02T10:00:00Z"}'' "$ELASTICSEARCH_URL/_connector/_sync_job/my-connector-sync-job/_stats"'
+      - lang: Java
+        source: "client.connector().syncJobUpdateStats(s -> s\n    .connectorSyncJobId(\"my-connector-sync-job\")\n    .deletedDocumentCount(10L)\n    .indexedDocumentCount(20L)\n    .indexedDocumentVolume(1000L)\n    .lastSeen(l -> l\n        .time(\"2023-01-02T10:00:00Z\")\n    )\n    .totalDocumentCount(2000)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_filtering/_activate:
+    put:
+      tags:
+      - Connector
+      summary: Activate the connector draft filter
+      description: Activates the valid draft filtering for a connector.
+      operationId: connector-update-active-filtering
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Experimental; Added in 8.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_api_key_id:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector API key ID
+      description: 'Update the `api_key_id` and `api_key_secret_id` fields of a connector.
+
+        You can specify the ID of the API key used for authorization and the ID of the connector secret where the API key is stored.
+
+        The connector secret ID is required only for Elastic managed (native) connectors.
+
+        Self-managed connectors (connector clients) do not use this field.'
+      operationId: connector-update-api-key-id
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                api_key_id:
+                  type: string
+                api_key_secret_id:
+                  type: string
+            examples:
+              ConnectorUpdateApiKeyIDRequestExample1:
+                value: "{\n    \"api_key_id\": \"my-api-key-id\",\n    \"api_key_secret_id\": \"my-connector-secret-id\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateAPIKeyIDResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_api_key_id\n{\n    \"api_key_id\": \"my-api-key-id\",\n    \"api_key_secret_id\": \"my-connector-secret-id\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_api_key_id(\n    connector_id=\"my-connector\",\n    api_key_id=\"my-api-key-id\",\n    api_key_secret_id=\"my-connector-secret-id\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateApiKeyId({\n  connector_id: \"my-connector\",\n  api_key_id: \"my-api-key-id\",\n  api_key_secret_id: \"my-connector-secret-id\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_api_key_id(\n  connector_id: \"my-connector\",\n  body: {\n    \"api_key_id\": \"my-api-key-id\",\n    \"api_key_secret_id\": \"my-connector-secret-id\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateApiKeyId([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"api_key_id\" => \"my-api-key-id\",\n        \"api_key_secret_id\" => \"my-connector-secret-id\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"api_key_id":"my-api-key-id","api_key_secret_id":"my-connector-secret-id"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_api_key_id"'
+      - lang: Java
+        source: "client.connector().updateApiKeyId(u -> u\n    .apiKeyId(\"my-api-key-id\")\n    .apiKeySecretId(\"my-connector-secret-id\")\n    .connectorId(\"my-connector\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_configuration:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector configuration
+      description: Update the configuration field in the connector document.
+      operationId: connector-update-configuration
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                configuration:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.ConnectorConfiguration'
+                values:
+                  type: object
+                  additionalProperties:
+                    type: object
+            examples:
+              ConnectorUpdateConfigurationRequestExample1:
+                value: "{\n    \"values\": {\n        \"tenant_id\": \"my-tenant-id\",\n        \"tenant_name\": \"my-sharepoint-site\",\n        \"client_id\": \"foo\",\n        \"secret_value\": \"bar\",\n        \"site_collections\": \"*\"\n    }\n}"
+              ConnectorUpdateConfigurationRequestExample2:
+                value: "{\n    \"values\": {\n        \"secret_value\": \"foo-bar\"\n    }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateConfigurationResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-spo-connector/_configuration\n{\n    \"values\": {\n        \"tenant_id\": \"my-tenant-id\",\n        \"tenant_name\": \"my-sharepoint-site\",\n        \"client_id\": \"foo\",\n        \"secret_value\": \"bar\",\n        \"site_collections\": \"*\"\n    }\n}"
+      - lang: Python
+        source: "resp = client.connector.update_configuration(\n    connector_id=\"my-spo-connector\",\n    values={\n        \"tenant_id\": \"my-tenant-id\",\n        \"tenant_name\": \"my-sharepoint-site\",\n        \"client_id\": \"foo\",\n        \"secret_value\": \"bar\",\n        \"site_collections\": \"*\"\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateConfiguration({\n  connector_id: \"my-spo-connector\",\n  values: {\n    tenant_id: \"my-tenant-id\",\n    tenant_name: \"my-sharepoint-site\",\n    client_id: \"foo\",\n    secret_value: \"bar\",\n    site_collections: \"*\",\n  },\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_configuration(\n  connector_id: \"my-spo-connector\",\n  body: {\n    \"values\": {\n      \"tenant_id\": \"my-tenant-id\",\n      \"tenant_name\": \"my-sharepoint-site\",\n      \"client_id\": \"foo\",\n      \"secret_value\": \"bar\",\n      \"site_collections\": \"*\"\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateConfiguration([\n    \"connector_id\" => \"my-spo-connector\",\n    \"body\" => [\n        \"values\" => [\n            \"tenant_id\" => \"my-tenant-id\",\n            \"tenant_name\" => \"my-sharepoint-site\",\n            \"client_id\" => \"foo\",\n            \"secret_value\" => \"bar\",\n            \"site_collections\" => \"*\",\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"values":{"tenant_id":"my-tenant-id","tenant_name":"my-sharepoint-site","client_id":"foo","secret_value":"bar","site_collections":"*"}}'' "$ELASTICSEARCH_URL/_connector/my-spo-connector/_configuration"'
+      - lang: Java
+        source: "client.connector().updateConfiguration(u -> u\n    .connectorId(\"my-spo-connector\")\n    .values(Map.of(\"tenant_id\", JsonData.fromJson(\"\\\"my-tenant-id\\\"\"),\"tenant_name\", JsonData.fromJson(\"\\\"my-sharepoint-site\\\"\"),\"secret_value\", JsonData.fromJson(\"\\\"bar\\\"\"),\"client_id\", JsonData.fromJson(\"\\\"foo\\\"\"),\"site_collections\", JsonData.fromJson(\"\\\"*\\\"\")))\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_error:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector error field
+      description: 'Set the error field for the connector.
+
+        If the error provided in the request body is non-null, the connector’s status is updated to error.
+
+        Otherwise, if the error is reset to null, the connector status is updated to connected.'
+      operationId: connector-update-error
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  oneOf:
+                  - type: string
+                  - $ref: '#/components/schemas/_spec_utils.NullValue'
+              required:
+              - error
+            examples:
+              ConnectorUpdateErrorRequestExample1:
+                value: "{\n    \"error\": \"Houston, we have a problem!\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateErrorResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Experimental; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_error\n{\n    \"error\": \"Houston, we have a problem!\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_error(\n    connector_id=\"my-connector\",\n    error=\"Houston, we have a problem!\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateError({\n  connector_id: \"my-connector\",\n  error: \"Houston, we have a problem!\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_error(\n  connector_id: \"my-connector\",\n  body: {\n    \"error\": \"Houston, we have a problem!\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateError([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"error\" => \"Houston, we have a problem!\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"error":"Houston, we have a problem!"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_error"'
+      - lang: Java
+        source: "client.connector().updateError(u -> u\n    .connectorId(\"my-connector\")\n    .error(\"Houston, we have a problem!\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_features:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector features
+      description: 'Update the connector features in the connector document.
+
+        This API can be used to control the following aspects of a connector:
+
+
+        * document-level security
+
+        * incremental syncs
+
+        * advanced sync rules
+
+        * basic sync rules
+
+
+        Normally, the running connector service automatically manages these features.
+
+        However, you can use this API to override the default behavior.
+
+
+        To sync data using self-managed connectors, you need to deploy the Elastic connector service on your own infrastructure.
+
+        This service runs automatically on Elastic Cloud for Elastic managed connectors.'
+      operationId: connector-update-features
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                features:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.ConnectorFeatures'
+              required:
+              - features
+            examples:
+              ConnectorUpdateFeaturesRequestExample1:
+                value: "{\n  \"features\": {\n    \"document_level_security\": {\n      \"enabled\": true\n    },\n    \"incremental_sync\": {\n      \"enabled\": true\n    },\n    \"sync_rules\": {\n      \"advanced\": {\n        \"enabled\": false\n      },\n      \"basic\": {\n        \"enabled\": true\n      }\n    }\n  }\n}"
+              ConnectorUpdateFeaturesRequestExample2:
+                value: "{\n  \"features\": {\n    \"document_level_security\": {\n      \"enabled\": true\n    }\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateFeaturesResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Experimental
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_features\n{\n  \"features\": {\n    \"document_level_security\": {\n      \"enabled\": true\n    },\n    \"incremental_sync\": {\n      \"enabled\": true\n    },\n    \"sync_rules\": {\n      \"advanced\": {\n        \"enabled\": false\n      },\n      \"basic\": {\n        \"enabled\": true\n      }\n    }\n  }\n}"
+      - lang: Python
+        source: "resp = client.connector.update_features(\n    connector_id=\"my-connector\",\n    features={\n        \"document_level_security\": {\n            \"enabled\": True\n        },\n        \"incremental_sync\": {\n            \"enabled\": True\n        },\n        \"sync_rules\": {\n            \"advanced\": {\n                \"enabled\": False\n            },\n            \"basic\": {\n                \"enabled\": True\n            }\n        }\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateFeatures({\n  connector_id: \"my-connector\",\n  features: {\n    document_level_security: {\n      enabled: true,\n    },\n    incremental_sync: {\n      enabled: true,\n    },\n    sync_rules: {\n      advanced: {\n        enabled: false,\n      },\n      basic: {\n        enabled: true,\n      },\n    },\n  },\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_features(\n  connector_id: \"my-connector\",\n  body: {\n    \"features\": {\n      \"document_level_security\": {\n        \"enabled\": true\n      },\n      \"incremental_sync\": {\n        \"enabled\": true\n      },\n      \"sync_rules\": {\n        \"advanced\": {\n          \"enabled\": false\n        },\n        \"basic\": {\n          \"enabled\": true\n        }\n      }\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateFeatures([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"features\" => [\n            \"document_level_security\" => [\n                \"enabled\" => true,\n            ],\n            \"incremental_sync\" => [\n                \"enabled\" => true,\n            ],\n            \"sync_rules\" => [\n                \"advanced\" => [\n                    \"enabled\" => false,\n                ],\n                \"basic\" => [\n                    \"enabled\" => true,\n                ],\n            ],\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"features":{"document_level_security":{"enabled":true},"incremental_sync":{"enabled":true},"sync_rules":{"advanced":{"enabled":false},"basic":{"enabled":true}}}}'' "$ELASTICSEARCH_URL/_connector/my-connector/_features"'
+      - lang: Java
+        source: "client.connector().updateFeatures(u -> u\n    .connectorId(\"my-connector\")\n    .features(f -> f\n        .documentLevelSecurity(d -> d\n            .enabled(true)\n        )\n        .incrementalSync(i -> i\n            .enabled(true)\n        )\n        .syncRules(s -> s\n            .advanced(a -> a\n                .enabled(false)\n            )\n            .basic(b -> b\n                .enabled(true)\n            )\n        )\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_filtering:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector filtering
+      description: 'Update the draft filtering configuration of a connector and marks the draft validation state as edited.
+
+        The filtering draft is activated once validated by the running Elastic connector service.
+
+        The filtering property is used to configure sync rules (both basic and advanced) for a connector.'
+      operationId: connector-update-filtering
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filtering:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/connector._types.FilteringConfig'
+                rules:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/connector._types.FilteringRule'
+                advanced_snippet:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.FilteringAdvancedSnippet'
+            examples:
+              ConnectorUpdateFilteringRequestExample1:
+                value: "{\n    \"rules\": [\n         {\n            \"field\": \"file_extension\",\n            \"id\": \"exclude-txt-files\",\n            \"order\": 0,\n            \"policy\": \"exclude\",\n            \"rule\": \"equals\",\n            \"value\": \"txt\"\n        },\n        {\n            \"field\": \"_\",\n            \"id\": \"DEFAULT\",\n            \"order\": 1,\n            \"policy\": \"include\",\n            \"rule\": \"regex\",\n            \"value\": \".*\"\n        }\n    ]\n}"
+              ConnectorUpdateFilteringRequestExample2:
+                value: "{\n    \"advanced_snippet\": {\n        \"value\": [{\n            \"tables\": [\n                \"users\",\n                \"orders\"\n            ],\n            \"query\": \"SELECT users.id AS id, orders.order_id AS order_id FROM users JOIN orders ON users.id = orders.user_id\"\n        }]\n    }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateFilteringResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-g-drive-connector/_filtering\n{\n    \"rules\": [\n         {\n            \"field\": \"file_extension\",\n            \"id\": \"exclude-txt-files\",\n            \"order\": 0,\n            \"policy\": \"exclude\",\n            \"rule\": \"equals\",\n            \"value\": \"txt\"\n        },\n        {\n            \"field\": \"_\",\n            \"id\": \"DEFAULT\",\n            \"order\": 1,\n            \"policy\": \"include\",\n            \"rule\": \"regex\",\n            \"value\": \".*\"\n        }\n    ]\n}"
+      - lang: Python
+        source: "resp = client.connector.update_filtering(\n    connector_id=\"my-g-drive-connector\",\n    rules=[\n        {\n            \"field\": \"file_extension\",\n            \"id\": \"exclude-txt-files\",\n            \"order\": 0,\n            \"policy\": \"exclude\",\n            \"rule\": \"equals\",\n            \"value\": \"txt\"\n        },\n        {\n            \"field\": \"_\",\n            \"id\": \"DEFAULT\",\n            \"order\": 1,\n            \"policy\": \"include\",\n            \"rule\": \"regex\",\n            \"value\": \".*\"\n        }\n    ],\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateFiltering({\n  connector_id: \"my-g-drive-connector\",\n  rules: [\n    {\n      field: \"file_extension\",\n      id: \"exclude-txt-files\",\n      order: 0,\n      policy: \"exclude\",\n      rule: \"equals\",\n      value: \"txt\",\n    },\n    {\n      field: \"_\",\n      id: \"DEFAULT\",\n      order: 1,\n      policy: \"include\",\n      rule: \"regex\",\n      value: \".*\",\n    },\n  ],\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_filtering(\n  connector_id: \"my-g-drive-connector\",\n  body: {\n    \"rules\": [\n      {\n        \"field\": \"file_extension\",\n        \"id\": \"exclude-txt-files\",\n        \"order\": 0,\n        \"policy\": \"exclude\",\n        \"rule\": \"equals\",\n        \"value\": \"txt\"\n      },\n      {\n        \"field\": \"_\",\n        \"id\": \"DEFAULT\",\n        \"order\": 1,\n        \"policy\": \"include\",\n        \"rule\": \"regex\",\n        \"value\": \".*\"\n      }\n    ]\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateFiltering([\n    \"connector_id\" => \"my-g-drive-connector\",\n    \"body\" => [\n        \"rules\" => array(\n            [\n                \"field\" => \"file_extension\",\n                \"id\" => \"exclude-txt-files\",\n                \"order\" => 0,\n                \"policy\" => \"exclude\",\n                \"rule\" => \"equals\",\n                \"value\" => \"txt\",\n            ],\n            [\n                \"field\" => \"_\",\n                \"id\" => \"DEFAULT\",\n                \"order\" => 1,\n                \"policy\" => \"include\",\n                \"rule\" => \"regex\",\n                \"value\" => \".*\",\n            ],\n        ),\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"rules":[{"field":"file_extension","id":"exclude-txt-files","order":0,"policy":"exclude","rule":"equals","value":"txt"},{"field":"_","id":"DEFAULT","order":1,"policy":"include","rule":"regex","value":".*"}]}'' "$ELASTICSEARCH_URL/_connector/my-g-drive-connector/_filtering"'
+      - lang: Java
+        source: "client.connector().updateFiltering(u -> u\n    .connectorId(\"my-g-drive-connector\")\n    .rules(List.of(FilteringRule.of(f -> f\n            .field(\"file_extension\")\n            .id(\"exclude-txt-files\")\n            .order(0)\n            .policy(FilteringPolicy.Exclude)\n            .rule(FilteringRuleRule.Equals)\n            .value(\"txt\")\n        ),FilteringRule.of(f -> f\n            .field(\"_\")\n            .id(\"DEFAULT\")\n            .order(1)\n            .policy(FilteringPolicy.Include)\n            .rule(FilteringRuleRule.Regex)\n            .value(\".*\")\n        )))\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_filtering/_validation:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector draft filtering validation
+      description: Update the draft filtering validation info for a connector.
+      operationId: connector-update-filtering-validation
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validation:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.FilteringRulesValidation'
+              required:
+              - validation
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Experimental; Added in 8.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_index_name:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector index name
+      description: Update the `index_name` field of a connector, specifying the index where the data ingested by the connector is stored.
+      operationId: connector-update-index-name
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                index_name:
+                  oneOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                  - $ref: '#/components/schemas/_spec_utils.NullValue'
+              required:
+              - index_name
+            examples:
+              ConnectorUpdateIndexNameRequestExample1:
+                value: "{\n    \"index_name\": \"data-from-my-google-drive\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateIndexNameResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_index_name\n{\n    \"index_name\": \"data-from-my-google-drive\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_index_name(\n    connector_id=\"my-connector\",\n    index_name=\"data-from-my-google-drive\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateIndexName({\n  connector_id: \"my-connector\",\n  index_name: \"data-from-my-google-drive\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_index_name(\n  connector_id: \"my-connector\",\n  body: {\n    \"index_name\": \"data-from-my-google-drive\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateIndexName([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"index_name\" => \"data-from-my-google-drive\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"index_name":"data-from-my-google-drive"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_index_name"'
+      - lang: Java
+        source: "client.connector().updateIndexName(u -> u\n    .connectorId(\"my-connector\")\n    .indexName(\"data-from-my-google-drive\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_name:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector name and description
+      operationId: connector-update-name
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+            examples:
+              ConnectorUpdateNameRequestExample1:
+                value: "{\n    \"name\": \"Custom connector\",\n    \"description\": \"This is my customized connector\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateNameResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_name\n{\n    \"name\": \"Custom connector\",\n    \"description\": \"This is my customized connector\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_name(\n    connector_id=\"my-connector\",\n    name=\"Custom connector\",\n    description=\"This is my customized connector\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateName({\n  connector_id: \"my-connector\",\n  name: \"Custom connector\",\n  description: \"This is my customized connector\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_name(\n  connector_id: \"my-connector\",\n  body: {\n    \"name\": \"Custom connector\",\n    \"description\": \"This is my customized connector\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateName([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"name\" => \"Custom connector\",\n        \"description\" => \"This is my customized connector\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"name":"Custom connector","description":"This is my customized connector"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_name"'
+      - lang: Java
+        source: "client.connector().updateName(u -> u\n    .connectorId(\"my-connector\")\n    .description(\"This is my customized connector\")\n    .name(\"Custom connector\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_native:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector is_native flag
+      operationId: connector-update-native
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_native:
+                  type: boolean
+              required:
+              - is_native
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+      x-state: Beta; Added in 8.12.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_pipeline:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector pipeline
+      description: When you create a new connector, the configuration of an ingest pipeline is populated with default settings.
+      operationId: connector-update-pipeline
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pipeline:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.IngestPipelineParams'
+              required:
+              - pipeline
+            examples:
+              ConnectorUpdatePipelineRequestExample1:
+                value: "{\n    \"pipeline\": {\n        \"extract_binary_content\": true,\n        \"name\": \"my-connector-pipeline\",\n        \"reduce_whitespace\": true,\n        \"run_ml_inference\": true\n    }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdatePipelineResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_pipeline\n{\n    \"pipeline\": {\n        \"extract_binary_content\": true,\n        \"name\": \"my-connector-pipeline\",\n        \"reduce_whitespace\": true,\n        \"run_ml_inference\": true\n    }\n}"
+      - lang: Python
+        source: "resp = client.connector.update_pipeline(\n    connector_id=\"my-connector\",\n    pipeline={\n        \"extract_binary_content\": True,\n        \"name\": \"my-connector-pipeline\",\n        \"reduce_whitespace\": True,\n        \"run_ml_inference\": True\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updatePipeline({\n  connector_id: \"my-connector\",\n  pipeline: {\n    extract_binary_content: true,\n    name: \"my-connector-pipeline\",\n    reduce_whitespace: true,\n    run_ml_inference: true,\n  },\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_pipeline(\n  connector_id: \"my-connector\",\n  body: {\n    \"pipeline\": {\n      \"extract_binary_content\": true,\n      \"name\": \"my-connector-pipeline\",\n      \"reduce_whitespace\": true,\n      \"run_ml_inference\": true\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updatePipeline([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"pipeline\" => [\n            \"extract_binary_content\" => true,\n            \"name\" => \"my-connector-pipeline\",\n            \"reduce_whitespace\" => true,\n            \"run_ml_inference\" => true,\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"pipeline":{"extract_binary_content":true,"name":"my-connector-pipeline","reduce_whitespace":true,"run_ml_inference":true}}'' "$ELASTICSEARCH_URL/_connector/my-connector/_pipeline"'
+      - lang: Java
+        source: "client.connector().updatePipeline(u -> u\n    .connectorId(\"my-connector\")\n    .pipeline(p -> p\n        .extractBinaryContent(true)\n        .name(\"my-connector-pipeline\")\n        .reduceWhitespace(true)\n        .runMlInference(true)\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_scheduling:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector scheduling
+      operationId: connector-update-scheduling
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scheduling:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.SchedulingConfiguration'
+              required:
+              - scheduling
+            examples:
+              ConnectorUpdateSchedulingRequestExample1:
+                value: "{\n    \"scheduling\": {\n        \"access_control\": {\n            \"enabled\": true,\n            \"interval\": \"0 10 0 * * ?\"\n        },\n        \"full\": {\n            \"enabled\": true,\n            \"interval\": \"0 20 0 * * ?\"\n        },\n        \"incremental\": {\n            \"enabled\": false,\n            \"interval\": \"0 30 0 * * ?\"\n        }\n    }\n}"
+              ConnectorUpdateSchedulingRequestExample2:
+                value: "{\n    \"scheduling\": {\n        \"full\": {\n            \"enabled\": true,\n            \"interval\": \"0 10 0 * * ?\"\n        }\n    }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateSchedulingResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_scheduling\n{\n    \"scheduling\": {\n        \"access_control\": {\n            \"enabled\": true,\n            \"interval\": \"0 10 0 * * ?\"\n        },\n        \"full\": {\n            \"enabled\": true,\n            \"interval\": \"0 20 0 * * ?\"\n        },\n        \"incremental\": {\n            \"enabled\": false,\n            \"interval\": \"0 30 0 * * ?\"\n        }\n    }\n}"
+      - lang: Python
+        source: "resp = client.connector.update_scheduling(\n    connector_id=\"my-connector\",\n    scheduling={\n        \"access_control\": {\n            \"enabled\": True,\n            \"interval\": \"0 10 0 * * ?\"\n        },\n        \"full\": {\n            \"enabled\": True,\n            \"interval\": \"0 20 0 * * ?\"\n        },\n        \"incremental\": {\n            \"enabled\": False,\n            \"interval\": \"0 30 0 * * ?\"\n        }\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateScheduling({\n  connector_id: \"my-connector\",\n  scheduling: {\n    access_control: {\n      enabled: true,\n      interval: \"0 10 0 * * ?\",\n    },\n    full: {\n      enabled: true,\n      interval: \"0 20 0 * * ?\",\n    },\n    incremental: {\n      enabled: false,\n      interval: \"0 30 0 * * ?\",\n    },\n  },\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_scheduling(\n  connector_id: \"my-connector\",\n  body: {\n    \"scheduling\": {\n      \"access_control\": {\n        \"enabled\": true,\n        \"interval\": \"0 10 0 * * ?\"\n      },\n      \"full\": {\n        \"enabled\": true,\n        \"interval\": \"0 20 0 * * ?\"\n      },\n      \"incremental\": {\n        \"enabled\": false,\n        \"interval\": \"0 30 0 * * ?\"\n      }\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateScheduling([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"scheduling\" => [\n            \"access_control\" => [\n                \"enabled\" => true,\n                \"interval\" => \"0 10 0 * * ?\",\n            ],\n            \"full\" => [\n                \"enabled\" => true,\n                \"interval\" => \"0 20 0 * * ?\",\n            ],\n            \"incremental\" => [\n                \"enabled\" => false,\n                \"interval\" => \"0 30 0 * * ?\",\n            ],\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"scheduling":{"access_control":{"enabled":true,"interval":"0 10 0 * * ?"},"full":{"enabled":true,"interval":"0 20 0 * * ?"},"incremental":{"enabled":false,"interval":"0 30 0 * * ?"}}}'' "$ELASTICSEARCH_URL/_connector/my-connector/_scheduling"'
+      - lang: Java
+        source: "client.connector().updateScheduling(u -> u\n    .connectorId(\"my-connector\")\n    .scheduling(s -> s\n        .accessControl(a -> a\n            .enabled(true)\n            .interval(\"0 10 0 * * ?\")\n        )\n        .full(f -> f\n            .enabled(true)\n            .interval(\"0 20 0 * * ?\")\n        )\n        .incremental(i -> i\n            .enabled(false)\n            .interval(\"0 30 0 * * ?\")\n        )\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_service_type:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector service type
+      operationId: connector-update-service-type
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_type:
+                  type: string
+              required:
+              - service_type
+            examples:
+              ConnectorUpdateServiceTypeRequestExample1:
+                value: "{\n    \"service_type\": \"sharepoint_online\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateServiceTypeResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Beta; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_service_type\n{\n    \"service_type\": \"sharepoint_online\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_service_type(\n    connector_id=\"my-connector\",\n    service_type=\"sharepoint_online\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateServiceType({\n  connector_id: \"my-connector\",\n  service_type: \"sharepoint_online\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_service_type(\n  connector_id: \"my-connector\",\n  body: {\n    \"service_type\": \"sharepoint_online\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateServiceType([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"service_type\" => \"sharepoint_online\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"service_type":"sharepoint_online"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_service_type"'
+      - lang: Java
+        source: "client.connector().updateServiceType(u -> u\n    .connectorId(\"my-connector\")\n    .serviceType(\"sharepoint_online\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_connector/{connector_id}/_status:
+    put:
+      tags:
+      - Connector
+      summary: Update the connector status
+      operationId: connector-update-status
+      parameters:
+      - in: path
+        name: connector_id
+        description: The unique identifier of the connector to be updated
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Id'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  allOf:
+                  - $ref: '#/components/schemas/connector._types.ConnectorStatus'
+              required:
+              - status
+            examples:
+              ConnectorUpdateStatusRequestExample1:
+                value: "{\n    \"status\": \"needs_configuration\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Result'
+                required:
+                - result
+              examples:
+                ConnectorUpdateStatusResponseExample1:
+                  value: "{\n  \"result\": \"updated\"\n}"
+      x-state: Experimental; Added in 8.12.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _connector/my-connector/_status\n{\n    \"status\": \"needs_configuration\"\n}"
+      - lang: Python
+        source: "resp = client.connector.update_status(\n    connector_id=\"my-connector\",\n    status=\"needs_configuration\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.connector.updateStatus({\n  connector_id: \"my-connector\",\n  status: \"needs_configuration\",\n});"
+      - lang: Ruby
+        source: "response = client.connector.update_status(\n  connector_id: \"my-connector\",\n  body: {\n    \"status\": \"needs_configuration\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->connector()->updateStatus([\n    \"connector_id\" => \"my-connector\",\n    \"body\" => [\n        \"status\" => \"needs_configuration\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"status":"needs_configuration"}'' "$ELASTICSEARCH_URL/_connector/my-connector/_status"'
+      - lang: Java
+        source: "client.connector().updateStatus(u -> u\n    .connectorId(\"my-connector\")\n    .status(ConnectorStatus.NeedsConfiguration)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    connector._types.ConnectorConfigProperties:
+      type: object
+      properties:
+        category:
+          type: string
+        default_value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+        depends_on:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.Dependency'
+        display:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.DisplayType'
+        label:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.SelectOption'
+        order:
+          type: number
+        placeholder:
+          type: string
+        required:
+          type: boolean
+        sensitive:
+          type: boolean
+        tooltip:
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        type:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorFieldType'
+        ui_restrictions:
+          type: array
+          items:
+            type: string
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.Validation'
+        value:
+          type: object
+      required:
+      - default_value
+      - depends_on
+      - display
+      - label
+      - options
+      - required
+      - sensitive
+      - value
+    connector._types.SyncStatus:
+      type: string
+      enum:
+      - canceling
+      - canceled
+      - completed
+      - error
+      - in_progress
+      - pending
+      - suspended
+    connector._types.FilteringConfig:
+      type: object
+      properties:
+        active:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+        domain:
+          type: string
+        draft:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+      required:
+      - active
+      - draft
+    connector._types.Validation:
+      discriminator:
+        propertyName: type
+        mapping:
+          greater_than: '#/components/schemas/connector._types.GreaterThanValidation'
+          included_in: '#/components/schemas/connector._types.IncludedInValidation'
+          less_than: '#/components/schemas/connector._types.LessThanValidation'
+          list_type: '#/components/schemas/connector._types.ListTypeValidation'
+          regex: '#/components/schemas/connector._types.RegexValidation'
+      oneOf:
+      - $ref: '#/components/schemas/connector._types.LessThanValidation'
+      - $ref: '#/components/schemas/connector._types.GreaterThanValidation'
+      - $ref: '#/components/schemas/connector._types.ListTypeValidation'
+      - $ref: '#/components/schemas/connector._types.IncludedInValidation'
+      - $ref: '#/components/schemas/connector._types.RegexValidation'
+    connector._types.SchedulingConfiguration:
+      type: object
+      properties:
+        access_control:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+        full:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+        incremental:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorScheduling'
+    _types.Field:
+      description: Path to field or array of paths. Some API's support wildcards in the path to select multiple fields.
+      type: string
+    connector._types.FilteringValidation:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.Id'
+        messages:
+          type: array
+          items:
+            type: string
+      required:
+      - ids
+      - messages
+    connector._types.ConnectorFeatures:
+      type: object
+      properties:
+        document_level_security:
+          description: Indicates whether document-level security is enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        incremental_sync:
+          description: Indicates whether incremental syncs are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        native_connector_api_keys:
+          description: Indicates whether managed connector API keys are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        sync_rules:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncRulesFeature'
+    connector._types.ConnectorScheduling:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        interval:
+          description: The interval is expressed using the crontab syntax
+          type: string
+      required:
+      - enabled
+      - interval
+    _spec_utils.NullValue:
+      description: 'A `null` value that is to be interpreted as an actual value, unless other uses of `null` that are equivalent
+
+        to a missing value. It is used for exemple in settings, where using the `NullValue` for a setting will reset
+
+        it to its default value.'
+      type:
+      - string
+      - 'null'
+    connector._types.FilteringRules:
+      type: object
+      properties:
+        advanced_snippet:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringAdvancedSnippet'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringRule'
+        validation:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRulesValidation'
+      required:
+      - advanced_snippet
+      - rules
+      - validation
+    connector._types.FilteringAdvancedSnippet:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: object
+      required:
+      - value
+    connector._types.SelectOption:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - label
+      - value
+    connector._types.SyncJobType:
+      type: string
+      enum:
+      - full
+      - incremental
+      - access_control
+    connector._types.ConnectorCustomScheduling:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/connector._types.CustomScheduling'
+    connector._types.FilteringValidationState:
+      type: string
+      enum:
+      - edited
+      - invalid
+      - valid
+    connector._types.LessThanValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - less_than
+        constraint:
+          type: number
+      required:
+      - type
+      - constraint
+    connector._types.GreaterThanValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - greater_than
+        constraint:
+          type: number
+      required:
+      - type
+      - constraint
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    connector._types.ConnectorSyncJob:
+      type: object
+      properties:
+        cancelation_requested_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        canceled_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        completed_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        connector:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncJobConnectorReference'
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        deleted_document_count:
+          type: number
+        error:
+          type: string
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        indexed_document_count:
+          type: number
+        indexed_document_volume:
+          type: number
+        job_type:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncJobType'
+        last_seen:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+        started_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        status:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncStatus'
+        total_document_count:
+          type: number
+        trigger_method:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncJobTriggerMethod'
+        worker_hostname:
+          type: string
+      required:
+      - connector
+      - created_at
+      - deleted_document_count
+      - id
+      - indexed_document_count
+      - indexed_document_volume
+      - job_type
+      - metadata
+      - status
+      - total_document_count
+      - trigger_method
+    connector._types.ConnectorFieldType:
+      type: string
+      enum:
+      - str
+      - int
+      - list
+      - bool
+    _types.Result:
+      type: string
+      enum:
+      - created
+      - updated
+      - deleted
+      - not_found
+      - noop
+    connector._types.Dependency:
+      type: object
+      properties:
+        field:
+          type: string
+        value:
+          allOf:
+          - $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - field
+      - value
+    connector._types.ConnectorStatus:
+      type: string
+      enum:
+      - created
+      - needs_configuration
+      - configured
+      - connected
+      - error
+    _types.Name:
+      type: string
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.ScalarValue:
+      description: A scalar value.
+      oneOf:
+      - type: number
+      - type: number
+      - type: string
+      - type: boolean
+      - type:
+        - string
+        - 'null'
+    connector._types.IncludedInValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - included_in
+        constraint:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ScalarValue'
+      required:
+      - type
+      - constraint
+    connector._types.IngestPipelineParams:
+      type: object
+      properties:
+        extract_binary_content:
+          type: boolean
+        name:
+          type: string
+        reduce_whitespace:
+          type: boolean
+        run_ml_inference:
+          type: boolean
+      required:
+      - extract_binary_content
+      - name
+      - reduce_whitespace
+      - run_ml_inference
+    connector._types.DisplayType:
+      type: string
+      enum:
+      - textbox
+      - textarea
+      - numeric
+      - toggle
+      - dropdown
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    connector._types.ConnectorConfiguration:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/connector._types.ConnectorConfigProperties'
+    _types.IndexName:
+      type: string
+    connector._types.SyncJobConnectorReference:
+      type: object
+      properties:
+        configuration:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorConfiguration'
+        filtering:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRules'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        index_name:
+          type: string
+        language:
+          type: string
+        pipeline:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.IngestPipelineParams'
+        service_type:
+          type: string
+        sync_cursor:
+          type: object
+      required:
+      - configuration
+      - filtering
+      - id
+      - index_name
+      - service_type
+    connector._types.FilteringRulesValidation:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringValidation'
+        state:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringValidationState'
+      required:
+      - errors
+      - state
+    connector._types.RegexValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - regex
+        constraint:
+          type: string
+      required:
+      - type
+      - constraint
+    connector._types.FeatureEnabled:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+      required:
+      - enabled
+    connector._types.Connector:
+      type: object
+      properties:
+        api_key_id:
+          type: string
+        api_key_secret_id:
+          type: string
+        configuration:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorConfiguration'
+        custom_scheduling:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorCustomScheduling'
+        deleted:
+          type: boolean
+        description:
+          type: string
+        error:
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        features:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorFeatures'
+        filtering:
+          type: array
+          items:
+            $ref: '#/components/schemas/connector._types.FilteringConfig'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        index_name:
+          oneOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+          - type:
+            - string
+            - 'null'
+        is_native:
+          type: boolean
+        language:
+          type: string
+        last_access_control_sync_error:
+          type: string
+        last_access_control_sync_scheduled_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        last_access_control_sync_status:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncStatus'
+        last_deleted_document_count:
+          type: number
+        last_incremental_sync_scheduled_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        last_indexed_document_count:
+          type: number
+        last_seen:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        last_sync_error:
+          type: string
+        last_sync_scheduled_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        last_sync_status:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SyncStatus'
+        last_synced:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        name:
+          type: string
+        pipeline:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.IngestPipelineParams'
+        scheduling:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.SchedulingConfiguration'
+        service_type:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.ConnectorStatus'
+        sync_cursor:
+          type: object
+        sync_now:
+          type: boolean
+      required:
+      - configuration
+      - custom_scheduling
+      - deleted
+      - filtering
+      - is_native
+      - scheduling
+      - status
+      - sync_now
+    connector._types.FilteringRuleRule:
+      type: string
+      enum:
+      - contains
+      - ends_with
+      - equals
+      - regex
+      - starts_with
+      - '>'
+      - <
+    connector._types.FilteringPolicy:
+      type: string
+      enum:
+      - exclude
+      - include
+    _types.Id:
+      type: string
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    connector._types.CustomSchedulingConfigurationOverrides:
+      type: object
+      properties:
+        max_crawl_depth:
+          type: number
+        sitemap_discovery_disabled:
+          type: boolean
+        domain_allowlist:
+          type: array
+          items:
+            type: string
+        sitemap_urls:
+          type: array
+          items:
+            type: string
+        seed_urls:
+          type: array
+          items:
+            type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    connector._types.CustomScheduling:
+      type: object
+      properties:
+        configuration_overrides:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.CustomSchedulingConfigurationOverrides'
+        enabled:
+          type: boolean
+        interval:
+          type: string
+        last_synced:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        name:
+          type: string
+      required:
+      - configuration_overrides
+      - enabled
+      - interval
+      - name
+    connector._types.ListTypeValidation:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - list_type
+        constraint:
+          type: string
+      required:
+      - type
+      - constraint
+    connector._types.FilteringRule:
+      type: object
+      properties:
+        created_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        field:
+          allOf:
+          - $ref: '#/components/schemas/_types.Field'
+        id:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        order:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringPolicy'
+        rule:
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FilteringRuleRule'
+        updated_at:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        value:
+          type: string
+      required:
+      - field
+      - id
+      - order
+      - policy
+      - rule
+      - value
+    connector._types.SyncRulesFeature:
+      type: object
+      properties:
+        advanced:
+          description: Indicates whether advanced sync rules are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+        basic:
+          description: Indicates whether basic sync rules are enabled.
+          allOf:
+          - $ref: '#/components/schemas/connector._types.FeatureEnabled'
+    connector._types.SyncJobTriggerMethod:
+      type: string
+      enum:
+      - on_demand
+      - scheduled
+    _types.Names:
+      oneOf:
+      - $ref: '#/components/schemas/_types.Name'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.Name'
+  parameters:
+    connector.put-connector_id:
+      in: path
+      name: connector_id
+      description: The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Id'
+      style: simple
+  requestBodies:
+    connector.put:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              index_name:
+                allOf:
+                - $ref: '#/components/schemas/_types.IndexName'
+              is_native:
+                type: boolean
+              language:
+                type: string
+              name:
+                type: string
+              service_type:
+                type: string
+          examples:
+            ConnectorPutRequestExample1:
+              value: "{\n  \"index_name\": \"search-google-drive\",\n  \"name\": \"My Connector\",\n  \"service_type\": \"google_drive\"\n}"
+            ConnectorPutRequestExample2:
+              value: "{\n  \"index_name\": \"search-google-drive\",\n  \"name\": \"My Connector\",\n  \"description\": \"My Connector to sync data to Elastic index from Google Drive\",\n  \"service_type\": \"google_drive\",\n  \"language\": \"english\"\n}"
+  responses:
+    connector.put-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              result:
+                allOf:
+                - $ref: '#/components/schemas/_types.Result'
+              id:
+                allOf:
+                - $ref: '#/components/schemas/_types.Id'
+            required:
+            - result
+            - id
+          examples:
+            ConnectorPutResponseExample1:
+              value: "{\n  \"result\": \"created\",\n  \"id\": \"my-connector\"\n}"
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

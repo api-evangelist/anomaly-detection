@@ -1,0 +1,1426 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Ilm API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: ilm
+  x-displayName: Index lifecycle management
+  description: The index lifecycle management APIs enable you to set up policies to automatically manage the index lifecycle.
+  externalDocs:
+    url: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management
+    description: Learn more about managing the index lifecycle.
+paths:
+  /_ilm/policy/{policy}:
+    get:
+      tags:
+      - ilm
+      summary: Get lifecycle policies
+      description: '**All methods and paths for this operation:**
+
+
+        GET
+
+        /_ilm/policy
+
+
+        GET
+
+        /_ilm/policy/{policy}
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ilm`,`read_ilm`'
+      operationId: ilm-get-lifecycle
+      parameters:
+      - $ref: '#/components/parameters/ilm.get_lifecycle-policy'
+      - $ref: '#/components/parameters/ilm.get_lifecycle-master_timeout'
+      - $ref: '#/components/parameters/ilm.get_lifecycle-timeout'
+      responses:
+        '200':
+          $ref: '#/components/responses/ilm.get_lifecycle-200'
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _ilm/policy/my_policy
+
+          '
+      - lang: Python
+        source: "resp = client.ilm.get_lifecycle(\n    name=\"my_policy\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.getLifecycle({\n  name: \"my_policy\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.get_lifecycle(\n  policy: \"my_policy\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->getLifecycle([\n    \"policy\" => \"my_policy\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ilm/policy/my_policy"'
+      - lang: C#
+        source: "var response = await client.IndexLifecycleManagement\n    .GetLifecycleAsync(d1 => d1\n        .Name(\"my_policy\")\n    );"
+      - lang: Java
+        source: "client.ilm().getLifecycle(g -> g\n    .name(\"my_policy\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - ilm
+      summary: Create or update a lifecycle policy
+      description: 'If the specified policy exists, it is replaced and the policy version is incremented.
+
+
+        NOTE: Only the latest version of the policy is stored, you cannot revert to previous versions.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage`
+
+        * Cluster privileges: `manage_ilm`'
+      externalDocs:
+        description: About index lifecycle management
+        url: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management/index-lifecycle
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ilm-put-lifecycle.html
+      operationId: ilm-put-lifecycle
+      parameters:
+      - in: path
+        name: policy
+        description: Identifier for the policy.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                policy:
+                  allOf:
+                  - $ref: '#/components/schemas/ilm._types.Policy'
+            examples:
+              PutLifecycleRequestExample1:
+                description: 'Run `PUT _ilm/policy/my_policy` to create a new policy with arbitrary metadata.
+
+                  '
+                value: "{\n  \"policy\": {\n    \"_meta\": {\n      \"description\": \"used for nginx log\",\n      \"project\": {\n        \"name\": \"myProject\",\n        \"department\": \"myDepartment\"\n      }\n    },\n    \"phases\": {\n      \"warm\": {\n        \"min_age\": \"10d\",\n        \"actions\": {\n          \"forcemerge\": {\n            \"max_num_segments\": 1\n          }\n        }\n      },\n      \"delete\": {\n        \"min_age\": \"30d\",\n        \"actions\": {\n          \"delete\": {}\n        }\n      }\n    }\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PutLifecycleResponseExample1:
+                  description: A successful response when creating a new lifecycle policy.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _ilm/policy/my_policy\n{\n  \"policy\": {\n    \"_meta\": {\n      \"description\": \"used for nginx log\",\n      \"project\": {\n        \"name\": \"myProject\",\n        \"department\": \"myDepartment\"\n      }\n    },\n    \"phases\": {\n      \"warm\": {\n        \"min_age\": \"10d\",\n        \"actions\": {\n          \"forcemerge\": {\n            \"max_num_segments\": 1\n          }\n        }\n      },\n      \"delete\": {\n        \"min_age\": \"30d\",\n        \"actions\": {\n          \"delete\": {}\n        }\n      }\n    }\n  }\n}"
+      - lang: Python
+        source: "resp = client.ilm.put_lifecycle(\n    name=\"my_policy\",\n    policy={\n        \"_meta\": {\n            \"description\": \"used for nginx log\",\n            \"project\": {\n                \"name\": \"myProject\",\n                \"department\": \"myDepartment\"\n            }\n        },\n        \"phases\": {\n            \"warm\": {\n                \"min_age\": \"10d\",\n                \"actions\": {\n                    \"forcemerge\": {\n                        \"max_num_segments\": 1\n                    }\n                }\n            },\n            \"delete\": {\n                \"min_age\": \"30d\",\n                \"actions\": {\n                    \"delete\": {}\n                }\n            }\n        }\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.putLifecycle({\n  name: \"my_policy\",\n  policy: {\n    _meta: {\n      description: \"used for nginx log\",\n      project: {\n        name: \"myProject\",\n        department: \"myDepartment\",\n      },\n    },\n    phases: {\n      warm: {\n        min_age: \"10d\",\n        actions: {\n          forcemerge: {\n            max_num_segments: 1,\n          },\n        },\n      },\n      delete: {\n        min_age: \"30d\",\n        actions: {\n          delete: {},\n        },\n      },\n    },\n  },\n});"
+      - lang: Ruby
+        source: "response = client.ilm.put_lifecycle(\n  policy: \"my_policy\",\n  body: {\n    \"policy\": {\n      \"_meta\": {\n        \"description\": \"used for nginx log\",\n        \"project\": {\n          \"name\": \"myProject\",\n          \"department\": \"myDepartment\"\n        }\n      },\n      \"phases\": {\n        \"warm\": {\n          \"min_age\": \"10d\",\n          \"actions\": {\n            \"forcemerge\": {\n              \"max_num_segments\": 1\n            }\n          }\n        },\n        \"delete\": {\n          \"min_age\": \"30d\",\n          \"actions\": {\n            \"delete\": {}\n          }\n        }\n      }\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->putLifecycle([\n    \"policy\" => \"my_policy\",\n    \"body\" => [\n        \"policy\" => [\n            \"_meta\" => [\n                \"description\" => \"used for nginx log\",\n                \"project\" => [\n                    \"name\" => \"myProject\",\n                    \"department\" => \"myDepartment\",\n                ],\n            ],\n            \"phases\" => [\n                \"warm\" => [\n                    \"min_age\" => \"10d\",\n                    \"actions\" => [\n                        \"forcemerge\" => [\n                            \"max_num_segments\" => 1,\n                        ],\n                    ],\n                ],\n                \"delete\" => [\n                    \"min_age\" => \"30d\",\n                    \"actions\" => [\n                        \"delete\" => new ArrayObject([]),\n                    ],\n                ],\n            ],\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"policy":{"_meta":{"description":"used for nginx log","project":{"name":"myProject","department":"myDepartment"}},"phases":{"warm":{"min_age":"10d","actions":{"forcemerge":{"max_num_segments":1}}},"delete":{"min_age":"30d","actions":{"delete":{}}}}}}'' "$ELASTICSEARCH_URL/_ilm/policy/my_policy"'
+      - lang: C#
+        source: "var response = await client.IndexLifecycleManagement\n    .PutLifecycleAsync(name: \"my_policy\", d1 => d1\n        .Policy(d2 => d2\n            .Meta(new Dictionary<string, object>()\n            {\n                { \"description\", \"used for nginx log\" },\n                { \"project\", JsonSerializer.Deserialize<JsonElement>(\"\"\"\n                {\n                  \"name\": \"myProject\",\n                  \"department\": \"myDepartment\"\n                }\n                \"\"\") }\n            })\n            .Phases(d3 => d3\n                .Delete(d4 => d4\n                    .Actions(d5 => d5\n                        .Delete()\n                    )\n                    .MinAge(\"30d\")\n                )\n                .Warm(d4 => d4\n                    .Actions(d5 => d5\n                        .Forcemerge(d6 => d6\n                            .MaxNumSegments(1)\n                        )\n                    )\n                    .MinAge(\"10d\")\n                )\n            )\n        )\n    );"
+      - lang: Java
+        source: "client.ilm().putLifecycle(p -> p\n    .name(\"my_policy\")\n    .policy(po -> po\n        .phases(ph -> ph\n            .delete(d -> d\n                .actions(a -> a\n                    .delete(de -> de)\n                )\n                .minAge(m -> m\n                    .time(\"30d\")\n                )\n            )\n            .warm(w -> w\n                .actions(a -> a\n                    .forcemerge(f -> f\n                        .maxNumSegments(1)\n                    )\n                )\n                .minAge(m -> m\n                    .time(\"10d\")\n                )\n            )\n        )\n        .meta(Map.of(\"description\", JsonData.fromJson(\"\\\"used for nginx log\\\"\"),\"project\", JsonData.fromJson(\"\"\"\n{\"name\":\"myProject\",\"department\":\"myDepartment\"}\n\"\"\")))\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - ilm
+      summary: Delete a lifecycle policy
+      description: 'You cannot delete policies that are currently in use. If the policy is being used to manage any indices, the request fails and returns an error.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ilm`'
+      operationId: ilm-delete-lifecycle
+      parameters:
+      - in: path
+        name: policy
+        description: Identifier for the policy.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                DeleteLifecycleResponseExample1:
+                  description: A successful response when deleting a lifecycle policy.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE _ilm/policy/my_policy
+
+          '
+      - lang: Python
+        source: "resp = client.ilm.delete_lifecycle(\n    name=\"my_policy\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.deleteLifecycle({\n  name: \"my_policy\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.delete_lifecycle(\n  policy: \"my_policy\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->deleteLifecycle([\n    \"policy\" => \"my_policy\",\n]);"
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ilm/policy/my_policy"'
+      - lang: C#
+        source: 'var response = await client.IndexLifecycleManagement.DeleteLifecycleAsync(name: "my_policy");'
+      - lang: Java
+        source: "client.ilm().deleteLifecycle(d -> d\n    .name(\"my_policy\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ilm/explain:
+    get:
+      tags:
+      - ilm
+      summary: Explain the lifecycle state
+      description: 'Get the current lifecycle status for one or more indices.
+
+        For data streams, the API retrieves the current lifecycle status for the stream''s backing indices.
+
+
+        The response indicates when the index entered each lifecycle state, provides the definition of the running phase, and information about any failures.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `view_index_metadata`,`manage_ilm`'
+      externalDocs:
+        description: About explaining lifecycle state
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/explain-lifecycle
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ilm-explain-lifecycle.html
+      operationId: ilm-explain-lifecycle
+      parameters:
+      - in: path
+        name: index
+        description: 'Comma-separated list of data streams, indices, and aliases to target. Supports wildcards (`*`).
+
+          To target all data streams and indices, use `*` or `_all`.'
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: only_errors
+        description: Filters the returned indices to only indices that are managed by ILM and are in an error state, either due to an encountering an error while executing the policy, or attempting to use a policy that does not exist.
+        deprecated: false
+        schema:
+          type: boolean
+        style: form
+      - in: query
+        name: only_managed
+        description: Filters the returned indices to only indices that are managed by ILM.
+        deprecated: false
+        schema:
+          type: boolean
+        style: form
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  indices:
+                    type: object
+                    additionalProperties:
+                      $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplain'
+                required:
+                - indices
+              examples:
+                ExplainLifecycleResponseExample1:
+                  description: A successful response when retrieving the current ILM status for an index.
+                  value: "{\n  \"indices\": {\n    \"my-index-000001\": {\n      \"index\": \"my-index-000001\",\n      \"index_creation_date_millis\": 1538475653281,\n      \"index_creation_date\": \"2018-10-15T13:45:21.981Z\",\n      \"time_since_index_creation\": \"15s\",\n      \"managed\": true,\n      \"policy\": \"my_policy\",\n      \"lifecycle_date_millis\": 1538475653281,\n      \"lifecycle_date\": \"2018-10-15T13:45:21.981Z\",\n      \"age\": \"15s\",\n      \"phase\": \"new\",\n      \"phase_time_millis\": 1538475653317,\n      \"phase_time\": \"2018-10-15T13:45:22.577Z\",\n      \"action\": \"complete\"\n      \"action_time_millis\": 1538475653317,\n      \"action_time\": \"2018-10-15T13:45:22.577Z\",\n      \"step\": \"complete\",\n      \"step_time_millis\": 1538475653317,\n      \"step_time\": \"2018-10-15T13:45:22.577Z\"\n    }\n  }\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET .ds-timeseries-*/_ilm/explain
+
+          '
+      - lang: Python
+        source: "resp = client.ilm.explain_lifecycle(\n    index=\".ds-timeseries-*\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.explainLifecycle({\n  index: \".ds-timeseries-*\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.explain_lifecycle(\n  index: \".ds-timeseries-*\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->explainLifecycle([\n    \"index\" => \".ds-timeseries-*\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/.ds-timeseries-*/_ilm/explain"'
+      - lang: Java
+        source: "client.ilm().explainLifecycle(e -> e\n    .index(\".ds-timeseries-*\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ilm/status:
+    get:
+      tags:
+      - ilm
+      summary: Get the ILM status
+      description: 'Get the current index lifecycle management status.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `read_ilm`'
+      operationId: ilm-get-status
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  operation_mode:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.LifecycleOperationMode'
+                required:
+                - operation_mode
+              examples:
+                GetILMStatusResponseExample1:
+                  description: A successful response when retrieving the current ILM status.
+                  value: "{\n  \"operation_mode\": \"RUNNING\"\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _ilm/status
+
+          '
+      - lang: Python
+        source: resp = client.ilm.get_status()
+      - lang: JavaScript
+        source: const response = await client.ilm.getStatus();
+      - lang: Ruby
+        source: response = client.ilm.get_status
+      - lang: PHP
+        source: $resp = $client->ilm()->getStatus();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ilm/status"'
+      - lang: C#
+        source: var response = await client.IndexLifecycleManagement.GetStatusAsync();
+      - lang: Java
+        source: 'client.ilm().getStatus();
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ilm/migrate_to_data_tiers:
+    post:
+      tags:
+      - ilm
+      summary: Migrate to data tiers routing
+      description: 'Switch the indices, ILM policies, and legacy, composable, and component templates from using custom node attributes and attribute-based allocation filters to using data tiers.
+
+        Optionally, delete one legacy index template.
+
+        Using node roles enables ILM to automatically move the indices between data tiers.
+
+
+        Migrating away from custom node attributes routing can be manually performed.
+
+        This API provides an automated way of performing three out of the four manual steps listed in the migration guide:
+
+
+        1. Stop setting the custom hot attribute on new indices.
+
+        1. Remove custom allocation settings from existing ILM policies.
+
+        1. Replace custom allocation settings from existing indices with the corresponding tier preference.
+
+
+        ILM must be stopped before performing the migration.
+
+        Use the stop ILM and get ILM status APIs to wait until the reported operation mode is `STOPPED`.'
+      externalDocs:
+        description: About migrating index allocation
+        url: https://www.elastic.co/docs/manage-data/lifecycle/index-lifecycle-management/migrate-index-allocation-filters-to-node-roles
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ilm-migrate-to-data-tiers.html
+      operationId: ilm-migrate-to-data-tiers
+      parameters:
+      - in: query
+        name: dry_run
+        description: 'If true, simulates the migration from node attributes based allocation filters to data tiers, but does not perform the migration.
+
+          This provides a way to retrieve the indices and ILM policies that need to be migrated.'
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                legacy_template_to_delete:
+                  type: string
+                node_attribute:
+                  type: string
+            examples:
+              MigrateToDataTiersRequestExample1:
+                description: 'Run `POST /_ilm/migrate_to_data_tiers` to migrate the indices, ILM policies, legacy templates, composable, and component templates away from defining custom allocation filtering using the `custom_attribute_name` node attribute. It also deletes the legacy template with name `global-template` if it exists in the system.
+
+                  '
+                value: "{\n  \"legacy_template_to_delete\": \"global-template\",\n  \"node_attribute\": \"custom_attribute_name\"\n}"
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dry_run:
+                    type: boolean
+                  removed_legacy_template:
+                    description: 'The name of the legacy index template that was deleted.
+
+                      This information is missing if no legacy index templates were deleted.'
+                    type: string
+                  migrated_ilm_policies:
+                    description: The ILM policies that were updated.
+                    type: array
+                    items:
+                      type: string
+                  migrated_indices:
+                    description: The indices that were migrated to tier preference routing.
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Indices'
+                  migrated_legacy_templates:
+                    description: The legacy index templates that were updated to not contain custom routing settings for the provided data attribute.
+                    type: array
+                    items:
+                      type: string
+                  migrated_composable_templates:
+                    description: The composable index templates that were updated to not contain custom routing settings for the provided data attribute.
+                    type: array
+                    items:
+                      type: string
+                  migrated_component_templates:
+                    description: The component templates that were updated to not contain custom routing settings for the provided data attribute.
+                    type: array
+                    items:
+                      type: string
+                required:
+                - dry_run
+                - removed_legacy_template
+                - migrated_ilm_policies
+                - migrated_indices
+                - migrated_legacy_templates
+                - migrated_composable_templates
+                - migrated_component_templates
+              examples:
+                MigrateToDataTiersResponseExample1:
+                  description: 'A successful response when migrating indices, ILMs, and templates from custom node attributes to data tiers.
+
+                    '
+                  value: "{\n  \"dry_run\": false,\n  \"removed_legacy_template\":\"global-template\",\n  \"migrated_ilm_policies\":[\"policy_with_allocate_action\"],\n  \"migrated_indices\":[\"warm-index-to-migrate-000001\"],\n  \"migrated_legacy_templates\":[\"a-legacy-template\"],\n  \"migrated_composable_templates\":[\"a-composable-template\"],\n  \"migrated_component_templates\":[\"a-component-template\"]\n}"
+      x-state: Generally available; Added in 7.14.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST /_ilm/migrate_to_data_tiers\n{\n  \"legacy_template_to_delete\": \"global-template\",\n  \"node_attribute\": \"custom_attribute_name\"\n}"
+      - lang: Python
+        source: "resp = client.ilm.migrate_to_data_tiers(\n    legacy_template_to_delete=\"global-template\",\n    node_attribute=\"custom_attribute_name\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.migrateToDataTiers({\n  legacy_template_to_delete: \"global-template\",\n  node_attribute: \"custom_attribute_name\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.migrate_to_data_tiers(\n  body: {\n    \"legacy_template_to_delete\": \"global-template\",\n    \"node_attribute\": \"custom_attribute_name\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->migrateToDataTiers([\n    \"body\" => [\n        \"legacy_template_to_delete\" => \"global-template\",\n        \"node_attribute\" => \"custom_attribute_name\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"legacy_template_to_delete":"global-template","node_attribute":"custom_attribute_name"}'' "$ELASTICSEARCH_URL/_ilm/migrate_to_data_tiers"'
+      - lang: C#
+        source: "var response = await client.IndexLifecycleManagement\n    .MigrateToDataTiersAsync(d1 => d1\n        .LegacyTemplateToDelete(\"global-template\")\n        .NodeAttribute(\"custom_attribute_name\")\n    );"
+      - lang: Java
+        source: "client.ilm().migrateToDataTiers(m -> m\n    .legacyTemplateToDelete(\"global-template\")\n    .nodeAttribute(\"custom_attribute_name\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ilm/move/{index}:
+    post:
+      tags:
+      - ilm
+      summary: Move to a lifecycle step
+      description: 'Manually move an index into a specific step in the lifecycle policy and run that step.
+
+
+        WARNING: This operation can result in the loss of data. Manually moving an index into a specific step runs that step even if it has already been performed. This is a potentially destructive action and this should be considered an expert level API.
+
+
+        You must specify both the current step and the step to be executed in the body of the request.
+
+        The request will fail if the current step does not match the step currently running for the index
+
+        This is to prevent the index from being moved from an unexpected step into the next step.
+
+
+        When specifying the target (`next_step`) to which the index will be moved, either the name or both the action and name fields are optional.
+
+        If only the phase is specified, the index will move to the first step of the first action in the target phase.
+
+        If the phase and action are specified, the index will move to the first step of the specified action in the specified phase.
+
+        Only actions specified in the ILM policy are considered valid.
+
+        An index cannot move to a step that is not part of its policy.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage_ilm`'
+      operationId: ilm-move-to-step
+      parameters:
+      - in: path
+        name: index
+        description: The name of the index whose lifecycle step is to change
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_step:
+                  description: The step that the index is expected to be in.
+                  allOf:
+                  - $ref: '#/components/schemas/ilm.move_to_step.StepKey'
+                next_step:
+                  description: The step that you want to run.
+                  allOf:
+                  - $ref: '#/components/schemas/ilm.move_to_step.StepKey'
+              required:
+              - current_step
+              - next_step
+            examples:
+              MoveToStepRequestExample1:
+                summary: Move to forcemerge step
+                description: 'Run `POST _ilm/move/my-index-000001` to move `my-index-000001` from the initial step to the `forcemerge` step.
+
+                  '
+                value: "{\n  \"current_step\": {\n    \"phase\": \"new\",\n    \"action\": \"complete\",\n    \"name\": \"complete\"\n  },\n  \"next_step\": {\n    \"phase\": \"warm\",\n    \"action\": \"forcemerge\",\n    \"name\": \"forcemerge\"\n  }\n}"
+              MoveToStepRequestExample2:
+                summary: Move to warm step
+                description: 'Run `POST _ilm/move/my-index-000001` to move `my-index-000001` from the end of hot phase into the start of warm.
+
+                  '
+                value: "{\n  \"current_step\": {\n    \"phase\": \"hot\",\n    \"action\": \"complete\",\n    \"name\": \"complete\"\n  },\n  \"next_step\": {\n    \"phase\": \"warm\"\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                MoveToStepResponseExample1:
+                  description: 'A successful response when running a specific step in a lifecycle policy.
+
+                    '
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST _ilm/move/my-index-000001\n{\n  \"current_step\": {\n    \"phase\": \"new\",\n    \"action\": \"complete\",\n    \"name\": \"complete\"\n  },\n  \"next_step\": {\n    \"phase\": \"warm\",\n    \"action\": \"forcemerge\",\n    \"name\": \"forcemerge\"\n  }\n}"
+      - lang: Python
+        source: "resp = client.ilm.move_to_step(\n    index=\"my-index-000001\",\n    current_step={\n        \"phase\": \"new\",\n        \"action\": \"complete\",\n        \"name\": \"complete\"\n    },\n    next_step={\n        \"phase\": \"warm\",\n        \"action\": \"forcemerge\",\n        \"name\": \"forcemerge\"\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.moveToStep({\n  index: \"my-index-000001\",\n  current_step: {\n    phase: \"new\",\n    action: \"complete\",\n    name: \"complete\",\n  },\n  next_step: {\n    phase: \"warm\",\n    action: \"forcemerge\",\n    name: \"forcemerge\",\n  },\n});"
+      - lang: Ruby
+        source: "response = client.ilm.move_to_step(\n  index: \"my-index-000001\",\n  body: {\n    \"current_step\": {\n      \"phase\": \"new\",\n      \"action\": \"complete\",\n      \"name\": \"complete\"\n    },\n    \"next_step\": {\n      \"phase\": \"warm\",\n      \"action\": \"forcemerge\",\n      \"name\": \"forcemerge\"\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->moveToStep([\n    \"index\" => \"my-index-000001\",\n    \"body\" => [\n        \"current_step\" => [\n            \"phase\" => \"new\",\n            \"action\" => \"complete\",\n            \"name\" => \"complete\",\n        ],\n        \"next_step\" => [\n            \"phase\" => \"warm\",\n            \"action\" => \"forcemerge\",\n            \"name\" => \"forcemerge\",\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"current_step":{"phase":"new","action":"complete","name":"complete"},"next_step":{"phase":"warm","action":"forcemerge","name":"forcemerge"}}'' "$ELASTICSEARCH_URL/_ilm/move/my-index-000001"'
+      - lang: C#
+        source: "var response = await client.IndexLifecycleManagement\n    .MoveToStepAsync(index: \"my-index-000001\", d1 => d1\n        .CurrentStep(d2 => d2\n            .Action(\"complete\")\n            .Name(\"complete\")\n            .Phase(\"new\")\n        )\n        .NextStep(d2 => d2\n            .Action(\"forcemerge\")\n            .Name(\"forcemerge\")\n            .Phase(\"warm\")\n        )\n    );"
+      - lang: Java
+        source: "client.ilm().moveToStep(m -> m\n    .currentStep(c -> c\n        .action(\"complete\")\n        .name(\"complete\")\n        .phase(\"new\")\n    )\n    .index(\"my-index-000001\")\n    .nextStep(n -> n\n        .action(\"forcemerge\")\n        .name(\"forcemerge\")\n        .phase(\"warm\")\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ilm/remove:
+    post:
+      tags:
+      - ilm
+      summary: Remove policies from an index
+      description: 'Remove the assigned lifecycle policies from an index or a data stream''s backing indices.
+
+        It also stops managing the indices.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage_ilm`'
+      operationId: ilm-remove-policy
+      parameters:
+      - in: path
+        name: index
+        description: The name of the index to remove policy on
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  failed_indexes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/_types.IndexName'
+                  has_failures:
+                    type: boolean
+                required:
+                - failed_indexes
+                - has_failures
+              examples:
+                RemovePolicyResponseExample1:
+                  description: A successful response when removing a lifecycle policy from an index.
+                  value: "{\n  \"has_failures\" : false,\n  \"failed_indexes\" : []\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST logs-my_app-default/_ilm/remove
+
+          '
+      - lang: Python
+        source: "resp = client.ilm.remove_policy(\n    index=\"logs-my_app-default\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.removePolicy({\n  index: \"logs-my_app-default\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.remove_policy(\n  index: \"logs-my_app-default\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->removePolicy([\n    \"index\" => \"logs-my_app-default\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/logs-my_app-default/_ilm/remove"'
+      - lang: C#
+        source: 'var response = await client.IndexLifecycleManagement.RemovePolicyAsync(index: "logs-my_app-default");'
+      - lang: Java
+        source: "client.ilm().removePolicy(r -> r\n    .index(\"logs-my_app-default\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ilm/retry:
+    post:
+      tags:
+      - ilm
+      summary: Retry a policy
+      description: 'Retry running the lifecycle policy for an index that is in the ERROR step.
+
+        The API sets the policy back to the step where the error occurred and runs the step.
+
+        Use the explain lifecycle state API to determine whether an index is in the ERROR step.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage_ilm`'
+      operationId: ilm-retry
+      parameters:
+      - in: path
+        name: index
+        description: The name of the indices (comma-separated) whose failed lifecycle step is to be retry
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /my-index-000001/_ilm/retry
+
+          '
+      - lang: Python
+        source: "resp = client.ilm.retry(\n    index=\"my-index-000001\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ilm.retry({\n  index: \"my-index-000001\",\n});"
+      - lang: Ruby
+        source: "response = client.ilm.retry(\n  index: \"my-index-000001\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ilm()->retry([\n    \"index\" => \"my-index-000001\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/my-index-000001/_ilm/retry"'
+      - lang: C#
+        source: 'var response = await client.IndexLifecycleManagement.RetryAsync(index: "my-index-000001");'
+      - lang: Java
+        source: "client.ilm().retry(r -> r\n    .index(\"my-index-000001\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ilm/start:
+    post:
+      tags:
+      - ilm
+      summary: Start the ILM plugin
+      description: 'Start the index lifecycle management plugin if it is currently stopped.
+
+        ILM is started automatically when the cluster is formed.
+
+        Restarting ILM is necessary only when it has been stopped using the stop ILM API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ilm`'
+      operationId: ilm-start
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                StartILMResponseExample1:
+                  description: A successful response when stating the ILM plugin.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST _ilm/start
+
+          '
+      - lang: Python
+        source: resp = client.ilm.start()
+      - lang: JavaScript
+        source: const response = await client.ilm.start();
+      - lang: Ruby
+        source: response = client.ilm.start
+      - lang: PHP
+        source: $resp = $client->ilm()->start();
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ilm/start"'
+      - lang: C#
+        source: var response = await client.IndexLifecycleManagement.StartAsync();
+      - lang: Java
+        source: 'client.ilm().start(s -> s);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ilm/stop:
+    post:
+      tags:
+      - ilm
+      summary: Stop the ILM plugin
+      description: 'Halt all lifecycle management operations and stop the index lifecycle management plugin.
+
+        This is useful when you are performing maintenance on the cluster and need to prevent ILM from performing any actions on your indices.
+
+
+        The API returns as soon as the stop request has been acknowledged, but the plugin might continue to run until in-progress operations complete and the plugin can be safely stopped.
+
+        Use the get ILM status API to check whether ILM is running.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ilm`'
+      operationId: ilm-stop
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                StopILMResponseExample1:
+                  description: A successful response when stopping the ILM plugin.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST _ilm/stop
+
+          '
+      - lang: Python
+        source: resp = client.ilm.stop()
+      - lang: JavaScript
+        source: const response = await client.ilm.stop();
+      - lang: Ruby
+        source: response = client.ilm.stop
+      - lang: PHP
+        source: $resp = $client->ilm()->stop();
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ilm/stop"'
+      - lang: C#
+        source: var response = await client.IndexLifecycleManagement.StopAsync();
+      - lang: Java
+        source: 'client.ilm().stop(s -> s);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    ilm._types.Phases:
+      type: object
+      properties:
+        cold:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        delete:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        frozen:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        hot:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        warm:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    ilm.move_to_step.StepKey:
+      type: object
+      properties:
+        action:
+          description: The optional action to which the index will be moved.
+          type: string
+        name:
+          description: The optional step name to which the index will be moved.
+          type: string
+        phase:
+          type: string
+      required:
+      - phase
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ilm._types.DeleteAction:
+      type: object
+      properties:
+        delete_searchable_snapshot:
+          type: boolean
+    _types.EmptyObject:
+      description: For empty Class assignments
+      type: object
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
+    ilm._types.Policy:
+      type: object
+      properties:
+        phases:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phases'
+        _meta:
+          description: Arbitrary metadata that is not automatically generated or used by Elasticsearch.
+          allOf:
+          - $ref: '#/components/schemas/_types.Metadata'
+      required:
+      - phases
+    ilm._types.AllocateAction:
+      type: object
+      properties:
+        number_of_replicas:
+          type: number
+        total_shards_per_node:
+          type: number
+        include:
+          type: object
+          additionalProperties:
+            type: string
+        exclude:
+          type: object
+          additionalProperties:
+            type: string
+        require:
+          type: object
+          additionalProperties:
+            type: string
+    ilm._types.SearchableSnapshotAction:
+      type: object
+      properties:
+        snapshot_repository:
+          type: string
+        force_merge_index:
+          type: boolean
+      required:
+      - snapshot_repository
+    ilm._types.WaitForSnapshotAction:
+      type: object
+      properties:
+        policy:
+          type: string
+      required:
+      - policy
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    ilm.explain_lifecycle.LifecycleExplain:
+      discriminator:
+        propertyName: managed
+        mapping:
+          'false': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+          'true': '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
+      oneOf:
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainManaged'
+      - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainUnmanaged'
+    ilm._types.Actions:
+      type: object
+      properties:
+        allocate:
+          description: 'Phases allowed: warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.AllocateAction'
+        delete:
+          description: 'Phases allowed: delete.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.DeleteAction'
+        downsample:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.DownsampleAction'
+        freeze:
+          deprecated: true
+          description: The freeze action is a noop in 8.x
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        forcemerge:
+          description: 'Phases allowed: hot, warm.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.ForceMergeAction'
+        migrate:
+          description: 'Phases allowed: warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.MigrateAction'
+        readonly:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        rollover:
+          description: 'Phases allowed: hot.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.RolloverAction'
+        set_priority:
+          description: 'Phases allowed: hot, warm, cold.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.SetPriorityAction'
+        searchable_snapshot:
+          description: 'Phases allowed: hot, cold, frozen.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.SearchableSnapshotAction'
+        shrink:
+          description: 'Phases allowed: hot, warm.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.ShrinkAction'
+        unfollow:
+          description: 'Phases allowed: hot, warm, cold, frozen.'
+          allOf:
+          - $ref: '#/components/schemas/_types.EmptyObject'
+        wait_for_snapshot:
+          description: 'Phases allowed: delete.'
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.WaitForSnapshotAction'
+    ilm.explain_lifecycle.LifecycleExplainUnmanaged:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        managed:
+          type: string
+          enum:
+          - 'false'
+      required:
+      - index
+      - managed
+    ilm._types.ForceMergeAction:
+      type: object
+      properties:
+        max_num_segments:
+          type: number
+        index_codec:
+          type: string
+      required:
+      - max_num_segments
+    _types.Name:
+      type: string
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ilm._types.MigrateAction:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+    ilm.explain_lifecycle.LifecycleExplainManaged:
+      type: object
+      properties:
+        action:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        action_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        action_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        age_in_millis:
+          x-state: Generally available; Added in 9.2.0
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        failed_step:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        failed_step_retry_count:
+          type: number
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        index_creation_date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        index_creation_date_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        is_auto_retryable_error:
+          type: boolean
+        lifecycle_date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        lifecycle_date_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        managed:
+          type: string
+          enum:
+          - 'true'
+        phase:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        phase_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        phase_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        previous_step_info:
+          type: object
+          additionalProperties:
+            type: object
+        repository_name:
+          type: string
+        snapshot_name:
+          type: string
+        shrink_index_name:
+          type: string
+        step:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        step_info:
+          type: object
+          additionalProperties:
+            type: object
+        step_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        step_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        phase_execution:
+          allOf:
+          - $ref: '#/components/schemas/ilm.explain_lifecycle.LifecycleExplainPhaseExecution'
+        time_since_index_creation:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        skip:
+          type: boolean
+      required:
+      - index
+      - managed
+      - skip
+    ilm._types.RolloverAction:
+      type: object
+      properties:
+        max_size:
+          deprecated: true
+          description: The `max_size` condition has been deprecated in 9.3.0 and `max_primary_shard_size` should be used instead
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        max_docs:
+          type: number
+        max_primary_shard_docs:
+          type: number
+        min_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        min_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        min_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        min_docs:
+          type: number
+        min_primary_shard_docs:
+          type: number
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    ilm.explain_lifecycle.LifecycleExplainPhaseExecution:
+      type: object
+      properties:
+        phase_definition:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Phase'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        modified_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+      required:
+      - policy
+      - version
+      - modified_date_in_millis
+    _types.IndexName:
+      type: string
+    ilm._types.DownsampleAction:
+      type: object
+      properties:
+        fixed_interval:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationLarge'
+        wait_timeout:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+      required:
+      - fixed_interval
+    _types.DurationLarge:
+      description: 'A date histogram interval. Similar to `Duration` with additional units: `w` (week), `M` (month), `q` (quarter) and
+
+        `y` (year)'
+      type: string
+    ilm._types.SetPriorityAction:
+      type: object
+      properties:
+        priority:
+          type: number
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    ilm._types.ShrinkAction:
+      type: object
+      properties:
+        number_of_shards:
+          type: number
+        max_primary_shard_size:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        allow_write_after_shrink:
+          type: boolean
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.VersionNumber:
+      type: number
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    ilm.get_lifecycle.Lifecycle:
+      type: object
+      properties:
+        modified_date:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Policy'
+        version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+      required:
+      - modified_date
+      - policy
+      - version
+    ilm._types.Phase:
+      type: object
+      properties:
+        actions:
+          allOf:
+          - $ref: '#/components/schemas/ilm._types.Actions'
+        min_age:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+  parameters:
+    ilm.get_lifecycle-policy:
+      in: path
+      name: policy
+      description: Identifier for the policy.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Name'
+      style: simple
+    ilm.get_lifecycle-master_timeout:
+      in: query
+      name: master_timeout
+      description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    ilm.get_lifecycle-timeout:
+      in: query
+      name: timeout
+      description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+  responses:
+    ilm.get_lifecycle-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ilm.get_lifecycle.Lifecycle'
+          examples:
+            GetLifecycleResponseExample1:
+              description: A successful response when retrieving a lifecycle policy.
+              value: "{\n  \"my_policy\": {\n    \"version\": 1,\n    \"modified_date\": 82392349,\n    \"policy\": {\n      \"phases\": {\n        \"warm\": {\n          \"min_age\": \"10d\",\n          \"actions\": {\n            \"forcemerge\": {\n              \"max_num_segments\": 1\n            }\n          }\n        },\n        \"delete\": {\n          \"min_age\": \"30d\",\n          \"actions\": {\n            \"delete\": {\n              \"delete_searchable_snapshot\": true\n            }\n          }\n        }\n      }\n    },\n    \"in_use_by\" : {\n      \"indices\" : [],\n      \"data_streams\" : [],\n      \"composable_templates\" : []\n    }\n  }\n}"
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

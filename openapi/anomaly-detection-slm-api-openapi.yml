@@ -1,0 +1,1081 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Slm API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: slm
+  x-displayName: Snapshot lifecycle management
+  description: Snapshot lifecycle management (SLM) APIs enable you to set up policies to automatically take snapshots and control how long they are retained.
+  externalDocs:
+    url: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/create-snapshots
+    description: Learn more about creating a snapshot.
+paths:
+  /_slm/policy/{policy_id}:
+    get:
+      tags:
+      - slm
+      summary: Get policy information
+      description: '**All methods and paths for this operation:**
+
+
+        GET
+
+        /_slm/policy
+
+
+        GET
+
+        /_slm/policy/{policy_id}
+
+
+        Get snapshot lifecycle policy definitions and information about the latest snapshot attempts.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-get-lifecycle
+      parameters:
+      - $ref: '#/components/parameters/slm.get_lifecycle-policy_id'
+      - $ref: '#/components/parameters/slm.get_lifecycle-master_timeout'
+      - $ref: '#/components/parameters/slm.get_lifecycle-timeout'
+      responses:
+        '200':
+          $ref: '#/components/responses/slm.get_lifecycle-200'
+      x-state: Generally available; Added in 7.4.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _slm/policy/daily-snapshots?human
+
+          '
+      - lang: Python
+        source: "resp = client.slm.get_lifecycle(\n    policy_id=\"daily-snapshots\",\n    human=True,\n)"
+      - lang: JavaScript
+        source: "const response = await client.slm.getLifecycle({\n  policy_id: \"daily-snapshots\",\n  human: \"true\",\n});"
+      - lang: Ruby
+        source: "response = client.slm.get_lifecycle(\n  policy_id: \"daily-snapshots\",\n  human: \"true\"\n)"
+      - lang: PHP
+        source: "$resp = $client->slm()->getLifecycle([\n    \"policy_id\" => \"daily-snapshots\",\n    \"human\" => \"true\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/policy/daily-snapshots?human"'
+      - lang: C#
+        source: "var response = await client.SnapshotLifecycleManagement\n    .GetLifecycleAsync(d1 => d1\n        .PolicyId(new[] { \"daily-snapshots\" })\n    );"
+      - lang: Java
+        source: "client.slm().getLifecycle(g -> g\n    .policyId(\"daily-snapshots\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - slm
+      summary: Create or update a policy
+      description: 'Create or update a snapshot lifecycle policy.
+
+        If the policy already exists, this request increments the policy version.
+
+        Only the latest version of a policy is stored.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage`
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-put-lifecycle
+      parameters:
+      - in: path
+        name: policy_id
+        description: The identifier for the snapshot lifecycle policy you want to create or update.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                config:
+                  description: Configuration for each snapshot created by the policy.
+                  allOf:
+                  - $ref: '#/components/schemas/slm._types.Configuration'
+                name:
+                  description: Name automatically assigned to each snapshot created by the policy. Date math is supported. To prevent conflicting snapshot names, a UUID is automatically appended to each snapshot name.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Name'
+                repository:
+                  description: Repository used to store snapshots created by this policy. This repository must exist prior to the policy’s creation. You can create a repository using the snapshot repository API.
+                  type: string
+                retention:
+                  description: Retention rules used to retain and delete snapshots created by the policy.
+                  allOf:
+                  - $ref: '#/components/schemas/slm._types.Retention'
+                schedule:
+                  description: Periodic or absolute schedule at which the policy creates snapshots. SLM applies schedule changes immediately.
+                  allOf:
+                  - $ref: '#/components/schemas/watcher._types.CronExpression'
+            examples:
+              PutSnapshotLifecycleRequestExample1 copy:
+                summary: Create a policy
+                description: 'Run `PUT /_slm/policy/daily-snapshots` to create a lifecycle policy. The `schedule` is when the snapshot should be taken, in this case, 1:30am daily. The `retention` details specify to: keep snapshots for 30 days; always keep at least 5 successful snapshots, even if they''re more than 30 days old; keep no more than 50 successful snapshots, even if they''re less than 30 days old.
+
+                  '
+                value: "{\n  \"schedule\": \"0 30 1 * * ?\",\n  \"name\": \"<daily-snap-{now/d}>\",\n  \"repository\": \"my_repository\",\n  \"config\": {\n    \"indices\": [\"data-*\", \"important\"],\n    \"ignore_unavailable\": false,\n    \"include_global_state\": false\n  },\n  \"retention\": {\n    \"expire_after\": \"30d\",\n    \"min_count\": 5,\n    \"max_count\": 50\n  }\n}"
+              PutSnapshotLifecycleRequestExample2:
+                summary: Create a policy with intevals
+                description: 'Run `PUT /_slm/policy/hourly-snapshots` to create a lifecycle policy that uses interval scheduling. It creates a snapshot once every hour. The first snapshot will be created one hour after the policy is modified, with subsequent snapshots every hour afterward.
+
+                  '
+                value: "{\n  \"schedule\": \"1h\",\n  \"name\": \"<hourly-snap-{now/d}>\",\n  \"repository\": \"my_repository\",\n  \"config\": {\n    \"indices\": [\"data-*\", \"important\"]\n  }\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 7.4.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT /_slm/policy/daily-snapshots\n{\n  \"schedule\": \"0 30 1 * * ?\",\n  \"name\": \"<daily-snap-{now/d}>\",\n  \"repository\": \"my_repository\",\n  \"config\": {\n    \"indices\": [\"data-*\", \"important\"],\n    \"ignore_unavailable\": false,\n    \"include_global_state\": false\n  },\n  \"retention\": {\n    \"expire_after\": \"30d\",\n    \"min_count\": 5,\n    \"max_count\": 50\n  }\n}"
+      - lang: Python
+        source: "resp = client.slm.put_lifecycle(\n    policy_id=\"daily-snapshots\",\n    schedule=\"0 30 1 * * ?\",\n    name=\"<daily-snap-{now/d}>\",\n    repository=\"my_repository\",\n    config={\n        \"indices\": [\n            \"data-*\",\n            \"important\"\n        ],\n        \"ignore_unavailable\": False,\n        \"include_global_state\": False\n    },\n    retention={\n        \"expire_after\": \"30d\",\n        \"min_count\": 5,\n        \"max_count\": 50\n    },\n)"
+      - lang: JavaScript
+        source: "const response = await client.slm.putLifecycle({\n  policy_id: \"daily-snapshots\",\n  schedule: \"0 30 1 * * ?\",\n  name: \"<daily-snap-{now/d}>\",\n  repository: \"my_repository\",\n  config: {\n    indices: [\"data-*\", \"important\"],\n    ignore_unavailable: false,\n    include_global_state: false,\n  },\n  retention: {\n    expire_after: \"30d\",\n    min_count: 5,\n    max_count: 50,\n  },\n});"
+      - lang: Ruby
+        source: "response = client.slm.put_lifecycle(\n  policy_id: \"daily-snapshots\",\n  body: {\n    \"schedule\": \"0 30 1 * * ?\",\n    \"name\": \"<daily-snap-{now/d}>\",\n    \"repository\": \"my_repository\",\n    \"config\": {\n      \"indices\": [\n        \"data-*\",\n        \"important\"\n      ],\n      \"ignore_unavailable\": false,\n      \"include_global_state\": false\n    },\n    \"retention\": {\n      \"expire_after\": \"30d\",\n      \"min_count\": 5,\n      \"max_count\": 50\n    }\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->slm()->putLifecycle([\n    \"policy_id\" => \"daily-snapshots\",\n    \"body\" => [\n        \"schedule\" => \"0 30 1 * * ?\",\n        \"name\" => \"<daily-snap-{now/d}>\",\n        \"repository\" => \"my_repository\",\n        \"config\" => [\n            \"indices\" => array(\n                \"data-*\",\n                \"important\",\n            ),\n            \"ignore_unavailable\" => false,\n            \"include_global_state\" => false,\n        ],\n        \"retention\" => [\n            \"expire_after\" => \"30d\",\n            \"min_count\" => 5,\n            \"max_count\" => 50,\n        ],\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"schedule":"0 30 1 * * ?","name":"<daily-snap-{now/d}>","repository":"my_repository","config":{"indices":["data-*","important"],"ignore_unavailable":false,"include_global_state":false},"retention":{"expire_after":"30d","min_count":5,"max_count":50}}'' "$ELASTICSEARCH_URL/_slm/policy/daily-snapshots"'
+      - lang: C#
+        source: "var response = await client.SnapshotLifecycleManagement\n    .PutLifecycleAsync(policyId: \"daily-snapshots\", d1 => d1\n        .Config(d2 => d2\n            .IgnoreUnavailable(false)\n            .IncludeGlobalState(false)\n            .Indices(new[] { \"data-*\", \"important\" })\n        )\n        .Name(\"<daily-snap-{now/d}>\")\n        .Repository(\"my_repository\")\n        .Retention(d2 => d2\n            .ExpireAfter(\"30d\")\n            .MaxCount(50)\n            .MinCount(5)\n        )\n        .Schedule(\"0 30 1 * * ?\")\n    );"
+      - lang: Java
+        source: "client.slm().putLifecycle(p -> p\n    .config(c -> c\n        .ignoreUnavailable(false)\n        .indices(List.of(\"data-*\",\"important\"))\n        .includeGlobalState(false)\n    )\n    .name(\"<daily-snap-{now/d}>\")\n    .policyId(\"daily-snapshots\")\n    .repository(\"my_repository\")\n    .retention(r -> r\n        .expireAfter(e -> e\n            .time(\"30d\")\n        )\n        .maxCount(50)\n        .minCount(5)\n    )\n    .schedule(\"0 30 1 * * ?\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - slm
+      summary: Delete a policy
+      description: 'Delete a snapshot lifecycle policy definition.
+
+        This operation prevents any future snapshots from being taken but does not cancel in-progress snapshots or remove previously-taken snapshots.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-delete-lifecycle
+      parameters:
+      - in: path
+        name: policy_id
+        description: The id of the snapshot lifecycle policy to remove
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 7.4.0
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE /_slm/policy/daily-snapshots
+
+          '
+      - lang: Python
+        source: "resp = client.slm.delete_lifecycle(\n    policy_id=\"daily-snapshots\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.slm.deleteLifecycle({\n  policy_id: \"daily-snapshots\",\n});"
+      - lang: Ruby
+        source: "response = client.slm.delete_lifecycle(\n  policy_id: \"daily-snapshots\"\n)"
+      - lang: PHP
+        source: "$resp = $client->slm()->deleteLifecycle([\n    \"policy_id\" => \"daily-snapshots\",\n]);"
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/policy/daily-snapshots"'
+      - lang: C#
+        source: 'var response = await client.SnapshotLifecycleManagement.DeleteLifecycleAsync(policyId: "daily-snapshots");'
+      - lang: Java
+        source: "client.slm().deleteLifecycle(d -> d\n    .policyId(\"daily-snapshots\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/policy/{policy_id}/_execute:
+    put:
+      tags:
+      - slm
+      summary: Run a policy
+      description: 'Immediately create a snapshot according to the snapshot lifecycle policy without waiting for the scheduled time.
+
+        The snapshot policy is normally applied according to its schedule, but you might want to manually run a policy before performing an upgrade or other maintenance.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-execute-lifecycle
+      parameters:
+      - in: path
+        name: policy_id
+        description: The id of the snapshot lifecycle policy to be executed
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snapshot_name:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Name'
+                required:
+                - snapshot_name
+              examples:
+                ExecuteSnapshotLifecycleResponseExample1:
+                  description: 'Run `POST /_slm/policy/daily-snapshots/_execute` to take an immediate snapshot according to the `daily-snapshots` policy.
+
+                    '
+                  value: "{\n  \"snapshot_name\": \"daily-snap-2019.04.24-gwrqoo2xtea3q57vvg0uea\"\n}"
+      x-state: Generally available; Added in 7.4.0
+      x-codeSamples:
+      - lang: Console
+        source: 'PUT /_slm/policy/daily-snapshots/_execute
+
+          '
+      - lang: Python
+        source: "resp = client.slm.execute_lifecycle(\n    policy_id=\"daily-snapshots\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.slm.executeLifecycle({\n  policy_id: \"daily-snapshots\",\n});"
+      - lang: Ruby
+        source: "response = client.slm.execute_lifecycle(\n  policy_id: \"daily-snapshots\"\n)"
+      - lang: PHP
+        source: "$resp = $client->slm()->executeLifecycle([\n    \"policy_id\" => \"daily-snapshots\",\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/policy/daily-snapshots/_execute"'
+      - lang: C#
+        source: 'var response = await client.SnapshotLifecycleManagement.ExecuteLifecycleAsync(policyId: "daily-snapshots");'
+      - lang: Java
+        source: "client.slm().executeLifecycle(e -> e\n    .policyId(\"daily-snapshots\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/_execute_retention:
+    post:
+      tags:
+      - slm
+      summary: Run a retention policy
+      description: 'Manually apply the retention policy to force immediate removal of snapshots that are expired according to the snapshot lifecycle policy retention rules.
+
+        The retention policy is normally applied according to its schedule.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-execute-retention
+      parameters:
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 7.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST _slm/_execute_retention
+
+          '
+      - lang: Python
+        source: resp = client.slm.execute_retention()
+      - lang: JavaScript
+        source: const response = await client.slm.executeRetention();
+      - lang: Ruby
+        source: response = client.slm.execute_retention
+      - lang: PHP
+        source: $resp = $client->slm()->executeRetention();
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/_execute_retention"'
+      - lang: C#
+        source: var response = await client.SnapshotLifecycleManagement.ExecuteRetentionAsync();
+      - lang: Java
+        source: 'client.slm().executeRetention(e -> e);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/stats:
+    get:
+      tags:
+      - slm
+      summary: Get snapshot lifecycle management statistics
+      description: 'Get global and policy-level statistics about actions taken by snapshot lifecycle management.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-get-stats
+      parameters:
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  retention_deletion_time:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.Duration'
+                  retention_deletion_time_millis:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+                  retention_failed:
+                    type: number
+                  retention_runs:
+                    type: number
+                  retention_timed_out:
+                    type: number
+                  total_snapshots_deleted:
+                    type: number
+                  total_snapshot_deletion_failures:
+                    type: number
+                  total_snapshots_failed:
+                    type: number
+                  total_snapshots_taken:
+                    type: number
+                  policy_stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/slm._types.SnapshotPolicyStats'
+                required:
+                - retention_deletion_time
+                - retention_deletion_time_millis
+                - retention_failed
+                - retention_runs
+                - retention_timed_out
+                - total_snapshots_deleted
+                - total_snapshot_deletion_failures
+                - total_snapshots_failed
+                - total_snapshots_taken
+                - policy_stats
+              examples:
+                GetSnapshotLifecycleManagementStatsResponseExample1:
+                  description: A successful response from `GET /_slm/stats`.
+                  value: "{\n  \"retention_runs\": 13,\n  \"retention_failed\": 0,\n  \"retention_timed_out\": 0,\n  \"retention_deletion_time\": \"1.4s\",\n  \"retention_deletion_time_millis\": 1404,\n  \"policy_stats\": [ ],\n  \"total_snapshots_taken\": 1,\n  \"total_snapshots_failed\": 1,\n  \"total_snapshots_deleted\": 0,\n  \"total_snapshot_deletion_failures\": 0\n}"
+      x-state: Generally available; Added in 7.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_slm/stats
+
+          '
+      - lang: Python
+        source: resp = client.slm.get_stats()
+      - lang: JavaScript
+        source: const response = await client.slm.getStats();
+      - lang: Ruby
+        source: response = client.slm.get_stats
+      - lang: PHP
+        source: $resp = $client->slm()->getStats();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/stats"'
+      - lang: C#
+        source: var response = await client.SnapshotLifecycleManagement.GetStatsAsync();
+      - lang: Java
+        source: 'client.slm().getStats(g -> g);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/status:
+    get:
+      tags:
+      - slm
+      summary: Get the snapshot lifecycle management status
+      description: '## Required authorization
+
+
+        * Cluster privileges: `read_slm`'
+      operationId: slm-get-status
+      parameters:
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  operation_mode:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.LifecycleOperationMode'
+                required:
+                - operation_mode
+              examples:
+                GetSnapshotLifecycleManagementStatusResponseExample1:
+                  description: A successful response from `GET _slm/status`.
+                  value: "{\n  \"operation_mode\": \"RUNNING\"\n}"
+      x-state: Generally available; Added in 7.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET _slm/status
+
+          '
+      - lang: Python
+        source: resp = client.slm.get_status()
+      - lang: JavaScript
+        source: const response = await client.slm.getStatus();
+      - lang: Ruby
+        source: response = client.slm.get_status
+      - lang: PHP
+        source: $resp = $client->slm()->getStatus();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/status"'
+      - lang: C#
+        source: var response = await client.SnapshotLifecycleManagement.GetStatusAsync();
+      - lang: Java
+        source: 'client.slm().getStatus(g -> g);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/start:
+    post:
+      tags:
+      - slm
+      summary: Start snapshot lifecycle management
+      description: 'Snapshot lifecycle management (SLM) starts automatically when a cluster is formed.
+
+        Manually starting SLM is necessary only if it has been stopped using the stop SLM API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_slm`'
+      operationId: slm-start
+      parameters:
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                StartSnapshotLifecycleManagementResponseExample1:
+                  description: A successful response from `POST _slm/start`.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 7.6.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST _slm/start
+
+          '
+      - lang: Python
+        source: resp = client.slm.start()
+      - lang: JavaScript
+        source: const response = await client.slm.start();
+      - lang: Ruby
+        source: response = client.slm.start
+      - lang: PHP
+        source: $resp = $client->slm()->start();
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_slm/start"'
+      - lang: C#
+        source: var response = await client.SnapshotLifecycleManagement.StartAsync();
+      - lang: Java
+        source: 'client.slm().start(s -> s);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_slm/stop:
+    post:
+      tags:
+      - slm
+      summary: Stop snapshot lifecycle management
+      description: 'Stop all snapshot lifecycle management (SLM) operations and the SLM plugin.
+
+        This API is useful when you are performing maintenance on a cluster and need to prevent SLM from performing any actions on your data streams or indices.
+
+        Stopping SLM does not stop any snapshots that are in progress.
+
+        You can manually trigger snapshots with the run snapshot lifecycle policy API even if SLM is stopped.
+
+
+        The API returns a response as soon as the request is acknowledged, but the plugin might continue to run until in-progress operations complete and it can be safely stopped.
+
+        Use the get snapshot lifecycle management status API to see if SLM is running.'
+      operationId: slm-stop
+      parameters:
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available; Added in 7.6.0
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    slm._types.Retention:
+      type: object
+      properties:
+        expire_after:
+          description: Time period after which a snapshot is considered expired and eligible for deletion. SLM deletes expired snapshots based on the slm.retention_schedule.
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        max_count:
+          description: Maximum number of snapshots to retain, even if the snapshots have not yet expired. If the number of snapshots in the repository exceeds this limit, the policy retains the most recent snapshots and deletes older snapshots.
+          type: number
+        min_count:
+          description: Minimum number of snapshots to retain, even if the snapshots have expired.
+          type: number
+      required:
+      - expire_after
+      - max_count
+      - min_count
+    _types.LifecycleOperationMode:
+      type: string
+      enum:
+      - RUNNING
+      - STOPPING
+      - STOPPED
+    _types.Uuid:
+      type: string
+    slm._types.SnapshotLifecycle:
+      type: object
+      properties:
+        in_progress:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.InProgress'
+        last_failure:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Invocation'
+        last_success:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Invocation'
+        modified_date:
+          description: The last time the policy was modified.
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        modified_date_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        next_execution:
+          description: The next time the policy will run.
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        next_execution_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Policy'
+        version:
+          description: 'The version of the snapshot policy.
+
+            Only the latest version is stored and incremented when the policy is updated.'
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        stats:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Statistics'
+      required:
+      - modified_date_millis
+      - next_execution_millis
+      - policy
+      - version
+      - stats
+    slm._types.SnapshotPolicyStats:
+      type: object
+      properties:
+        policy:
+          type: string
+        snapshots_taken:
+          type: number
+        snapshots_failed:
+          type: number
+        snapshots_deleted:
+          type: number
+        snapshot_deletion_failures:
+          type: number
+      required:
+      - policy
+      - snapshots_taken
+      - snapshots_failed
+      - snapshots_deleted
+      - snapshot_deletion_failures
+    slm._types.InProgress:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        start_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        state:
+          type: string
+        uuid:
+          allOf:
+          - $ref: '#/components/schemas/_types.Uuid'
+      required:
+      - name
+      - start_time_millis
+      - state
+      - uuid
+    _types.Metadata:
+      type: object
+      additionalProperties:
+        type: object
+    _types.Name:
+      type: string
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    _types.IndexName:
+      type: string
+    slm._types.Configuration:
+      type: object
+      properties:
+        ignore_unavailable:
+          description: If false, the snapshot fails if any data stream or index in indices is missing or closed. If true, the snapshot ignores missing or closed data streams and indices.
+          default: false
+          type: boolean
+        indices:
+          description: 'A comma-separated list of data streams and indices to include in the snapshot. Multi-index syntax is supported.
+
+            By default, a snapshot includes all data streams and indices in the cluster. If this argument is provided, the snapshot only includes the specified data streams and clusters.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Indices'
+        include_global_state:
+          description: If true, the current global state is included in the snapshot.
+          default: true
+          type: boolean
+        feature_states:
+          description: 'A list of feature states to be included in this snapshot. A list of features available for inclusion in the snapshot and their descriptions be can be retrieved using the get features API.
+
+            Each feature state includes one or more system indices containing data necessary for the function of that feature. Providing an empty array will include no feature states in the snapshot, regardless of the value of include_global_state. By default, all available feature states will be included in the snapshot if include_global_state is true, or no feature states if include_global_state is false.'
+          type: array
+          items:
+            type: string
+        metadata:
+          description: Attaches arbitrary metadata to the snapshot, such as a record of who took the snapshot, why it was taken, or any other useful data. Metadata must be less than 1024 bytes.
+          allOf:
+          - $ref: '#/components/schemas/_types.Metadata'
+        partial:
+          description: If false, the entire snapshot will fail if one or more indices included in the snapshot do not have all primary shards available.
+          default: false
+          type: boolean
+    slm._types.Policy:
+      type: object
+      properties:
+        config:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Configuration'
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        repository:
+          type: string
+        retention:
+          allOf:
+          - $ref: '#/components/schemas/slm._types.Retention'
+        schedule:
+          allOf:
+          - $ref: '#/components/schemas/watcher._types.CronExpression'
+      required:
+      - name
+      - repository
+      - schedule
+    slm._types.Statistics:
+      type: object
+      properties:
+        retention_deletion_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        retention_deletion_time_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        retention_failed:
+          type: number
+        retention_runs:
+          type: number
+        retention_timed_out:
+          type: number
+        policy:
+          allOf:
+          - $ref: '#/components/schemas/_types.Id'
+        total_snapshots_deleted:
+          type: number
+        total_snapshot_deletion_failures:
+          type: number
+        total_snapshots_failed:
+          type: number
+        total_snapshots_taken:
+          type: number
+    slm._types.Invocation:
+      type: object
+      properties:
+        snapshot_name:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        time:
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+      required:
+      - snapshot_name
+      - time
+    watcher._types.CronExpression:
+      type: string
+    _types.Id:
+      type: string
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.VersionNumber:
+      type: number
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    _types.Names:
+      oneOf:
+      - $ref: '#/components/schemas/_types.Name'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.Name'
+  parameters:
+    slm.get_lifecycle-timeout:
+      in: query
+      name: timeout
+      description: 'The period to wait for a response.
+
+        If no response is received before the timeout expires, the request fails and returns an error.'
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    slm.get_lifecycle-policy_id:
+      in: path
+      name: policy_id
+      description: A comma-separated list of snapshot lifecycle policy identifiers.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Names'
+      style: simple
+    slm.get_lifecycle-master_timeout:
+      in: query
+      name: master_timeout
+      description: 'The period to wait for a connection to the master node.
+
+        If no response is received before the timeout expires, the request fails and returns an error.'
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+  responses:
+    slm.get_lifecycle-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/slm._types.SnapshotLifecycle'
+          examples:
+            GetSnapshotLifecycleResponseExample1:
+              description: A successful response from `GET _slm/policy/daily-snapshots?human`.
+              value: "{\n  \"daily-snapshots\": {\n    \"version\": 1,\n    \"modified_date\": \"2099-05-06T01:30:00.000Z\",\n    \"modified_date_millis\": 4081757400000,\n    \"policy\" : {\n      \"schedule\": \"0 30 1 * * ?\",\n      \"name\": \"<daily-snap-{now/d}>\",\n      \"repository\": \"my_repository\",\n      \"config\": {\n        \"indices\": [\"data-*\", \"important\"],\n        \"ignore_unavailable\": false,\n        \"include_global_state\": false\n      },\n      \"retention\": {\n        \"expire_after\": \"30d\",\n        \"min_count\": 5,\n        \"max_count\": 50\n      }\n    },\n    \"stats\": {\n      \"policy\": \"daily-snapshots\",\n      \"snapshots_taken\": 0,\n      \"snapshots_failed\": 0,\n      \"snapshots_deleted\": 0,\n      \"snapshot_deletion_failures\": 0\n    },\n    \"next_execution\": \"2099-05-07T01:30:00.000Z\",\n    \"next_execution_millis\": 4081843800000\n  }\n}"
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

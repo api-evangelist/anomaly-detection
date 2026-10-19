@@ -1,0 +1,1811 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Ccr API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: Ccr
+  x-displayName: Cross-cluster replication
+  description: The cross-cluster replication (CCR) APIs let you run replication operations, such as creating and managing follower indices or auto-follow patterns. Use CCR to replicate indices across clusters to maintain search availability during outages, reduce indexing impact, and lower search latency by serving requests closer to users.
+  externalDocs:
+    description: Learn more about cross-cluster replication.
+    url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+paths:
+  /_ccr/auto_follow/{name}:
+    get:
+      tags:
+      - Ccr
+      summary: Get auto-follow patterns
+      description: '**All methods and paths for this operation:**
+
+
+        GET
+
+        /_ccr/auto_follow
+
+
+        GET
+
+        /_ccr/auto_follow/{name}
+
+
+        Get cross-cluster replication auto-follow patterns.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ccr`'
+      externalDocs:
+        description: More about auto-follow patterns
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication/manage-auto-follow-patterns
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-get-auto-follow-pattern.html
+      operationId: ccr-get-auto-follow-pattern
+      parameters:
+      - $ref: '#/components/parameters/ccr.get_auto_follow_pattern-name'
+      - $ref: '#/components/parameters/ccr.get_auto_follow_pattern-master_timeout'
+      responses:
+        '200':
+          $ref: '#/components/responses/ccr.get_auto_follow_pattern-200'
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_ccr/auto_follow/my_auto_follow_pattern
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.get_auto_follow_pattern(\n    name=\"my_auto_follow_pattern\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.getAutoFollowPattern({\n  name: \"my_auto_follow_pattern\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.get_auto_follow_pattern(\n  name: \"my_auto_follow_pattern\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->getAutoFollowPattern([\n    \"name\" => \"my_auto_follow_pattern\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ccr/auto_follow/my_auto_follow_pattern"'
+      - lang: C#
+        source: "var response = await client.CrossClusterReplication\n    .GetAutoFollowPatternAsync(d1 => d1\n        .Name(\"my_auto_follow_pattern\")\n    );"
+      - lang: Java
+        source: "client.ccr().getAutoFollowPattern(g -> g\n    .name(\"my_auto_follow_pattern\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    put:
+      tags:
+      - Ccr
+      summary: Create or update auto-follow patterns
+      description: 'Create a collection of cross-cluster replication auto-follow patterns for a remote cluster.
+
+        Newly created indices on the remote cluster that match any of the patterns are automatically configured as follower indices.
+
+        Indices on the remote cluster that were created before the auto-follow pattern was created will not be auto-followed even if they match the pattern.
+
+
+        This API can also be used to update auto-follow patterns.
+
+        NOTE: Follower indices that were configured automatically before updating an auto-follow pattern will remain unchanged even if they do not match against the new patterns.'
+      externalDocs:
+        description: More about auto-follow patterns
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication/manage-auto-follow-patterns
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-put-auto-follow-pattern.html
+      operationId: ccr-put-auto-follow-pattern
+      parameters:
+      - in: path
+        name: name
+        description: The name of the collection of auto-follow patterns.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                remote_cluster:
+                  description: The remote cluster containing the leader indices to match against.
+                  type: string
+                follow_index_pattern:
+                  description: The name of follower index. The template {{leader_index}} can be used to derive the name of the follower index from the name of the leader index. When following a data stream, use {{leader_index}}; CCR does not support changes to the names of a follower data stream’s backing indices.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexPattern'
+                leader_index_patterns:
+                  description: An array of simple index patterns to match against indices in the remote cluster specified by the remote_cluster field.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexPatterns'
+                leader_index_exclusion_patterns:
+                  description: An array of simple index patterns that can be used to exclude indices from being auto-followed. Indices in the remote cluster whose names are matching one or more leader_index_patterns and one or more leader_index_exclusion_patterns won’t be followed.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexPatterns'
+                max_outstanding_read_requests:
+                  description: The maximum number of outstanding reads requests from the remote cluster.
+                  default: 12
+                  type: number
+                settings:
+                  description: Settings to override from the leader index. Note that certain settings can not be overrode (e.g., index.number_of_shards).
+                  type: object
+                  additionalProperties:
+                    type: object
+                max_outstanding_write_requests:
+                  description: The maximum number of outstanding reads requests from the remote cluster.
+                  default: 9
+                  type: number
+                read_poll_timeout:
+                  description: The maximum time to wait for new operations on the remote cluster when the follower index is synchronized with the leader index. When the timeout has elapsed, the poll for operations will return to the follower so that it can update some statistics. Then the follower will immediately attempt to read from the leader again.
+                  default: 1m
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                max_read_request_operation_count:
+                  description: The maximum number of operations to pull per read from the remote cluster.
+                  default: 5120
+                  type: number
+                max_read_request_size:
+                  description: The maximum size in bytes of per read of a batch of operations pulled from the remote cluster.
+                  default: 32mb
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+                max_retry_delay:
+                  description: The maximum time to wait before retrying an operation that failed exceptionally. An exponential backoff strategy is employed when retrying.
+                  default: 500ms
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                max_write_buffer_count:
+                  description: The maximum number of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will be deferred until the number of queued operations goes below the limit.
+                  default: 2147483647
+                  type: number
+                max_write_buffer_size:
+                  description: The maximum total bytes of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will be deferred until the total bytes of queued operations goes below the limit.
+                  default: 512mb
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+                max_write_request_operation_count:
+                  description: The maximum number of operations per bulk write request executed on the follower.
+                  default: 5120
+                  type: number
+                max_write_request_size:
+                  description: The maximum total bytes of operations per bulk write request executed on the follower.
+                  default: 9223372036854775807b
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+              required:
+              - remote_cluster
+            examples:
+              PutAutoFollowPatternRequestExample1:
+                description: 'Run `PUT /_ccr/auto_follow/my_auto_follow_pattern` to creates an auto-follow pattern.
+
+                  '
+                value: "{\n  \"remote_cluster\" : \"remote_cluster\",\n  \"leader_index_patterns\" :\n  [\n    \"leader_index*\"\n  ],\n  \"follow_index_pattern\" : \"{{leader_index}}-follower\",\n  \"settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PutAutoFollowPatternResponseExample1:
+                  description: A successful response for creating an auto-follow pattern.
+                  value: "{\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT /_ccr/auto_follow/my_auto_follow_pattern\n{\n  \"remote_cluster\" : \"remote_cluster\",\n  \"leader_index_patterns\" :\n  [\n    \"leader_index*\"\n  ],\n  \"follow_index_pattern\" : \"{{leader_index}}-follower\",\n  \"settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+      - lang: Python
+        source: "resp = client.ccr.put_auto_follow_pattern(\n    name=\"my_auto_follow_pattern\",\n    remote_cluster=\"remote_cluster\",\n    leader_index_patterns=[\n        \"leader_index*\"\n    ],\n    follow_index_pattern=\"{{leader_index}}-follower\",\n    settings={\n        \"index.number_of_replicas\": 0\n    },\n    max_read_request_operation_count=1024,\n    max_outstanding_read_requests=16,\n    max_read_request_size=\"1024k\",\n    max_write_request_operation_count=32768,\n    max_write_request_size=\"16k\",\n    max_outstanding_write_requests=8,\n    max_write_buffer_count=512,\n    max_write_buffer_size=\"512k\",\n    max_retry_delay=\"10s\",\n    read_poll_timeout=\"30s\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.putAutoFollowPattern({\n  name: \"my_auto_follow_pattern\",\n  remote_cluster: \"remote_cluster\",\n  leader_index_patterns: [\"leader_index*\"],\n  follow_index_pattern: \"{{leader_index}}-follower\",\n  settings: {\n    \"index.number_of_replicas\": 0,\n  },\n  max_read_request_operation_count: 1024,\n  max_outstanding_read_requests: 16,\n  max_read_request_size: \"1024k\",\n  max_write_request_operation_count: 32768,\n  max_write_request_size: \"16k\",\n  max_outstanding_write_requests: 8,\n  max_write_buffer_count: 512,\n  max_write_buffer_size: \"512k\",\n  max_retry_delay: \"10s\",\n  read_poll_timeout: \"30s\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.put_auto_follow_pattern(\n  name: \"my_auto_follow_pattern\",\n  body: {\n    \"remote_cluster\": \"remote_cluster\",\n    \"leader_index_patterns\": [\n      \"leader_index*\"\n    ],\n    \"follow_index_pattern\": \"{{leader_index}}-follower\",\n    \"settings\": {\n      \"index.number_of_replicas\": 0\n    },\n    \"max_read_request_operation_count\": 1024,\n    \"max_outstanding_read_requests\": 16,\n    \"max_read_request_size\": \"1024k\",\n    \"max_write_request_operation_count\": 32768,\n    \"max_write_request_size\": \"16k\",\n    \"max_outstanding_write_requests\": 8,\n    \"max_write_buffer_count\": 512,\n    \"max_write_buffer_size\": \"512k\",\n    \"max_retry_delay\": \"10s\",\n    \"read_poll_timeout\": \"30s\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->putAutoFollowPattern([\n    \"name\" => \"my_auto_follow_pattern\",\n    \"body\" => [\n        \"remote_cluster\" => \"remote_cluster\",\n        \"leader_index_patterns\" => array(\n            \"leader_index*\",\n        ),\n        \"follow_index_pattern\" => \"{{leader_index}}-follower\",\n        \"settings\" => [\n            \"index.number_of_replicas\" => 0,\n        ],\n        \"max_read_request_operation_count\" => 1024,\n        \"max_outstanding_read_requests\" => 16,\n        \"max_read_request_size\" => \"1024k\",\n        \"max_write_request_operation_count\" => 32768,\n        \"max_write_request_size\" => \"16k\",\n        \"max_outstanding_write_requests\" => 8,\n        \"max_write_buffer_count\" => 512,\n        \"max_write_buffer_size\" => \"512k\",\n        \"max_retry_delay\" => \"10s\",\n        \"read_poll_timeout\" => \"30s\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"remote_cluster":"remote_cluster","leader_index_patterns":["leader_index*"],"follow_index_pattern":"{{leader_index}}-follower","settings":{"index.number_of_replicas":0},"max_read_request_operation_count":1024,"max_outstanding_read_requests":16,"max_read_request_size":"1024k","max_write_request_operation_count":32768,"max_write_request_size":"16k","max_outstanding_write_requests":8,"max_write_buffer_count":512,"max_write_buffer_size":"512k","max_retry_delay":"10s","read_poll_timeout":"30s"}'' "$ELASTICSEARCH_URL/_ccr/auto_follow/my_auto_follow_pattern"'
+      - lang: C#
+        source: "var response = await client.CrossClusterReplication\n    .PutAutoFollowPatternAsync(name: \"my_auto_follow_pattern\", d1 => d1\n        .FollowIndexPattern(\"{{leader_index}}-follower\")\n        .LeaderIndexPatterns(\"leader_index*\")\n        .MaxOutstandingReadRequests(16)\n        .MaxOutstandingWriteRequests(8)\n        .MaxReadRequestOperationCount(1024)\n        .MaxReadRequestSize(new ByteSize(\"1024k\"))\n        .MaxRetryDelay(\"10s\")\n        .MaxWriteBufferCount(512)\n        .MaxWriteBufferSize(new ByteSize(\"512k\"))\n        .MaxWriteRequestOperationCount(32768)\n        .MaxWriteRequestSize(new ByteSize(\"16k\"))\n        .ReadPollTimeout(\"30s\")\n        .RemoteCluster(\"remote_cluster\")\n        .Settings(new Dictionary<string, object>()\n        {\n            { \"index.number_of_replicas\", 0 }\n        })\n    );"
+      - lang: Java
+        source: "client.ccr().putAutoFollowPattern(p -> p\n    .followIndexPattern(\"{{leader_index}}-follower\")\n    .leaderIndexPatterns(\"leader_index*\")\n    .maxOutstandingReadRequests(16)\n    .maxOutstandingWriteRequests(8)\n    .maxReadRequestOperationCount(1024)\n    .maxReadRequestSize(\"1024k\")\n    .maxRetryDelay(m -> m\n        .time(\"10s\")\n    )\n    .maxWriteBufferCount(512)\n    .maxWriteBufferSize(\"512k\")\n    .maxWriteRequestOperationCount(32768)\n    .maxWriteRequestSize(\"16k\")\n    .name(\"my_auto_follow_pattern\")\n    .readPollTimeout(r -> r\n        .time(\"30s\")\n    )\n    .remoteCluster(\"remote_cluster\")\n    .settings(\"index.number_of_replicas\", JsonData.fromJson(\"0\"))\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - Ccr
+      summary: Delete auto-follow patterns
+      description: 'Delete a collection of cross-cluster replication auto-follow patterns.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ccr`'
+      externalDocs:
+        description: More about auto-follow patterns
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication/manage-auto-follow-patterns
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-delete-auto-follow-pattern.html
+      operationId: ccr-delete-auto-follow-pattern
+      parameters:
+      - in: path
+        name: name
+        description: The auto-follow pattern collection to delete.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                DeleteAutoFollowPatternResponseExample1:
+                  description: A successful response from `DELETE /_ccr/auto_follow/my_auto_follow_pattern`, which deletes an auto-follow pattern.
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE /_ccr/auto_follow/my_auto_follow_pattern
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.delete_auto_follow_pattern(\n    name=\"my_auto_follow_pattern\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.deleteAutoFollowPattern({\n  name: \"my_auto_follow_pattern\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.delete_auto_follow_pattern(\n  name: \"my_auto_follow_pattern\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->deleteAutoFollowPattern([\n    \"name\" => \"my_auto_follow_pattern\",\n]);"
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ccr/auto_follow/my_auto_follow_pattern"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.DeleteAutoFollowPatternAsync(name: "my_auto_follow_pattern");'
+      - lang: Java
+        source: "client.ccr().deleteAutoFollowPattern(d -> d\n    .name(\"my_auto_follow_pattern\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/follow:
+    put:
+      tags:
+      - Ccr
+      summary: Create a follower
+      description: 'Create a cross-cluster replication follower index that follows a specific leader index.
+
+        When the API returns, the follower index exists and cross-cluster replication starts replicating operations from the leader index to the follower index.'
+      operationId: ccr-follow
+      parameters:
+      - in: path
+        name: index
+        description: The name of the follower index.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: wait_for_active_shards
+        description: 'Specifies the number of shards to wait on being active before responding. This defaults to waiting on none of the shards to be
+
+          active.
+
+          A shard must be restored from the leader index before being active. Restoring a follower shard requires transferring all the
+
+          remote Lucene segment files to the follower index.'
+        deprecated: false
+        schema:
+          default: '0'
+          allOf:
+          - $ref: '#/components/schemas/_types.WaitForActiveShards'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_stream_name:
+                  description: If the leader index is part of a data stream, the name to which the local data stream for the followed index should be renamed.
+                  type: string
+                leader_index:
+                  description: The name of the index in the leader cluster to follow.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                max_outstanding_read_requests:
+                  description: The maximum number of outstanding reads requests from the remote cluster.
+                  type: number
+                max_outstanding_write_requests:
+                  description: The maximum number of outstanding write requests on the follower.
+                  type: number
+                max_read_request_operation_count:
+                  description: The maximum number of operations to pull per read from the remote cluster.
+                  type: number
+                max_read_request_size:
+                  description: The maximum size in bytes of per read of a batch of operations pulled from the remote cluster.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+                max_retry_delay:
+                  description: 'The maximum time to wait before retrying an operation that failed exceptionally. An exponential backoff strategy is employed when
+
+                    retrying.'
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                max_write_buffer_count:
+                  description: 'The maximum number of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will be
+
+                    deferred until the number of queued operations goes below the limit.'
+                  type: number
+                max_write_buffer_size:
+                  description: 'The maximum total bytes of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will
+
+                    be deferred until the total bytes of queued operations goes below the limit.'
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+                max_write_request_operation_count:
+                  description: The maximum number of operations per bulk write request executed on the follower.
+                  type: number
+                max_write_request_size:
+                  description: The maximum total bytes of operations per bulk write request executed on the follower.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.ByteSize'
+                read_poll_timeout:
+                  description: 'The maximum time to wait for new operations on the remote cluster when the follower index is synchronized with the leader index.
+
+                    When the timeout has elapsed, the poll for operations will return to the follower so that it can update some statistics.
+
+                    Then the follower will immediately attempt to read from the leader again.'
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                remote_cluster:
+                  description: The remote cluster containing the leader index.
+                  type: string
+                settings:
+                  description: Settings to override from the leader index.
+                  allOf:
+                  - $ref: '#/components/schemas/indices._types.IndexSettings'
+              required:
+              - leader_index
+              - remote_cluster
+            examples:
+              CreateFollowIndexRequestExample1:
+                description: Run `PUT /follower_index/_ccr/follow?wait_for_active_shards=1` to create a follower index named `follower_index`.
+                value: "{\n  \"remote_cluster\" : \"remote_cluster\",\n  \"leader_index\" : \"leader_index\",\n  \"settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  follow_index_created:
+                    type: boolean
+                  follow_index_shards_acked:
+                    type: boolean
+                  index_following_started:
+                    type: boolean
+                required:
+                - follow_index_created
+                - follow_index_shards_acked
+                - index_following_started
+              examples:
+                CreateFollowIndexResponseExample1:
+                  description: A successful response from `PUT /follower_index/_ccr/follow?wait_for_active_shards=1`.
+                  value: "{\n  \"follow_index_created\" : true,\n  \"follow_index_shards_acked\" : true,\n  \"index_following_started\" : true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: "PUT /follower_index/_ccr/follow?wait_for_active_shards=1\n{\n  \"remote_cluster\" : \"remote_cluster\",\n  \"leader_index\" : \"leader_index\",\n  \"settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+      - lang: Python
+        source: "resp = client.ccr.follow(\n    index=\"follower_index\",\n    wait_for_active_shards=\"1\",\n    remote_cluster=\"remote_cluster\",\n    leader_index=\"leader_index\",\n    settings={\n        \"index.number_of_replicas\": 0\n    },\n    max_read_request_operation_count=1024,\n    max_outstanding_read_requests=16,\n    max_read_request_size=\"1024k\",\n    max_write_request_operation_count=32768,\n    max_write_request_size=\"16k\",\n    max_outstanding_write_requests=8,\n    max_write_buffer_count=512,\n    max_write_buffer_size=\"512k\",\n    max_retry_delay=\"10s\",\n    read_poll_timeout=\"30s\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.follow({\n  index: \"follower_index\",\n  wait_for_active_shards: 1,\n  remote_cluster: \"remote_cluster\",\n  leader_index: \"leader_index\",\n  settings: {\n    \"index.number_of_replicas\": 0,\n  },\n  max_read_request_operation_count: 1024,\n  max_outstanding_read_requests: 16,\n  max_read_request_size: \"1024k\",\n  max_write_request_operation_count: 32768,\n  max_write_request_size: \"16k\",\n  max_outstanding_write_requests: 8,\n  max_write_buffer_count: 512,\n  max_write_buffer_size: \"512k\",\n  max_retry_delay: \"10s\",\n  read_poll_timeout: \"30s\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.follow(\n  index: \"follower_index\",\n  wait_for_active_shards: \"1\",\n  body: {\n    \"remote_cluster\": \"remote_cluster\",\n    \"leader_index\": \"leader_index\",\n    \"settings\": {\n      \"index.number_of_replicas\": 0\n    },\n    \"max_read_request_operation_count\": 1024,\n    \"max_outstanding_read_requests\": 16,\n    \"max_read_request_size\": \"1024k\",\n    \"max_write_request_operation_count\": 32768,\n    \"max_write_request_size\": \"16k\",\n    \"max_outstanding_write_requests\": 8,\n    \"max_write_buffer_count\": 512,\n    \"max_write_buffer_size\": \"512k\",\n    \"max_retry_delay\": \"10s\",\n    \"read_poll_timeout\": \"30s\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->follow([\n    \"index\" => \"follower_index\",\n    \"wait_for_active_shards\" => \"1\",\n    \"body\" => [\n        \"remote_cluster\" => \"remote_cluster\",\n        \"leader_index\" => \"leader_index\",\n        \"settings\" => [\n            \"index.number_of_replicas\" => 0,\n        ],\n        \"max_read_request_operation_count\" => 1024,\n        \"max_outstanding_read_requests\" => 16,\n        \"max_read_request_size\" => \"1024k\",\n        \"max_write_request_operation_count\" => 32768,\n        \"max_write_request_size\" => \"16k\",\n        \"max_outstanding_write_requests\" => 8,\n        \"max_write_buffer_count\" => 512,\n        \"max_write_buffer_size\" => \"512k\",\n        \"max_retry_delay\" => \"10s\",\n        \"read_poll_timeout\" => \"30s\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"remote_cluster":"remote_cluster","leader_index":"leader_index","settings":{"index.number_of_replicas":0},"max_read_request_operation_count":1024,"max_outstanding_read_requests":16,"max_read_request_size":"1024k","max_write_request_operation_count":32768,"max_write_request_size":"16k","max_outstanding_write_requests":8,"max_write_buffer_count":512,"max_write_buffer_size":"512k","max_retry_delay":"10s","read_poll_timeout":"30s"}'' "$ELASTICSEARCH_URL/follower_index/_ccr/follow?wait_for_active_shards=1"'
+      - lang: Java
+        source: "client.ccr().follow(f -> f\n    .index(\"follower_index\")\n    .leaderIndex(\"leader_index\")\n    .maxOutstandingReadRequests(16L)\n    .maxOutstandingWriteRequests(8)\n    .maxReadRequestOperationCount(1024)\n    .maxReadRequestSize(\"1024k\")\n    .maxRetryDelay(m -> m\n        .time(\"10s\")\n    )\n    .maxWriteBufferCount(512)\n    .maxWriteBufferSize(\"512k\")\n    .maxWriteRequestOperationCount(32768)\n    .maxWriteRequestSize(\"16k\")\n    .readPollTimeout(r -> r\n        .time(\"30s\")\n    )\n    .remoteCluster(\"remote_cluster\")\n    .settings(s -> s\n        .otherSettings(\"index.number_of_replicas\", JsonData.fromJson(\"0\"))\n    )\n    .waitForActiveShards(w -> w\n        .count(1)\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/info:
+    get:
+      tags:
+      - Ccr
+      summary: Get follower information
+      description: 'Get information about all cross-cluster replication follower indices.
+
+        For example, the results include follower index names, leader index names, replication options, and whether the follower indices are active or paused.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `monitor`'
+      externalDocs:
+        description: About cross-cluster replication
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-get-follow-info.html
+      operationId: ccr-follow-info
+      parameters:
+      - in: path
+        name: index
+        description: A comma-delimited list of follower index patterns.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Indices'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  follower_indices:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ccr.follow_info.FollowerIndex'
+                required:
+                - follower_indices
+              examples:
+                FollowInfoResponseExample1:
+                  summary: An active follower index
+                  description: A successful response from `GET /follower_index/_ccr/info` when the follower index is active.
+                  value: "{\n  \"follower_indices\": [\n    {\n      \"follower_index\": \"follower_index\",\n      \"remote_cluster\": \"remote_cluster\",\n      \"leader_index\": \"leader_index\",\n      \"status\": \"active\",\n      \"parameters\": {\n        \"max_read_request_operation_count\": 5120,\n        \"max_read_request_size\": \"32mb\",\n        \"max_outstanding_read_requests\": 12,\n        \"max_write_request_operation_count\": 5120,\n        \"max_write_request_size\": \"9223372036854775807b\",\n        \"max_outstanding_write_requests\": 9,\n        \"max_write_buffer_count\": 2147483647,\n        \"max_write_buffer_size\": \"512mb\",\n        \"max_retry_delay\": \"500ms\",\n        \"read_poll_timeout\": \"1m\"\n      }\n    }\n  ]\n}"
+                FollowInfoResponseExample2:
+                  summary: A paused follower index
+                  description: A successful response from `GET /follower_index/_ccr/info` when the follower index is paused.
+                  value: "{\n  \"follower_indices\": [\n    {\n      \"follower_index\": \"follower_index\",\n      \"remote_cluster\": \"remote_cluster\",\n      \"leader_index\": \"leader_index\",\n      \"status\": \"paused\"\n    }\n  ]\n}"
+      x-state: Generally available; Added in 6.7.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /follower_index/_ccr/info
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.follow_info(\n    index=\"follower_index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.followInfo({\n  index: \"follower_index\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.follow_info(\n  index: \"follower_index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->followInfo([\n    \"index\" => \"follower_index\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/follower_index/_ccr/info"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.FollowInfoAsync(indices: new[] { "follower_index" });'
+      - lang: Java
+        source: "client.ccr().followInfo(f -> f\n    .index(\"follower_index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/stats:
+    get:
+      tags:
+      - Ccr
+      summary: Get follower stats
+      description: 'Get cross-cluster replication follower stats.
+
+        The API returns shard-level stats about the "following tasks" associated with each shard for the specified indices.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `monitor`'
+      externalDocs:
+        description: About cross-cluster replication
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-get-follow-stats.html
+      operationId: ccr-follow-stats
+      parameters:
+      - in: path
+        name: index
+        description: A comma-delimited list of index patterns.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Indices'
+        style: simple
+      - in: query
+        name: timeout
+        description: 'The period to wait for a response.
+
+          If no response is received before the timeout expires, the request fails and returns an error.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  indices:
+                    description: An array of follower index statistics.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ccr._types.FollowIndexStats'
+                required:
+                - indices
+              examples:
+                FollowIndexStatsResponseExample1:
+                  description: A successful response from `GET /follower_index/_ccr/stats`, which retrieves follower stats.
+                  value: "{\n  \"indices\" : [\n    {\n      \"index\" : \"follower_index\",\n      \"total_global_checkpoint_lag\" : 256,\n      \"shards\" : [\n        {\n          \"remote_cluster\" : \"remote_cluster\",\n          \"leader_index\" : \"leader_index\",\n          \"follower_index\" : \"follower_index\",\n          \"shard_id\" : 0,\n          \"leader_global_checkpoint\" : 1024,\n          \"leader_max_seq_no\" : 1536,\n          \"follower_global_checkpoint\" : 768,\n          \"follower_max_seq_no\" : 896,\n          \"last_requested_seq_no\" : 897,\n          \"outstanding_read_requests\" : 8,\n          \"outstanding_write_requests\" : 2,\n          \"write_buffer_operation_count\" : 64,\n          \"follower_mapping_version\" : 4,\n          \"follower_settings_version\" : 2,\n          \"follower_aliases_version\" : 8,\n          \"total_read_time_millis\" : 32768,\n          \"total_read_remote_exec_time_millis\" : 16384,\n          \"successful_read_requests\" : 32,\n          \"failed_read_requests\" : 0,\n          \"operations_read\" : 896,\n          \"bytes_read\" : 32768,\n          \"total_write_time_millis\" : 16384,\n          \"write_buffer_size_in_bytes\" : 1536,\n          \"successful_write_requests\" : 16,\n          \"failed_write_requests\" : 0,\n          \"operations_written\" : 832,\n          \"read_exceptions\" : [ ],\n          \"time_since_last_read_millis\" : 8\n        }\n      ]\n    }\n  ]\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /follower_index/_ccr/stats
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.follow_stats(\n    index=\"follower_index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.followStats({\n  index: \"follower_index\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.follow_stats(\n  index: \"follower_index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->followStats([\n    \"index\" => \"follower_index\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/follower_index/_ccr/stats"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.FollowStatsAsync(indices: new[] { "follower_index" });'
+      - lang: Java
+        source: "client.ccr().followStats(f -> f\n    .index(\"follower_index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/forget_follower:
+    post:
+      tags:
+      - Ccr
+      summary: Forget a follower
+      description: 'Remove the cross-cluster replication follower retention leases from the leader.
+
+
+        A following index takes out retention leases on its leader index.
+
+        These leases are used to increase the likelihood that the shards of the leader index retain the history of operations that the shards of the following index need to run replication.
+
+        When a follower index is converted to a regular index by the unfollow API (either by directly calling the API or by index lifecycle management tasks), these leases are removed.
+
+        However, removal of the leases can fail, for example when the remote cluster containing the leader index is unavailable.
+
+        While the leases will eventually expire on their own, their extended existence can cause the leader index to hold more history than necessary and prevent index lifecycle management from performing some operations on the leader index.
+
+        This API exists to enable manually removing the leases when the unfollow API is unable to do so.
+
+
+        NOTE: This API does not stop replication by a following index. If you use this API with a follower index that is still actively following, the following index will add back retention leases on the leader.
+
+        The only purpose of this API is to handle the case of failure to remove the following retention leases after the unfollow API is invoked.'
+      externalDocs:
+        description: About cross-cluster replication
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-post-forget-follower.html
+      operationId: ccr-forget-follower
+      parameters:
+      - in: path
+        name: index
+        description: Name of the leader index for which specified follower retention leases should be removed
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                follower_cluster:
+                  type: string
+                follower_index:
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                follower_index_uuid:
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Uuid'
+                leader_remote_cluster:
+                  type: string
+            examples:
+              ForgetFollowerIndexRequestExample1:
+                description: Run `POST /<leader_index>/_ccr/forget_follower`.
+                value: "{\n  \"follower_cluster\" : \"<follower_cluster>\",\n  \"follower_index\" : \"<follower_index>\",\n  \"follower_index_uuid\" : \"<follower_index_uuid>\",\n  \"leader_remote_cluster\" : \"<leader_remote_cluster>\"\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _shards:
+                    allOf:
+                    - $ref: '#/components/schemas/_types.ShardStatistics'
+                required:
+                - _shards
+              examples:
+                ForgetFollowerIndexResponseExample1:
+                  description: 'A successful response for removing the follower retention leases from the leader index.
+
+                    '
+                  value: "{\n  \"_shards\" : {\n    \"total\" : 1,\n    \"successful\" : 1,\n    \"failed\" : 0,\n    \"failures\" : [ ]\n  }\n}"
+      x-state: Generally available; Added in 6.7.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST /<leader_index>/_ccr/forget_follower\n{\n  \"follower_cluster\" : \"<follower_cluster>\",\n  \"follower_index\" : \"<follower_index>\",\n  \"follower_index_uuid\" : \"<follower_index_uuid>\",\n  \"leader_remote_cluster\" : \"<leader_remote_cluster>\"\n}"
+      - lang: Python
+        source: "resp = client.ccr.forget_follower(\n    index=\"<leader_index>\",\n    follower_cluster=\"<follower_cluster>\",\n    follower_index=\"<follower_index>\",\n    follower_index_uuid=\"<follower_index_uuid>\",\n    leader_remote_cluster=\"<leader_remote_cluster>\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.forgetFollower({\n  index: \"<leader_index>\",\n  follower_cluster: \"<follower_cluster>\",\n  follower_index: \"<follower_index>\",\n  follower_index_uuid: \"<follower_index_uuid>\",\n  leader_remote_cluster: \"<leader_remote_cluster>\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.forget_follower(\n  index: \"<leader_index>\",\n  body: {\n    \"follower_cluster\": \"<follower_cluster>\",\n    \"follower_index\": \"<follower_index>\",\n    \"follower_index_uuid\": \"<follower_index_uuid>\",\n    \"leader_remote_cluster\": \"<leader_remote_cluster>\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->forgetFollower([\n    \"index\" => \"<leader_index>\",\n    \"body\" => [\n        \"follower_cluster\" => \"<follower_cluster>\",\n        \"follower_index\" => \"<follower_index>\",\n        \"follower_index_uuid\" => \"<follower_index_uuid>\",\n        \"leader_remote_cluster\" => \"<leader_remote_cluster>\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"follower_cluster":"<follower_cluster>","follower_index":"<follower_index>","follower_index_uuid":"<follower_index_uuid>","leader_remote_cluster":"<leader_remote_cluster>"}'' "$ELASTICSEARCH_URL/<leader_index>/_ccr/forget_follower"'
+      - lang: C#
+        source: "var response = await client.CrossClusterReplication\n    .ForgetFollowerAsync(index: \"<leader_index>\", d1 => d1\n        .FollowerCluster(\"<follower_cluster>\")\n        .FollowerIndex(\"<follower_index>\")\n        .FollowerIndexUuid(\"<follower_index_uuid>\")\n        .LeaderRemoteCluster(\"<leader_remote_cluster>\")\n    );"
+      - lang: Java
+        source: "client.ccr().forgetFollower(f -> f\n    .followerCluster(\"<follower_cluster>\")\n    .followerIndex(\"<follower_index>\")\n    .followerIndexUuid(\"<follower_index_uuid>\")\n    .index(\"<leader_index>\")\n    .leaderRemoteCluster(\"<leader_remote_cluster>\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ccr/auto_follow/{name}/pause:
+    post:
+      tags:
+      - Ccr
+      summary: Pause an auto-follow pattern
+      description: 'Pause a cross-cluster replication auto-follow pattern.
+
+        When the API returns, the auto-follow pattern is inactive.
+
+        New indices that are created on the remote cluster and match the auto-follow patterns are ignored.
+
+
+        You can resume auto-following with the resume auto-follow pattern API.
+
+        When it resumes, the auto-follow pattern is active again and automatically configures follower indices for newly created indices on the remote cluster that match its patterns.
+
+        Remote indices that were created while the pattern was paused will also be followed, unless they have been deleted or closed in the interim.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ccr`'
+      externalDocs:
+        description: More about auto-follow patterns
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication/manage-auto-follow-patterns
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-pause-auto-follow-pattern.html
+      operationId: ccr-pause-auto-follow-pattern
+      parameters:
+      - in: path
+        name: name
+        description: The name of the auto-follow pattern to pause.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PauseAutoFollowPatternResponseExample1:
+                  description: A successful response from `POST /_ccr/auto_follow/my_auto_follow_pattern/pause`, which pauses an auto-follow pattern.
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 7.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /_ccr/auto_follow/my_auto_follow_pattern/pause
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.pause_auto_follow_pattern(\n    name=\"my_auto_follow_pattern\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.pauseAutoFollowPattern({\n  name: \"my_auto_follow_pattern\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.pause_auto_follow_pattern(\n  name: \"my_auto_follow_pattern\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->pauseAutoFollowPattern([\n    \"name\" => \"my_auto_follow_pattern\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ccr/auto_follow/my_auto_follow_pattern/pause"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.PauseAutoFollowPatternAsync(name: "my_auto_follow_pattern");'
+      - lang: Java
+        source: "client.ccr().pauseAutoFollowPattern(p -> p\n    .name(\"my_auto_follow_pattern\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/pause_follow:
+    post:
+      tags:
+      - Ccr
+      summary: Pause a follower
+      description: 'Pause a cross-cluster replication follower index.
+
+        The follower index will not fetch any additional operations from the leader index.
+
+        You can resume following with the resume follower API.
+
+        You can pause and resume a follower index to change the configuration of the following task.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ccr`'
+      operationId: ccr-pause-follow
+      parameters:
+      - in: path
+        name: index
+        description: The name of the follower index.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                PauseFollowIndexResponseExample1:
+                  description: A successful response from `POST /follower_index/_ccr/pause_follow`, which pauses a follower index.
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /follower_index/_ccr/pause_follow
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.pause_follow(\n    index=\"follower_index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.pauseFollow({\n  index: \"follower_index\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.pause_follow(\n  index: \"follower_index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->pauseFollow([\n    \"index\" => \"follower_index\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/follower_index/_ccr/pause_follow"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.PauseFollowAsync(index: "follower_index");'
+      - lang: Java
+        source: "client.ccr().pauseFollow(p -> p\n    .index(\"follower_index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ccr/auto_follow/{name}/resume:
+    post:
+      tags:
+      - Ccr
+      summary: Resume an auto-follow pattern
+      description: 'Resume a cross-cluster replication auto-follow pattern that was paused.
+
+        The auto-follow pattern will resume configuring following indices for newly created indices that match its patterns on the remote cluster.
+
+        Remote indices created while the pattern was paused will also be followed unless they have been deleted or closed in the interim.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage_ccr`'
+      externalDocs:
+        description: More about auto-follow patterns
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication/manage-auto-follow-patterns
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-resume-auto-follow-pattern.html
+      operationId: ccr-resume-auto-follow-pattern
+      parameters:
+      - in: path
+        name: name
+        description: The name of the auto-follow pattern to resume.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                ResumeAutoFollowPatternResponseExample1:
+                  description: 'A successful response `POST /_ccr/auto_follow/my_auto_follow_pattern/resume`, which resumes an auto-follow pattern.
+
+                    '
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 7.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /_ccr/auto_follow/my_auto_follow_pattern/resume
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.resume_auto_follow_pattern(\n    name=\"my_auto_follow_pattern\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.resumeAutoFollowPattern({\n  name: \"my_auto_follow_pattern\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.resume_auto_follow_pattern(\n  name: \"my_auto_follow_pattern\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->resumeAutoFollowPattern([\n    \"name\" => \"my_auto_follow_pattern\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ccr/auto_follow/my_auto_follow_pattern/resume"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.ResumeAutoFollowPatternAsync(name: "my_auto_follow_pattern");'
+      - lang: Java
+        source: "client.ccr().resumeAutoFollowPattern(r -> r\n    .name(\"my_auto_follow_pattern\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/resume_follow:
+    post:
+      tags:
+      - Ccr
+      summary: Resume a follower
+      description: 'Resume a cross-cluster replication follower index that was paused.
+
+        The follower index could have been paused with the pause follower API.
+
+        Alternatively it could be paused due to replication that cannot be retried due to failures during following tasks.
+
+        When this API returns, the follower index will resume fetching operations from the leader index.'
+      externalDocs:
+        description: About cross-cluster replication
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-post-resume-follow.html
+      operationId: ccr-resume-follow
+      parameters:
+      - in: path
+        name: index
+        description: Name of the follow index to resume following
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                max_outstanding_read_requests:
+                  type: number
+                max_outstanding_write_requests:
+                  type: number
+                max_read_request_operation_count:
+                  type: number
+                max_read_request_size:
+                  type: string
+                max_retry_delay:
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+                max_write_buffer_count:
+                  type: number
+                max_write_buffer_size:
+                  type: string
+                max_write_request_operation_count:
+                  type: number
+                max_write_request_size:
+                  type: string
+                read_poll_timeout:
+                  allOf:
+                  - $ref: '#/components/schemas/_types.Duration'
+            examples:
+              ResumeFollowIndexRequestExample1:
+                description: Run `POST /follower_index/_ccr/resume_follow` to resume the follower index.
+                value: "{\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                ResumeFollowIndexResponseExample1:
+                  description: A successful response from resuming a folower index.
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST /follower_index/_ccr/resume_follow\n{\n  \"max_read_request_operation_count\" : 1024,\n  \"max_outstanding_read_requests\" : 16,\n  \"max_read_request_size\" : \"1024k\",\n  \"max_write_request_operation_count\" : 32768,\n  \"max_write_request_size\" : \"16k\",\n  \"max_outstanding_write_requests\" : 8,\n  \"max_write_buffer_count\" : 512,\n  \"max_write_buffer_size\" : \"512k\",\n  \"max_retry_delay\" : \"10s\",\n  \"read_poll_timeout\" : \"30s\"\n}"
+      - lang: Python
+        source: "resp = client.ccr.resume_follow(\n    index=\"follower_index\",\n    max_read_request_operation_count=1024,\n    max_outstanding_read_requests=16,\n    max_read_request_size=\"1024k\",\n    max_write_request_operation_count=32768,\n    max_write_request_size=\"16k\",\n    max_outstanding_write_requests=8,\n    max_write_buffer_count=512,\n    max_write_buffer_size=\"512k\",\n    max_retry_delay=\"10s\",\n    read_poll_timeout=\"30s\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.resumeFollow({\n  index: \"follower_index\",\n  max_read_request_operation_count: 1024,\n  max_outstanding_read_requests: 16,\n  max_read_request_size: \"1024k\",\n  max_write_request_operation_count: 32768,\n  max_write_request_size: \"16k\",\n  max_outstanding_write_requests: 8,\n  max_write_buffer_count: 512,\n  max_write_buffer_size: \"512k\",\n  max_retry_delay: \"10s\",\n  read_poll_timeout: \"30s\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.resume_follow(\n  index: \"follower_index\",\n  body: {\n    \"max_read_request_operation_count\": 1024,\n    \"max_outstanding_read_requests\": 16,\n    \"max_read_request_size\": \"1024k\",\n    \"max_write_request_operation_count\": 32768,\n    \"max_write_request_size\": \"16k\",\n    \"max_outstanding_write_requests\": 8,\n    \"max_write_buffer_count\": 512,\n    \"max_write_buffer_size\": \"512k\",\n    \"max_retry_delay\": \"10s\",\n    \"read_poll_timeout\": \"30s\"\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->resumeFollow([\n    \"index\" => \"follower_index\",\n    \"body\" => [\n        \"max_read_request_operation_count\" => 1024,\n        \"max_outstanding_read_requests\" => 16,\n        \"max_read_request_size\" => \"1024k\",\n        \"max_write_request_operation_count\" => 32768,\n        \"max_write_request_size\" => \"16k\",\n        \"max_outstanding_write_requests\" => 8,\n        \"max_write_buffer_count\" => 512,\n        \"max_write_buffer_size\" => \"512k\",\n        \"max_retry_delay\" => \"10s\",\n        \"read_poll_timeout\" => \"30s\",\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"max_read_request_operation_count":1024,"max_outstanding_read_requests":16,"max_read_request_size":"1024k","max_write_request_operation_count":32768,"max_write_request_size":"16k","max_outstanding_write_requests":8,"max_write_buffer_count":512,"max_write_buffer_size":"512k","max_retry_delay":"10s","read_poll_timeout":"30s"}'' "$ELASTICSEARCH_URL/follower_index/_ccr/resume_follow"'
+      - lang: C#
+        source: "var response = await client.CrossClusterReplication\n    .ResumeFollowAsync(index: \"follower_index\", d1 => d1\n        .MaxOutstandingReadRequests(16L)\n        .MaxOutstandingWriteRequests(8L)\n        .MaxReadRequestOperationCount(1024L)\n        .MaxReadRequestSize(\"1024k\")\n        .MaxRetryDelay(\"10s\")\n        .MaxWriteBufferCount(512L)\n        .MaxWriteBufferSize(\"512k\")\n        .MaxWriteRequestOperationCount(32768L)\n        .MaxWriteRequestSize(\"16k\")\n        .ReadPollTimeout(\"30s\")\n    );"
+      - lang: Java
+        source: "client.ccr().resumeFollow(r -> r\n    .index(\"follower_index\")\n    .maxOutstandingReadRequests(16L)\n    .maxOutstandingWriteRequests(8L)\n    .maxReadRequestOperationCount(1024L)\n    .maxReadRequestSize(\"1024k\")\n    .maxRetryDelay(m -> m\n        .time(\"10s\")\n    )\n    .maxWriteBufferCount(512L)\n    .maxWriteBufferSize(\"512k\")\n    .maxWriteRequestOperationCount(32768L)\n    .maxWriteRequestSize(\"16k\")\n    .readPollTimeout(re -> re\n        .time(\"30s\")\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_ccr/stats:
+    get:
+      tags:
+      - Ccr
+      summary: Get cross-cluster replication stats
+      description: 'This API returns stats about auto-following and the same shard-level stats as the get follower stats API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `monitor`'
+      operationId: ccr-stats
+      parameters:
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  auto_follow_stats:
+                    description: Statistics for the auto-follow coordinator.
+                    allOf:
+                    - $ref: '#/components/schemas/ccr.stats.AutoFollowStats'
+                  follow_stats:
+                    description: Shard-level statistics for follower indices.
+                    allOf:
+                    - $ref: '#/components/schemas/ccr.stats.FollowStats'
+                required:
+                - auto_follow_stats
+                - follow_stats
+              examples:
+                CcrStatsResponseExample1:
+                  description: A successful response from `GET /_ccr/stats` that returns cross-cluster replication stats.
+                  value: "{\n  \"auto_follow_stats\" : {\n    \"number_of_failed_follow_indices\" : 0,\n    \"number_of_failed_remote_cluster_state_requests\" : 0,\n    \"number_of_successful_follow_indices\" : 1,\n    \"recent_auto_follow_errors\" : [],\n    \"auto_followed_clusters\" : []\n  },\n  \"follow_stats\" : {\n    \"indices\" : [\n      {\n        \"index\" : \"follower_index\",\n        \"total_global_checkpoint_lag\" : 256,\n        \"shards\" : [\n          {\n            \"remote_cluster\" : \"remote_cluster\",\n            \"leader_index\" : \"leader_index\",\n            \"follower_index\" : \"follower_index\",\n            \"shard_id\" : 0,\n            \"leader_global_checkpoint\" : 1024,\n            \"leader_max_seq_no\" : 1536,\n            \"follower_global_checkpoint\" : 768,\n            \"follower_max_seq_no\" : 896,\n            \"last_requested_seq_no\" : 897,\n            \"outstanding_read_requests\" : 8,\n            \"outstanding_write_requests\" : 2,\n            \"write_buffer_operation_count\" : 64,\n            \"follower_mapping_version\" : 4,\n            \"follower_settings_version\" : 2,\n            \"follower_aliases_version\" : 8,\n            \"total_read_time_millis\" : 32768,\n            \"total_read_remote_exec_time_millis\" : 16384,\n            \"successful_read_requests\" : 32,\n            \"failed_read_requests\" : 0,\n            \"operations_read\" : 896,\n            \"bytes_read\" : 32768,\n            \"total_write_time_millis\" : 16384,\n            \"write_buffer_size_in_bytes\" : 1536,\n            \"successful_write_requests\" : 16,\n            \"failed_write_requests\" : 0,\n            \"operations_written\" : 832,\n            \"read_exceptions\" : [ ],\n            \"time_since_last_read_millis\" : 8\n          }\n        ]\n      }\n    ]\n  }\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_ccr/stats
+
+          '
+      - lang: Python
+        source: resp = client.ccr.stats()
+      - lang: JavaScript
+        source: const response = await client.ccr.stats();
+      - lang: Ruby
+        source: response = client.ccr.stats
+      - lang: PHP
+        source: $resp = $client->ccr()->stats();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_ccr/stats"'
+      - lang: C#
+        source: var response = await client.CrossClusterReplication.StatsAsync();
+      - lang: Java
+        source: 'client.ccr().stats(s -> s);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_ccr/unfollow:
+    post:
+      tags:
+      - Ccr
+      summary: Unfollow an index
+      description: 'Convert a cross-cluster replication follower index to a regular index.
+
+        The API stops the following task associated with a follower index and removes index metadata and settings associated with cross-cluster replication.
+
+        The follower index must be paused and closed before you call the unfollow API.
+
+
+        > info
+
+        > Currently cross-cluster replication does not support converting an existing regular index to a follower index. Converting a follower index to a regular index is an irreversible operation.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage_follow_index`'
+      externalDocs:
+        description: About cross-cluster replication
+        url: https://www.elastic.co/docs/deploy-manage/tools/cross-cluster-replication
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/ccr-post-unfollow.html
+      operationId: ccr-unfollow
+      parameters:
+      - in: path
+        name: index
+        description: The name of the follower index.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.IndexName'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for a connection to the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          It can also be set to `-1` to indicate that the request should never timeout.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+              examples:
+                UnfollowIndexResponseExample1:
+                  description: A successful response from `POST /follower_index/_ccr/unfollow`.
+                  value: "{\n  \"acknowledged\" : true\n}"
+      x-state: Generally available; Added in 6.5.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /follower_index/_ccr/unfollow
+
+          '
+      - lang: Python
+        source: "resp = client.ccr.unfollow(\n    index=\"follower_index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.ccr.unfollow({\n  index: \"follower_index\",\n});"
+      - lang: Ruby
+        source: "response = client.ccr.unfollow(\n  index: \"follower_index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->ccr()->unfollow([\n    \"index\" => \"follower_index\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/follower_index/_ccr/unfollow"'
+      - lang: C#
+        source: 'var response = await client.CrossClusterReplication.UnfollowAsync(index: "follower_index");'
+      - lang: Java
+        source: "client.ccr().unfollow(u -> u\n    .index(\"follower_index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type
+    ccr._types.FollowIndexStats:
+      type: object
+      properties:
+        index:
+          description: The name of the follower index.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        shards:
+          description: An array of shard-level following task statistics.
+          type: array
+          items:
+            $ref: '#/components/schemas/ccr._types.ShardStats'
+      required:
+      - index
+      - shards
+    ccr._types.ShardStats:
+      type: object
+      properties:
+        bytes_read:
+          description: 'The total of transferred bytes read from the leader.
+
+            This is only an estimate and does not account for compression if enabled.'
+          type: number
+        failed_read_requests:
+          description: The number of failed reads.
+          type: number
+        failed_write_requests:
+          description: The number of failed bulk write requests on the follower.
+          type: number
+        fatal_exception:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        follower_aliases_version:
+          description: The index aliases version the follower is synced up to.
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        follower_global_checkpoint:
+          description: 'The current global checkpoint on the follower.
+
+            The difference between the `leader_global_checkpoint` and the `follower_global_checkpoint` is an indication of how much the follower is lagging the leader.'
+          type: number
+        follower_index:
+          description: The name of the follower index.
+          type: string
+        follower_mapping_version:
+          description: The mapping version the follower is synced up to.
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        follower_max_seq_no:
+          description: The current maximum sequence number on the follower.
+          allOf:
+          - $ref: '#/components/schemas/_types.SequenceNumber'
+        follower_settings_version:
+          description: The index settings version the follower is synced up to.
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        last_requested_seq_no:
+          description: The starting sequence number of the last batch of operations requested from the leader.
+          allOf:
+          - $ref: '#/components/schemas/_types.SequenceNumber'
+        leader_global_checkpoint:
+          description: The current global checkpoint on the leader known to the follower task.
+          type: number
+        leader_index:
+          description: The name of the index in the leader cluster being followed.
+          type: string
+        leader_max_seq_no:
+          description: The current maximum sequence number on the leader known to the follower task.
+          allOf:
+          - $ref: '#/components/schemas/_types.SequenceNumber'
+        operations_read:
+          description: The total number of operations read from the leader.
+          type: number
+        operations_written:
+          description: The number of operations written on the follower.
+          type: number
+        outstanding_read_requests:
+          description: The number of active read requests from the follower.
+          type: number
+        outstanding_write_requests:
+          description: The number of active bulk write requests on the follower.
+          type: number
+        read_exceptions:
+          description: An array of objects representing failed reads.
+          type: array
+          items:
+            $ref: '#/components/schemas/ccr._types.ReadException'
+        remote_cluster:
+          description: The remote cluster containing the leader index.
+          type: string
+        shard_id:
+          description: The numerical shard ID, with values from 0 to one less than the number of replicas.
+          type: number
+        successful_read_requests:
+          description: The number of successful fetches.
+          type: number
+        successful_write_requests:
+          description: The number of bulk write requests run on the follower.
+          type: number
+        time_since_last_read:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        time_since_last_read_millis:
+          description: 'The number of milliseconds since a read request was sent to the leader.
+
+            When the follower is caught up to the leader, this number will increase up to the configured `read_poll_timeout` at which point another read request will be sent to the leader.'
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        total_read_remote_exec_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        total_read_remote_exec_time_millis:
+          description: The total time reads spent running on the remote cluster.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        total_read_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        total_read_time_millis:
+          description: The total time reads were outstanding, measured from the time a read was sent to the leader to the time a reply was returned to the follower.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        total_write_time:
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        total_write_time_millis:
+          description: The total time spent writing on the follower.
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+        write_buffer_operation_count:
+          description: The number of write operations queued on the follower.
+          type: number
+        write_buffer_size_in_bytes:
+          description: The total number of bytes of operations currently queued for writing.
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+      required:
+      - bytes_read
+      - failed_read_requests
+      - failed_write_requests
+      - follower_aliases_version
+      - follower_global_checkpoint
+      - follower_index
+      - follower_mapping_version
+      - follower_max_seq_no
+      - follower_settings_version
+      - last_requested_seq_no
+      - leader_global_checkpoint
+      - leader_index
+      - leader_max_seq_no
+      - operations_read
+      - operations_written
+      - outstanding_read_requests
+      - outstanding_write_requests
+      - read_exceptions
+      - remote_cluster
+      - shard_id
+      - successful_read_requests
+      - successful_write_requests
+      - time_since_last_read_millis
+      - total_read_remote_exec_time_millis
+      - total_read_time_millis
+      - total_write_time_millis
+      - write_buffer_operation_count
+      - write_buffer_size_in_bytes
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    _types.IndexPatterns:
+      type: array
+      items:
+        $ref: '#/components/schemas/_types.IndexPattern'
+    _types.DurationValueUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+    ccr.stats.FollowStats:
+      type: object
+      properties:
+        indices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ccr._types.FollowIndexStats'
+      required:
+      - indices
+    _types.ShardFailure:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
+    _types.Uuid:
+      type: string
+    _types.IndexPattern:
+      type: string
+    ccr._types.ReadException:
+      type: object
+      properties:
+        exception:
+          description: The exception that caused the read to fail.
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        from_seq_no:
+          description: The starting sequence number of the batch requested from the leader.
+          allOf:
+          - $ref: '#/components/schemas/_types.SequenceNumber'
+        retries:
+          description: The number of times the batch has been retried.
+          type: number
+      required:
+      - exception
+      - from_seq_no
+      - retries
+    ccr.stats.AutoFollowedCluster:
+      type: object
+      properties:
+        cluster_name:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        last_seen_metadata_version:
+          allOf:
+          - $ref: '#/components/schemas/_types.VersionNumber'
+        time_since_last_check_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.DurationValueUnitMillis'
+      required:
+      - cluster_name
+      - last_seen_metadata_version
+      - time_since_last_check_millis
+    indices._types.IndexSettings:
+      type: object
+      x-model: true
+      externalDocs:
+        description: Index settings
+        url: https://www.elastic.co/docs/reference/elasticsearch/index-settings/
+    _types.Name:
+      type: string
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.WaitForActiveShardOptions:
+      type: string
+      enum:
+      - all
+      - index-setting
+    ccr.follow_info.FollowerIndexParameters:
+      type: object
+      properties:
+        max_outstanding_read_requests:
+          description: The maximum number of outstanding reads requests from the remote cluster.
+          type: number
+        max_outstanding_write_requests:
+          description: The maximum number of outstanding write requests on the follower.
+          type: number
+        max_read_request_operation_count:
+          description: The maximum number of operations to pull per read from the remote cluster.
+          type: number
+        max_read_request_size:
+          description: The maximum size in bytes of per read of a batch of operations pulled from the remote cluster.
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_retry_delay:
+          description: 'The maximum time to wait before retrying an operation that failed exceptionally. An exponential backoff strategy is employed when
+
+            retrying.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        max_write_buffer_count:
+          description: 'The maximum number of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will be
+
+            deferred until the number of queued operations goes below the limit.'
+          type: number
+        max_write_buffer_size:
+          description: 'The maximum total bytes of operations that can be queued for writing. When this limit is reached, reads from the remote cluster will
+
+            be deferred until the total bytes of queued operations goes below the limit.'
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        max_write_request_operation_count:
+          description: The maximum number of operations per bulk write request executed on the follower.
+          type: number
+        max_write_request_size:
+          description: The maximum total bytes of operations per bulk write request executed on the follower.
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        read_poll_timeout:
+          description: 'The maximum time to wait for new operations on the remote cluster when the follower index is synchronized with the leader index.
+
+            When the timeout has elapsed, the poll for operations will return to the follower so that it can update some statistics.
+
+            Then the follower will immediately attempt to read from the leader again.'
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+    _types.uint:
+      type: number
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    _types.IndexName:
+      type: string
+    ccr.follow_info.FollowerIndexStatus:
+      type: string
+      enum:
+      - active
+      - paused
+    _types.SequenceNumber:
+      type: number
+    ccr.get_auto_follow_pattern.AutoFollowPatternSummary:
+      type: object
+      properties:
+        active:
+          type: boolean
+        remote_cluster:
+          description: The remote cluster containing the leader indices to match against.
+          type: string
+        follow_index_pattern:
+          description: The name of follower index.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexPattern'
+        leader_index_patterns:
+          description: An array of simple index patterns to match against indices in the remote cluster specified by the remote_cluster field.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexPatterns'
+        leader_index_exclusion_patterns:
+          description: An array of simple index patterns that can be used to exclude indices from being auto-followed.
+          x-state: Generally available; Added in 7.14.0
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexPatterns'
+        max_outstanding_read_requests:
+          description: The maximum number of outstanding reads requests from the remote cluster.
+          type: number
+      required:
+      - active
+      - remote_cluster
+      - leader_index_patterns
+      - leader_index_exclusion_patterns
+      - max_outstanding_read_requests
+    ccr.follow_info.FollowerIndex:
+      type: object
+      properties:
+        follower_index:
+          description: The name of the follower index.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        leader_index:
+          description: The name of the index in the leader cluster that is followed.
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        parameters:
+          description: An object that encapsulates cross-cluster replication parameters. If the follower index's status is paused, this object is omitted.
+          allOf:
+          - $ref: '#/components/schemas/ccr.follow_info.FollowerIndexParameters'
+        remote_cluster:
+          description: The remote cluster that contains the leader index.
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        status:
+          description: 'The status of the index following: `active` or `paused`.'
+          allOf:
+          - $ref: '#/components/schemas/ccr.follow_info.FollowerIndexStatus'
+      required:
+      - follower_index
+      - leader_index
+      - remote_cluster
+      - status
+    _types.ShardStatistics:
+      type: object
+      properties:
+        failed:
+          description: The number of shards the operation or search attempted to run on but failed.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        successful:
+          description: The number of shards the operation or search succeeded on.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        total:
+          description: The number of shards the operation or search will run on overall.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ShardFailure'
+        skipped:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+      required:
+      - failed
+      - successful
+      - total
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    _types.WaitForActiveShards:
+      oneOf:
+      - type: number
+      - $ref: '#/components/schemas/_types.WaitForActiveShardOptions'
+    _types.VersionNumber:
+      type: number
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    ccr.get_auto_follow_pattern.AutoFollowPattern:
+      type: object
+      properties:
+        name:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        pattern:
+          allOf:
+          - $ref: '#/components/schemas/ccr.get_auto_follow_pattern.AutoFollowPatternSummary'
+      required:
+      - name
+      - pattern
+    ccr.stats.AutoFollowStats:
+      type: object
+      properties:
+        auto_followed_clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ccr.stats.AutoFollowedCluster'
+        number_of_failed_follow_indices:
+          description: 'The number of indices that the auto-follow coordinator failed to automatically follow.
+
+            The causes of recent failures are captured in the logs of the elected master node and in the `auto_follow_stats.recent_auto_follow_errors` field.'
+          type: number
+        number_of_failed_remote_cluster_state_requests:
+          description: The number of times that the auto-follow coordinator failed to retrieve the cluster state from a remote cluster registered in a collection of auto-follow patterns.
+          type: number
+        number_of_successful_follow_indices:
+          description: The number of indices that the auto-follow coordinator successfully followed.
+          type: number
+        recent_auto_follow_errors:
+          description: An array of objects representing failures by the auto-follow coordinator.
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - auto_followed_clusters
+      - number_of_failed_follow_indices
+      - number_of_failed_remote_cluster_state_requests
+      - number_of_successful_follow_indices
+      - recent_auto_follow_errors
+  responses:
+    ccr.get_auto_follow_pattern-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              patterns:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ccr.get_auto_follow_pattern.AutoFollowPattern'
+            required:
+            - patterns
+          examples:
+            GetAutoFollowPatternResponseExample1:
+              description: A successful response from `GET /_ccr/auto_follow/my_auto_follow_pattern`, which gets auto-follow patterns.
+              value: "{\n  \"patterns\": [\n    {\n      \"name\": \"my_auto_follow_pattern\",\n      \"pattern\": {\n        \"active\": true,\n        \"remote_cluster\" : \"remote_cluster\",\n        \"leader_index_patterns\" :\n        [\n          \"leader_index*\"\n        ],\n        \"leader_index_exclusion_patterns\":\n        [\n          \"leader_index_001\"\n        ],\n        \"follow_index_pattern\" : \"{{leader_index}}-follower\"\n      }\n    }\n  ]\n}"
+  parameters:
+    ccr.get_auto_follow_pattern-master_timeout:
+      in: query
+      name: master_timeout
+      description: 'The period to wait for a connection to the master node.
+
+        If the master node is not available before the timeout expires, the request fails and returns an error.
+
+        It can also be set to `-1` to indicate that the request should never timeout.'
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    ccr.get_auto_follow_pattern-name:
+      in: path
+      name: name
+      description: 'The auto-follow pattern collection that you want to retrieve.
+
+        If you do not specify a name, the API returns information for all collections.'
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Name'
+      style: simple
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

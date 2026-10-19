@@ -1,0 +1,670 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch Searchable Snapshots API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: searchable_snapshots
+  x-displayName: Searchable snapshots
+  description: The searchable snapshots APIs enable you to perform searchable snapshots operations.
+  externalDocs:
+    url: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/searchable-snapshots
+    description: Learn more about searchable snapshots.
+paths:
+  /_searchable_snapshots/{node_id}/cache/stats:
+    get:
+      tags:
+      - searchable_snapshots
+      summary: Get cache statistics
+      description: '**All methods and paths for this operation:**
+
+
+        GET
+
+        /_searchable_snapshots/cache/stats
+
+
+        GET
+
+        /_searchable_snapshots/{node_id}/cache/stats
+
+
+        Get statistics about the shared cache for partially mounted indices.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`'
+      externalDocs:
+        description: More about searchable snapshots
+        url: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/searchable-snapshots
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/searchable-snapshots-api-cache-stats.html
+      operationId: searchable-snapshots-cache-stats
+      parameters:
+      - $ref: '#/components/parameters/searchable_snapshots.cache_stats-node_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/searchable_snapshots.cache_stats-200'
+      x-state: Experimental; Added in 7.13.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_searchable_snapshots/cache/stats
+
+          '
+      - lang: Python
+        source: resp = client.searchable_snapshots.cache_stats()
+      - lang: JavaScript
+        source: const response = await client.searchableSnapshots.cacheStats();
+      - lang: Ruby
+        source: response = client.searchable_snapshots.cache_stats
+      - lang: PHP
+        source: $resp = $client->searchableSnapshots()->cacheStats();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_searchable_snapshots/cache/stats"'
+      - lang: C#
+        source: var response = await client.SearchableSnapshots.CacheStatsAsync();
+      - lang: Java
+        source: 'client.searchableSnapshots().cacheStats(c -> c);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_searchable_snapshots/cache/clear:
+    post:
+      tags:
+      - searchable_snapshots
+      summary: Clear the cache
+      description: '**All methods and paths for this operation:**
+
+
+        POST
+
+        /_searchable_snapshots/cache/clear
+
+
+        POST
+
+        /{index}/_searchable_snapshots/cache/clear
+
+
+        Clear indices and data streams from the shared cache for partially mounted indices.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage`
+
+        * Cluster privileges: `manage`'
+      externalDocs:
+        description: More about searchable snapshots
+        url: https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/searchable-snapshots
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/searchable-snapshots-api-clear-cache.html
+      operationId: searchable-snapshots-clear-cache
+      parameters:
+      - $ref: '#/components/parameters/searchable_snapshots.clear_cache-index'
+      - $ref: '#/components/parameters/searchable_snapshots.clear_cache-expand_wildcards'
+      - $ref: '#/components/parameters/searchable_snapshots.clear_cache-allow_no_indices'
+      - $ref: '#/components/parameters/searchable_snapshots.clear_cache-ignore_unavailable'
+      responses:
+        '200':
+          $ref: '#/components/responses/searchable_snapshots.clear_cache-200'
+      x-state: Experimental; Added in 7.10.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /my-index/_searchable_snapshots/cache/clear
+
+          '
+      - lang: Python
+        source: "resp = client.searchable_snapshots.clear_cache(\n    index=\"my-index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.searchableSnapshots.clearCache({\n  index: \"my-index\",\n});"
+      - lang: Ruby
+        source: "response = client.searchable_snapshots.clear_cache(\n  index: \"my-index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->searchableSnapshots()->clearCache([\n    \"index\" => \"my-index\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/my-index/_searchable_snapshots/cache/clear"'
+      - lang: C#
+        source: "var response = await client.SearchableSnapshots\n    .ClearCacheAsync(d1 => d1\n        .Indices(new[] { \"my-index\" })\n    );"
+      - lang: Java
+        source: "client.searchableSnapshots().clearCache(c -> c\n    .index(\"my-index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_snapshot/{repository}/{snapshot}/_mount:
+    post:
+      tags:
+      - searchable_snapshots
+      summary: Mount a snapshot
+      description: 'Mount a snapshot as a searchable snapshot index.
+
+        Do not use this API for snapshots managed by index lifecycle management (ILM).
+
+        Manually mounting ILM-managed snapshots can interfere with ILM processes.
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage`
+
+        * Cluster privileges: `manage`'
+      operationId: searchable-snapshots-mount
+      parameters:
+      - in: path
+        name: repository
+        description: The name of the repository containing the snapshot of the index to mount.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: path
+        name: snapshot
+        description: The name of the snapshot of the index to mount.
+        required: true
+        deprecated: false
+        schema:
+          $ref: '#/components/schemas/_types.Name'
+        style: simple
+      - in: query
+        name: master_timeout
+        description: 'The period to wait for the master node.
+
+          If the master node is not available before the timeout expires, the request fails and returns an error.
+
+          To indicate that the request should never timeout, set it to `-1`.'
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: wait_for_completion
+        description: If true, the request blocks until the operation is complete.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: storage
+        description: "The mount option for the searchable snapshot index.\nFor further information on mount options, refer to: [Mount options](https://www.elastic.co/docs/deploy-manage/tools/snapshot-and-restore/searchable-snapshots#searchable-snapshot-mount-storage-options)\n\nSupported values include:\n  - `full_copy`: Fully caches the snapshotted index’s shards in the Elasticsearch cluster.\n  - `shared_cache`: Uses a local cache containing only recently searched parts of the snapshotted index’s data.\n\n"
+        deprecated: false
+        schema:
+          default: full_copy
+          allOf:
+          - $ref: '#/components/schemas/searchable_snapshots.mount.StorageOption'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                index:
+                  description: 'The name of the index contained in the snapshot whose data is to be mounted.
+
+                    If no `renamed_index` is specified, this name will also be used to create the new index.'
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                renamed_index:
+                  description: The name of the index that will be created.
+                  allOf:
+                  - $ref: '#/components/schemas/_types.IndexName'
+                index_settings:
+                  description: The settings that should be added to the index when it is mounted.
+                  type: object
+                  additionalProperties:
+                    type: object
+                ignore_index_settings:
+                  description: The names of settings that should be removed from the index when it is mounted.
+                  type: array
+                  items:
+                    type: string
+              required:
+              - index
+            examples:
+              SearchableSnapshotsMountSnapshotRequestExample1:
+                description: 'Run `POST /_snapshot/my_repository/my_snapshot/_mount?wait_for_completion=true` to mount the index `my_docs` from an existing snapshot named `my_snapshot` stored in `my_repository` as a new index `docs`.
+
+                  '
+                value: "{\n  \"index\": \"my_docs\",\n  \"renamed_index\": \"docs\",\n  \"index_settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"ignore_index_settings\": [ \"index.refresh_interval\" ]\n}"
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snapshot:
+                    allOf:
+                    - $ref: '#/components/schemas/searchable_snapshots.mount.MountedSnapshot'
+                required:
+                - snapshot
+      x-state: Generally available; Added in 7.10.0
+      x-codeSamples:
+      - lang: Console
+        source: "POST /_snapshot/my_repository/my_snapshot/_mount?wait_for_completion=true\n{\n  \"index\": \"my_docs\",\n  \"renamed_index\": \"docs\",\n  \"index_settings\": {\n    \"index.number_of_replicas\": 0\n  },\n  \"ignore_index_settings\": [ \"index.refresh_interval\" ]\n}"
+      - lang: Python
+        source: "resp = client.searchable_snapshots.mount(\n    repository=\"my_repository\",\n    snapshot=\"my_snapshot\",\n    wait_for_completion=True,\n    index=\"my_docs\",\n    renamed_index=\"docs\",\n    index_settings={\n        \"index.number_of_replicas\": 0\n    },\n    ignore_index_settings=[\n        \"index.refresh_interval\"\n    ],\n)"
+      - lang: JavaScript
+        source: "const response = await client.searchableSnapshots.mount({\n  repository: \"my_repository\",\n  snapshot: \"my_snapshot\",\n  wait_for_completion: \"true\",\n  index: \"my_docs\",\n  renamed_index: \"docs\",\n  index_settings: {\n    \"index.number_of_replicas\": 0,\n  },\n  ignore_index_settings: [\"index.refresh_interval\"],\n});"
+      - lang: Ruby
+        source: "response = client.searchable_snapshots.mount(\n  repository: \"my_repository\",\n  snapshot: \"my_snapshot\",\n  wait_for_completion: \"true\",\n  body: {\n    \"index\": \"my_docs\",\n    \"renamed_index\": \"docs\",\n    \"index_settings\": {\n      \"index.number_of_replicas\": 0\n    },\n    \"ignore_index_settings\": [\n      \"index.refresh_interval\"\n    ]\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->searchableSnapshots()->mount([\n    \"repository\" => \"my_repository\",\n    \"snapshot\" => \"my_snapshot\",\n    \"wait_for_completion\" => \"true\",\n    \"body\" => [\n        \"index\" => \"my_docs\",\n        \"renamed_index\" => \"docs\",\n        \"index_settings\" => [\n            \"index.number_of_replicas\" => 0,\n        ],\n        \"ignore_index_settings\" => array(\n            \"index.refresh_interval\",\n        ),\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"index":"my_docs","renamed_index":"docs","index_settings":{"index.number_of_replicas":0},"ignore_index_settings":["index.refresh_interval"]}'' "$ELASTICSEARCH_URL/_snapshot/my_repository/my_snapshot/_mount?wait_for_completion=true"'
+      - lang: C#
+        source: "var response = await client.SearchableSnapshots\n    .MountAsync(repository: \"my_repository\", snapshot: \"my_snapshot\", d1 => d1\n        .WaitForCompletion(true)\n        .IgnoreIndexSettings(\"index.refresh_interval\")\n        .Index(\"my_docs\")\n        .IndexSettings(new Dictionary<string, object>()\n        {\n            { \"index.number_of_replicas\", 0 }\n        })\n        .RenamedIndex(\"docs\")\n    );"
+      - lang: Java
+        source: "client.searchableSnapshots().mount(m -> m\n    .ignoreIndexSettings(\"index.refresh_interval\")\n    .index(\"my_docs\")\n    .indexSettings(\"index.number_of_replicas\", JsonData.fromJson(\"0\"))\n    .renamedIndex(\"docs\")\n    .repository(\"my_repository\")\n    .snapshot(\"my_snapshot\")\n    .waitForCompletion(true)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /{index}/_searchable_snapshots/stats:
+    get:
+      tags:
+      - searchable_snapshots
+      summary: Get searchable snapshot statistics
+      description: '**All methods and paths for this operation:**
+
+
+        GET
+
+        /_searchable_snapshots/stats
+
+
+        GET
+
+        /{index}/_searchable_snapshots/stats
+
+
+        ## Required authorization
+
+
+        * Index privileges: `manage`
+
+        * Cluster privileges: `manage`'
+      operationId: searchable-snapshots-stats
+      parameters:
+      - $ref: '#/components/parameters/searchable_snapshots.stats-index'
+      - $ref: '#/components/parameters/searchable_snapshots.stats-level'
+      responses:
+        '200':
+          $ref: '#/components/responses/searchable_snapshots.stats-200'
+      x-state: Generally available; Added in 7.10.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /my-index/_searchable_snapshots/stats
+
+          '
+      - lang: Python
+        source: "resp = client.searchable_snapshots.stats(\n    index=\"my-index\",\n)"
+      - lang: JavaScript
+        source: "const response = await client.searchableSnapshots.stats({\n  index: \"my-index\",\n});"
+      - lang: Ruby
+        source: "response = client.searchable_snapshots.stats(\n  index: \"my-index\"\n)"
+      - lang: PHP
+        source: "$resp = $client->searchableSnapshots()->stats([\n    \"index\" => \"my-index\",\n]);"
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/my-index/_searchable_snapshots/stats"'
+      - lang: C#
+        source: "var response = await client.SearchableSnapshots\n    .StatsAsync(d1 => d1\n        .Indices(new[] { \"my-index\" })\n    );"
+      - lang: Java
+        source: "client.searchableSnapshots().stats(s -> s\n    .index(\"my-index\")\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    _types.ErrorCause:
+      description: 'Cause and details about a request failure. This class defines the properties common to all error types.
+
+        Additional details are also provided, that depend on the error type.'
+      type: object
+      properties:
+        type:
+          description: The type of error
+          type: string
+        reason:
+          description: A human-readable explanation of the error, in English.
+          oneOf:
+          - type: string
+          - type:
+            - string
+            - 'null'
+        stack_trace:
+          description: The server stack trace. Present only if the `error_trace=true` parameter was sent with the request.
+          type: string
+        caused_by:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        root_cause:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+        suppressed:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ErrorCause'
+      required:
+      - type
+    _types.ExpandWildcard:
+      type: string
+      enum:
+      - all
+      - open
+      - closed
+      - hidden
+      - none
+    searchable_snapshots.mount.MountedSnapshot:
+      type: object
+      properties:
+        snapshot:
+          allOf:
+          - $ref: '#/components/schemas/_types.Name'
+        indices:
+          allOf:
+          - $ref: '#/components/schemas/_types.Indices'
+        shards:
+          allOf:
+          - $ref: '#/components/schemas/_types.ShardStatistics'
+      required:
+      - snapshot
+      - indices
+      - shards
+    _types.ByteSize:
+      oneOf:
+      - type: number
+      - type: string
+    _types.ShardFailure:
+      type: object
+      properties:
+        index:
+          allOf:
+          - $ref: '#/components/schemas/_types.IndexName'
+        node:
+          type: string
+        reason:
+          allOf:
+          - $ref: '#/components/schemas/_types.ErrorCause'
+        shard:
+          type: number
+        status:
+          type: string
+        primary:
+          type: boolean
+      required:
+      - reason
+    _types.ExpandWildcards:
+      oneOf:
+      - $ref: '#/components/schemas/_types.ExpandWildcard'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.ExpandWildcard'
+    _types.Name:
+      type: string
+    _types.NodeIds:
+      oneOf:
+      - $ref: '#/components/schemas/_types.NodeId'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.NodeId'
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    searchable_snapshots.cache_stats.Shared:
+      type: object
+      properties:
+        reads:
+          type: number
+        bytes_read_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        writes:
+          type: number
+        bytes_written_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        evictions:
+          type: number
+        num_regions:
+          type: number
+        size_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+        region_size_in_bytes:
+          allOf:
+          - $ref: '#/components/schemas/_types.ByteSize'
+      required:
+      - reads
+      - bytes_read_in_bytes
+      - writes
+      - bytes_written_in_bytes
+      - evictions
+      - num_regions
+      - size_in_bytes
+      - region_size_in_bytes
+    _types.uint:
+      type: number
+    _types.IndexName:
+      type: string
+    _types.ShardStatistics:
+      type: object
+      properties:
+        failed:
+          description: The number of shards the operation or search attempted to run on but failed.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        successful:
+          description: The number of shards the operation or search succeeded on.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        total:
+          description: The number of shards the operation or search will run on overall.
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/_types.ShardFailure'
+        skipped:
+          allOf:
+          - $ref: '#/components/schemas/_types.uint'
+      required:
+      - failed
+      - successful
+      - total
+    _types.NodeId:
+      type: string
+    _types.Indices:
+      oneOf:
+      - $ref: '#/components/schemas/_types.IndexName'
+      - type: array
+        items:
+          $ref: '#/components/schemas/_types.IndexName'
+    searchable_snapshots.cache_stats.Node:
+      type: object
+      properties:
+        shared_cache:
+          allOf:
+          - $ref: '#/components/schemas/searchable_snapshots.cache_stats.Shared'
+      required:
+      - shared_cache
+    searchable_snapshots._types.StatsLevel:
+      type: string
+      enum:
+      - cluster
+      - indices
+      - shards
+    searchable_snapshots.mount.StorageOption:
+      type: string
+      enum:
+      - full_copy
+      - shared_cache
+  parameters:
+    searchable_snapshots.cache_stats-node_id:
+      in: path
+      name: node_id
+      description: The names of the nodes in the cluster to target.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.NodeIds'
+      style: simple
+    searchable_snapshots.stats-index:
+      in: path
+      name: index
+      description: A comma-separated list of data streams and indices to retrieve statistics for.
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Indices'
+      style: simple
+    searchable_snapshots.clear_cache-ignore_unavailable:
+      in: query
+      name: ignore_unavailable
+      description: 'If `false`, the request returns an error if it targets a concrete (non-wildcarded)
+
+        index, alias, or data stream that is missing, closed, or otherwise unavailable.
+
+        If `true`, unavailable concrete targets are silently ignored.'
+      deprecated: false
+      schema:
+        type: boolean
+      style: form
+    searchable_snapshots.clear_cache-index:
+      in: path
+      name: index
+      description: 'A comma-separated list of data streams, indices, and aliases to clear from the cache.
+
+        It supports wildcards (`*`).'
+      required: true
+      deprecated: false
+      schema:
+        $ref: '#/components/schemas/_types.Indices'
+      style: simple
+    searchable_snapshots.stats-level:
+      in: query
+      name: level
+      description: Return stats aggregated at cluster, index or shard level
+      deprecated: false
+      schema:
+        default: indices
+        allOf:
+        - $ref: '#/components/schemas/searchable_snapshots._types.StatsLevel'
+      style: form
+    searchable_snapshots.clear_cache-expand_wildcards:
+      in: query
+      name: expand_wildcards
+      description: "Whether to expand wildcard expression to concrete indices that are open, closed or both\n\nSupported values include:\n  - `all`: Match any data stream or index, including hidden ones.\n  - `open`: Match open, non-hidden indices. Also matches any non-hidden data stream.\n  - `closed`: Match closed, non-hidden indices. Also matches any non-hidden data stream. Data streams cannot be closed.\n  - `hidden`: Match hidden data streams and hidden indices. Must be combined with `open`, `closed`, or `both`.\n  - `none`: Wildcard expressions are not accepted.\n\n"
+      deprecated: false
+      schema:
+        default: open
+        allOf:
+        - $ref: '#/components/schemas/_types.ExpandWildcards'
+      style: form
+    searchable_snapshots.clear_cache-allow_no_indices:
+      in: query
+      name: allow_no_indices
+      description: 'A setting that does two separate checks on the index expression.
+
+        If `false`, the request returns an error (1) if any wildcard expression
+
+        (including `_all` and `*`) resolves to zero matching indices or (2) if the
+
+        complete set of resolved indices, aliases or data streams is empty after all
+
+        expressions are evaluated. If `true`, index expressions that resolve to no
+
+        indices are allowed and the request returns an empty result.'
+      deprecated: false
+      schema:
+        type: boolean
+      style: form
+  responses:
+    searchable_snapshots.cache_stats-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nodes:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/searchable_snapshots.cache_stats.Node'
+            required:
+            - nodes
+          examples:
+            CacheStatsResponseExample1:
+              description: A successful response from `GET /_searchable_snapshots/cache/stats`.
+              value: "{\n  \"nodes\" : {\n    \"eerrtBMtQEisohZzxBLUSw\" : {\n      \"shared_cache\" : {\n        \"reads\" : 6051, // The number of cache region read operations. If reads > writes, the difference represents requests successfully served from the cache without accessing the snapshot repository.\n        \"bytes_read_in_bytes\" : 5448829,\n        \"writes\" : 37, // The number of cache region write operations. If reads == writes, every request required fetching data from the snapshot repository into the cache.\n        \"bytes_written_in_bytes\" : 1208320,\n        \"evictions\" : 5, // The number of cache region evictions. A low eviction count indicates the cache is effectively serving requests. Use this metric to evaluate cache sizing.\n        \"num_regions\" : 65536,\n        \"size_in_bytes\" : 1099511627776,\n        \"region_size_in_bytes\" : 16777216 // The size of each cache region. A region is a contiguous byte range stored on local disk.\n      }\n    }\n  }\n}"
+    searchable_snapshots.stats-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                type: object
+              total:
+                type: object
+            required:
+            - stats
+            - total
+    searchable_snapshots.clear_cache-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

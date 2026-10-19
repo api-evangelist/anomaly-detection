@@ -1,24 +1,63 @@
 {
   "provider": "anomaly-detection",
   "sources": [
-    "_original/anomaly-detection-openapi.yml"
+    "_original/anomaly-detection-openapi.json"
   ],
   "outputs": [
-    "anomaly-detection-changepoint-api-openapi.yml",
-    "anomaly-detection-multivariate-api-openapi.yml",
-    "anomaly-detection-univariate-api-openapi.yml"
+    "anomaly-detection-analytics-api-openapi.yml",
+    "anomaly-detection-cat-api-openapi.yml",
+    "anomaly-detection-ccr-api-openapi.yml",
+    "anomaly-detection-cluster-api-openapi.yml",
+    "anomaly-detection-connector-api-openapi.yml",
+    "anomaly-detection-data-stream-api-openapi.yml",
+    "anomaly-detection-document-api-openapi.yml",
+    "anomaly-detection-enrich-api-openapi.yml",
+    "anomaly-detection-eql-api-openapi.yml",
+    "anomaly-detection-esql-api-openapi.yml",
+    "anomaly-detection-features-api-openapi.yml",
+    "anomaly-detection-fleet-api-openapi.yml",
+    "anomaly-detection-graph-api-openapi.yml",
+    "anomaly-detection-health-report-api-openapi.yml",
+    "anomaly-detection-ilm-api-openapi.yml",
+    "anomaly-detection-indices-api-openapi.yml",
+    "anomaly-detection-inference-api-openapi.yml",
+    "anomaly-detection-info-api-openapi.yml",
+    "anomaly-detection-ingest-api-openapi.yml",
+    "anomaly-detection-license-api-openapi.yml",
+    "anomaly-detection-logstash-api-openapi.yml",
+    "anomaly-detection-migration-api-openapi.yml",
+    "anomaly-detection-ml-api-openapi.yml",
+    "anomaly-detection-ml-anomaly-api-openapi.yml",
+    "anomaly-detection-ml-data-frame-api-openapi.yml",
+    "anomaly-detection-ml-trained-model-api-openapi.yml",
+    "anomaly-detection-query-rules-api-openapi.yml",
+    "anomaly-detection-reindex-api-openapi.yml",
+    "anomaly-detection-rollup-api-openapi.yml",
+    "anomaly-detection-script-api-openapi.yml",
+    "anomaly-detection-search-api-openapi.yml",
+    "anomaly-detection-search-application-api-openapi.yml",
+    "anomaly-detection-searchable-snapshots-api-openapi.yml",
+    "anomaly-detection-security-api-openapi.yml",
+    "anomaly-detection-slm-api-openapi.yml",
+    "anomaly-detection-snapshot-api-openapi.yml",
+    "anomaly-detection-sql-api-openapi.yml",
+    "anomaly-detection-streams-api-openapi.yml",
+    "anomaly-detection-synonyms-api-openapi.yml",
+    "anomaly-detection-tasks-api-openapi.yml",
+    "anomaly-detection-text-structure-api-openapi.yml",
+    "anomaly-detection-transform-api-openapi.yml",
+    "anomaly-detection-watcher-api-openapi.yml",
+    "anomaly-detection-xpack-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "anomaly-detection-openapi.json: info.version missing"
+  ],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "anomaly-detection-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "anomaly-detection-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+44 apis, 49 total)"
   ],
-  "skipped": [
-    "anomaly-detection-changepoint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "anomaly-detection-multivariate-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "anomaly-detection-univariate-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

@@ -1,0 +1,811 @@
+openapi: 3.2.0
+info:
+  title: Elasticsearch License API
+  license:
+    name: Apache 2.0
+    url: https://github.com/elastic/elasticsearch-specification/blob/main/LICENSE
+  version: ''
+  description: 'Elasticsearch provides REST APIs that are used by the UI components and can be called directly to configure and access Elasticsearch features.
+
+    ## Documentation source and versions
+
+    This documentation is derived from the `main` branch of the elasticsearch-specification repository. It is provided under license Attribution-NonCommercial-NoDerivatives 4.0 International.
+
+    This documentation contains work-in-progress information for future Elastic Stack releases.'
+  x-doc-license:
+    name: Attribution-NonCommercial-NoDerivatives 4.0 International
+    url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+  x-feedbackLink:
+    label: Feedback
+    url: https://github.com/elastic/docs-content/issues/new?assignees=&labels=feedback%2Ccommunity&projects=&template=api-feedback.yaml&title=%5BFeedback%5D%3A+
+security:
+- apiKeyAuth: []
+- basicAuth: []
+- bearerAuth: []
+tags:
+- name: License
+  x-displayName: Licensing
+  description: Licensing APIs enable you to manage your licenses.
+  externalDocs:
+    url: https://www.elastic.co/subscriptions
+    description: For more information about the different types of licenses, refer to Elastic subscriptions.
+paths:
+  /_license:
+    get:
+      tags:
+      - License
+      summary: Get license information
+      description: 'Get information about your Elastic license including its type, its status, when it was issued, and when it expires.
+
+
+        >info
+
+        > If the master node is generating a new cluster state, the get license API may return a `404 Not Found` response.
+
+        > If you receive an unexpected 404 response after cluster startup, wait a short period and retry the request.'
+      operationId: license-get
+      parameters:
+      - in: query
+        name: accept_enterprise
+        description: 'If `true`, this parameter returns enterprise for Enterprise license types. If `false`, this parameter returns platinum for both platinum and enterprise license types. This behavior is maintained for backwards compatibility.
+
+          This parameter is deprecated and will always be set to true in 8.x.'
+        deprecated: true
+        schema:
+          default: true
+          type: boolean
+        style: form
+      - in: query
+        name: local
+        description: 'Specifies whether to retrieve local information.
+
+          From 9.2 onwards the default value is `true`, which means the information is retrieved from the responding node.
+
+          In earlier versions the default is `false`, which means the information is retrieved from the elected master node.'
+        deprecated: false
+        schema:
+          default: true
+          type: boolean
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  license:
+                    allOf:
+                    - $ref: '#/components/schemas/license.get.LicenseInformation'
+                required:
+                - license
+              examples:
+                GetLicenseResponseExample1:
+                  description: A successful response from `GET /_license`.
+                  value: "{\n  \"license\" : {\n    \"status\" : \"active\",\n    \"uid\" : \"cbff45e7-c553-41f7-ae4f-9205eabd80xx\",\n    \"type\" : \"trial\",\n    \"issue_date\" : \"2018-10-20T22:05:12.332Z\",\n    \"issue_date_in_millis\" : 1540073112332,\n    \"expiry_date\" : \"2018-11-19T22:05:12.332Z\",\n    \"expiry_date_in_millis\" : 1542665112332,\n    \"max_nodes\" : 1000,\n    \"max_resource_units\" : null,\n    \"issued_to\" : \"test\",\n    \"issuer\" : \"elasticsearch\",\n    \"start_date_in_millis\" : -1\n  }\n}"
+      x-state: Generally available
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_license
+
+          '
+      - lang: Python
+        source: resp = client.license.get()
+      - lang: JavaScript
+        source: const response = await client.license.get();
+      - lang: Ruby
+        source: response = client.license.get
+      - lang: PHP
+        source: $resp = $client->license()->get();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license"'
+      - lang: C#
+        source: var response = await client.LicenseManagement.GetAsync();
+      - lang: Java
+        source: 'client.license().get(g -> g);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    post:
+      tags:
+      - License
+      summary: Update the license
+      description: '**All methods and paths for this operation:**
+
+
+        PUT
+
+        /_license
+
+
+        POST
+
+        /_license
+
+
+        You can update your license at runtime without shutting down your nodes.
+
+        License updates take effect immediately.
+
+        If the license you are installing does not support all of the features that were available with your previous license, however, you are notified in the response.
+
+        You must then re-submit the API request with the acknowledge parameter set to true.
+
+
+        NOTE: If Elasticsearch security features are enabled and you are installing a gold or higher license, you must enable TLS on the transport networking layer before you install the license.
+
+        If the operator privileges feature is enabled, only operator users can use this API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`'
+      operationId: license-post
+      parameters:
+      - $ref: '#/components/parameters/license.post-acknowledge'
+      - $ref: '#/components/parameters/license.post-master_timeout'
+      - $ref: '#/components/parameters/license.post-timeout'
+      requestBody:
+        $ref: '#/components/requestBodies/license.post'
+      responses:
+        '200':
+          $ref: '#/components/responses/license.post-200'
+      x-state: Generally available
+      x-codeSamples:
+      - lang: Console
+        source: "PUT _license\n{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
+      - lang: Python
+        source: "resp = client.license.post(\n    licenses=[\n        {\n            \"uid\": \"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n            \"type\": \"basic\",\n            \"issue_date_in_millis\": 1411948800000,\n            \"expiry_date_in_millis\": 1914278399999,\n            \"max_nodes\": 1,\n            \"issued_to\": \"issuedTo\",\n            \"issuer\": \"issuer\",\n            \"signature\": \"xx\"\n        }\n    ],\n)"
+      - lang: JavaScript
+        source: "const response = await client.license.post({\n  licenses: [\n    {\n      uid: \"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      type: \"basic\",\n      issue_date_in_millis: 1411948800000,\n      expiry_date_in_millis: 1914278399999,\n      max_nodes: 1,\n      issued_to: \"issuedTo\",\n      issuer: \"issuer\",\n      signature: \"xx\",\n    },\n  ],\n});"
+      - lang: Ruby
+        source: "response = client.license.post(\n  body: {\n    \"licenses\": [\n      {\n        \"uid\": \"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n        \"type\": \"basic\",\n        \"issue_date_in_millis\": 1411948800000,\n        \"expiry_date_in_millis\": 1914278399999,\n        \"max_nodes\": 1,\n        \"issued_to\": \"issuedTo\",\n        \"issuer\": \"issuer\",\n        \"signature\": \"xx\"\n      }\n    ]\n  }\n)"
+      - lang: PHP
+        source: "$resp = $client->license()->post([\n    \"body\" => [\n        \"licenses\" => array(\n            [\n                \"uid\" => \"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n                \"type\" => \"basic\",\n                \"issue_date_in_millis\" => 1411948800000,\n                \"expiry_date_in_millis\" => 1914278399999,\n                \"max_nodes\" => 1,\n                \"issued_to\" => \"issuedTo\",\n                \"issuer\" => \"issuer\",\n                \"signature\" => \"xx\",\n            ],\n        ),\n    ],\n]);"
+      - lang: curl
+        source: 'curl -X PUT -H "Authorization: ApiKey $ELASTIC_API_KEY" -H "Content-Type: application/json" -d ''{"licenses":[{"uid":"893361dc-9749-4997-93cb-802e3d7fa4xx","type":"basic","issue_date_in_millis":1411948800000,"expiry_date_in_millis":1914278399999,"max_nodes":1,"issued_to":"issuedTo","issuer":"issuer","signature":"xx"}]}'' "$ELASTICSEARCH_URL/_license"'
+      - lang: C#
+        source: "var response = await client.LicenseManagement\n    .PostAsync(d1 => d1\n        .Licenses(d2 => d2\n            .ExpiryDateInMillis(DateTimeOffset.Parse(\"2030-08-29T23:59:59.9990000+00:00\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind))\n            .IssueDateInMillis(DateTimeOffset.Parse(\"2014-09-29T00:00:00.0000000+00:00\", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind))\n            .IssuedTo(\"issuedTo\")\n            .Issuer(\"issuer\")\n            .MaxNodes(1L)\n            .Signature(\"xx\")\n            .Type(LicenseType.Basic)\n            .Uid(\"893361dc-9749-4997-93cb-802e3d7fa4xx\")\n        )\n    );"
+      - lang: Java
+        source: "client.license().post(p -> p\n    .licenses(l -> l\n        .expiryDateInMillis(1914278399999L)\n        .issueDateInMillis(1411948800000L)\n        .issuedTo(\"issuedTo\")\n        .issuer(\"issuer\")\n        .maxNodes(1L)\n        .signature(\"xx\")\n        .type(LicenseType.Basic)\n        .uid(\"893361dc-9749-4997-93cb-802e3d7fa4xx\")\n    )\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+    delete:
+      tags:
+      - License
+      summary: Delete the license
+      description: 'When the license expires, your subscription level reverts to Basic.
+
+
+        If the operator privileges feature is enabled, only operator users can use this API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`'
+      externalDocs:
+        description: About managing your license
+        url: https://www.elastic.co/docs/deploy-manage/license/manage-your-license-in-self-managed-cluster
+        x-previousVersionUrl: https://www.elastic.co/guide/en/elasticsearch/reference/8.19/delete-license.html
+      operationId: license-delete
+      parameters:
+      - in: query
+        name: master_timeout
+        description: The period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_types.AcknowledgedResponseBase'
+      x-state: Generally available
+      x-codeSamples:
+      - lang: Console
+        source: 'DELETE /_license
+
+          '
+      - lang: Python
+        source: resp = client.license.delete()
+      - lang: JavaScript
+        source: const response = await client.license.delete();
+      - lang: Ruby
+        source: response = client.license.delete
+      - lang: PHP
+        source: $resp = $client->license()->delete();
+      - lang: curl
+        source: 'curl -X DELETE -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license"'
+      - lang: C#
+        source: var response = await client.LicenseManagement.DeleteAsync();
+      - lang: Java
+        source: 'client.license().delete(d -> d);
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_license/basic_status:
+    get:
+      tags:
+      - License
+      summary: Get the basic license status
+      description: '## Required authorization
+
+
+        * Cluster privileges: `monitor`'
+      operationId: license-get-basic-status
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eligible_to_start_basic:
+                    type: boolean
+                required:
+                - eligible_to_start_basic
+              examples:
+                GetBasicLicenseStatusResponseExample1:
+                  description: A successful response from `GET /_license/basic_status`.
+                  value: "{\n  \"eligible_to_start_basic\": true\n}"
+      x-state: Generally available; Added in 6.3.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_license/basic_status
+
+          '
+      - lang: Python
+        source: resp = client.license.get_basic_status()
+      - lang: JavaScript
+        source: const response = await client.license.getBasicStatus();
+      - lang: Ruby
+        source: response = client.license.get_basic_status
+      - lang: PHP
+        source: $resp = $client->license()->getBasicStatus();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license/basic_status"'
+      - lang: C#
+        source: var response = await client.LicenseManagement.GetBasicStatusAsync();
+      - lang: Java
+        source: 'client.license().getBasicStatus();
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_license/trial_status:
+    get:
+      tags:
+      - License
+      summary: Get the trial status
+      description: '## Required authorization
+
+
+        * Cluster privileges: `monitor`'
+      operationId: license-get-trial-status
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eligible_to_start_trial:
+                    type: boolean
+                required:
+                - eligible_to_start_trial
+              examples:
+                GetTrialLicenseStatusResponseExample1:
+                  description: A successful response from `GET /_license/trial_status`.
+                  value: "{\n  \"eligible_to_start_trial\": true\n}"
+      x-state: Generally available; Added in 6.1.0
+      x-codeSamples:
+      - lang: Console
+        source: 'GET /_license/trial_status
+
+          '
+      - lang: Python
+        source: resp = client.license.get_trial_status()
+      - lang: JavaScript
+        source: const response = await client.license.getTrialStatus();
+      - lang: Ruby
+        source: response = client.license.get_trial_status
+      - lang: PHP
+        source: $resp = $client->license()->getTrialStatus();
+      - lang: curl
+        source: 'curl -X GET -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license/trial_status"'
+      - lang: C#
+        source: var response = await client.LicenseManagement.GetTrialStatusAsync();
+      - lang: Java
+        source: 'client.license().getTrialStatus();
+
+          '
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_license/start_basic:
+    post:
+      tags:
+      - License
+      summary: Start a basic license
+      description: 'Start an indefinite basic license, which gives access to all the basic features.
+
+
+        NOTE: In order to start a basic license, you must not currently have a basic license.
+
+
+        If the basic license does not support all of the features that are available with your current license, however, you are notified in the response.
+
+        You must then re-submit the API request with the `acknowledge` parameter set to `true`.
+
+
+        To check the status of your basic license, use the get basic license API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`'
+      operationId: license-post-start-basic
+      parameters:
+      - in: query
+        name: acknowledge
+        description: To start a basic license, you must accept the acknowledge messages and set this parameter to `true`.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      - in: query
+        name: timeout
+        description: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+                  basic_was_started:
+                    type: boolean
+                  error_message:
+                    type: string
+                  type:
+                    allOf:
+                    - $ref: '#/components/schemas/license._types.LicenseType'
+                  acknowledge:
+                    type: object
+                    additionalProperties:
+                      oneOf:
+                      - type: string
+                      - type: array
+                        items:
+                          type: string
+                required:
+                - acknowledged
+                - basic_was_started
+              examples:
+                StartBasicLicenseResponseExample1:
+                  description: A successful response from `POST /_license/start_basic?acknowledge=true`. If you currently have a license with more features than a basic license and you start a basic license, you must pass the acknowledge parameter.
+                  value: "{\n  \"basic_was_started\": true,\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.3.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /_license/start_basic?acknowledge=true
+
+          '
+      - lang: Python
+        source: "resp = client.license.post_start_basic(\n    acknowledge=True,\n)"
+      - lang: JavaScript
+        source: "const response = await client.license.postStartBasic({\n  acknowledge: \"true\",\n});"
+      - lang: Ruby
+        source: "response = client.license.post_start_basic(\n  acknowledge: \"true\"\n)"
+      - lang: PHP
+        source: "$resp = $client->license()->postStartBasic([\n    \"acknowledge\" => \"true\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license/start_basic?acknowledge=true"'
+      - lang: C#
+        source: "var response = await client.LicenseManagement\n    .PostStartBasicAsync(d1 => d1\n        .Acknowledge(true)\n    );"
+      - lang: Java
+        source: "client.license().postStartBasic(p -> p\n    .acknowledge(true)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+  /_license/start_trial:
+    post:
+      tags:
+      - License
+      summary: Start a trial
+      description: 'Start a 30-day trial, which gives access to all subscription features.
+
+
+        NOTE: You are allowed to start a trial only if your cluster has not already activated a trial for the current major product version.
+
+        For example, if you have already activated a trial for v8.0, you cannot start a new trial until v9.0. You can, however, request an extended trial at https://www.elastic.co/trialextension.
+
+
+        To check the status of your trial, use the get trial status API.
+
+
+        ## Required authorization
+
+
+        * Cluster privileges: `manage`'
+      operationId: license-post-start-trial
+      parameters:
+      - in: query
+        name: acknowledge
+        description: To start a trial, you must accept the acknowledge messages and set this parameter to `true`.
+        deprecated: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - in: query
+        name: type
+        description: The type of trial license to generate
+        deprecated: false
+        schema:
+          default: trial
+          type: string
+        style: form
+      - in: query
+        name: master_timeout
+        description: Period to wait for a connection to the master node.
+        deprecated: false
+        schema:
+          default: 30s
+          allOf:
+          - $ref: '#/components/schemas/_types.Duration'
+        style: form
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+                  error_message:
+                    type: string
+                  trial_was_started:
+                    type: boolean
+                  type:
+                    allOf:
+                    - $ref: '#/components/schemas/license._types.LicenseType'
+                required:
+                - acknowledged
+                - trial_was_started
+              examples:
+                StartTrialLicenseResponseExample1:
+                  description: A successful response from `POST /_license/start_trial?acknowledge=true`.
+                  value: "{\n  \"trial_was_started\": true,\n  \"acknowledged\": true\n}"
+      x-state: Generally available; Added in 6.1.0
+      x-codeSamples:
+      - lang: Console
+        source: 'POST /_license/start_trial?acknowledge=true
+
+          '
+      - lang: Python
+        source: "resp = client.license.post_start_trial(\n    acknowledge=True,\n)"
+      - lang: JavaScript
+        source: "const response = await client.license.postStartTrial({\n  acknowledge: \"true\",\n});"
+      - lang: Ruby
+        source: "response = client.license.post_start_trial(\n  acknowledge: \"true\"\n)"
+      - lang: PHP
+        source: "$resp = $client->license()->postStartTrial([\n    \"acknowledge\" => \"true\",\n]);"
+      - lang: curl
+        source: 'curl -X POST -H "Authorization: ApiKey $ELASTIC_API_KEY" "$ELASTICSEARCH_URL/_license/start_trial?acknowledge=true"'
+      - lang: C#
+        source: "var response = await client.LicenseManagement\n    .PostStartTrialAsync(d1 => d1\n        .Acknowledge(true)\n    );"
+      - lang: Java
+        source: "client.license().postStartTrial(p -> p\n    .acknowledge(true)\n);\n"
+      x-metaTags:
+      - content: Elasticsearch
+        name: product_name
+components:
+  schemas:
+    license._types.License:
+      type: object
+      properties:
+        expiry_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issue_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        start_date_in_millis:
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issued_to:
+          type: string
+        issuer:
+          type: string
+        max_nodes:
+          oneOf:
+          - type: number
+          - type:
+            - string
+            - 'null'
+        max_resource_units:
+          type: number
+        signature:
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        uid:
+          type: string
+      required:
+      - expiry_date_in_millis
+      - issue_date_in_millis
+      - issued_to
+      - issuer
+      - signature
+      - type
+      - uid
+    license._types.LicenseType:
+      type: string
+      enum:
+      - missing
+      - trial
+      - basic
+      - standard
+      - dev
+      - silver
+      - gold
+      - platinum
+      - enterprise
+    _types.Uuid:
+      type: string
+    _types.Duration:
+      externalDocs:
+        url: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/api-conventions#time-units
+      description: 'A duration. Units can be `nanos`, `micros`, `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours) and
+
+        `d` (days). Also accepts "0" without a unit and "-1" to indicate an unspecified value.'
+      type: string
+    _types.DateTime:
+      description: 'A date and time, either as a string whose format can depend on the context (defaulting to ISO 8601), or a
+
+        number of milliseconds since the Epoch. Elasticsearch accepts both as input, but will generally output a string
+
+        representation.'
+      oneOf:
+      - type: string
+      - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+    _types.AcknowledgedResponseBase:
+      type: object
+      properties:
+        acknowledged:
+          description: For a successful response, this value is always true. On failure, an exception is returned instead.
+          type: boolean
+      required:
+      - acknowledged
+    license.get.LicenseInformation:
+      type: object
+      properties:
+        expiry_date:
+          description: The date and time the license expires in ISO 8601 format.
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        expiry_date_in_millis:
+          description: The date and time the license expires in milliseconds since the Unix epoch.
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issue_date:
+          description: The date and time the license was issued in ISO 8601 format.
+          allOf:
+          - $ref: '#/components/schemas/_types.DateTime'
+        issue_date_in_millis:
+          description: The date and time the license was issued in milliseconds since the Unix epoch.
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+        issued_to:
+          description: The name of the customer or organization that received the license.
+          type: string
+        issuer:
+          description: The name of the organization that issued the license.
+          type: string
+        max_nodes:
+          description: The maximum number of nodes the license allows.
+          oneOf:
+          - type: number
+          - type:
+            - string
+            - 'null'
+        max_resource_units:
+          description: The maximum number of resource units the license allows (for enterprise licenses only).
+          oneOf:
+          - type: number
+          - type:
+            - string
+            - 'null'
+        status:
+          description: The status of the license. For example,active, valid, invalid, or expired.
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseStatus'
+        type:
+          description: The type of the license. For example, trial, basic, gold, platinum, or enterprise.
+          allOf:
+          - $ref: '#/components/schemas/license._types.LicenseType'
+        uid:
+          description: The unique identifier of the license.
+          allOf:
+          - $ref: '#/components/schemas/_types.Uuid'
+        start_date_in_millis:
+          description: The date and time the license was started in milliseconds since the Unix epoch.
+          allOf:
+          - $ref: '#/components/schemas/_types.EpochTimeUnitMillis'
+      required:
+      - issue_date
+      - issue_date_in_millis
+      - issued_to
+      - issuer
+      - max_nodes
+      - status
+      - type
+      - uid
+      - start_date_in_millis
+    license.post.Acknowledgement:
+      type: object
+      properties:
+        license:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+      required:
+      - license
+      - message
+    license._types.LicenseStatus:
+      type: string
+      enum:
+      - active
+      - valid
+      - invalid
+      - expired
+    _types.UnitMillis:
+      description: Time unit for milliseconds
+      type: number
+    _types.EpochTimeUnitMillis:
+      allOf:
+      - $ref: '#/components/schemas/_types.UnitMillis'
+  parameters:
+    license.post-master_timeout:
+      in: query
+      name: master_timeout
+      description: The period to wait for a connection to the master node.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+    license.post-acknowledge:
+      in: query
+      name: acknowledge
+      description: 'To update a license, you must accept the acknowledge messages and set this parameter to `true`.
+
+        In particular, if you are upgrading or downgrading a license, you must acknowlege the feature changes.'
+      deprecated: false
+      schema:
+        default: false
+        type: boolean
+      style: form
+    license.post-timeout:
+      in: query
+      name: timeout
+      description: The period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
+      deprecated: false
+      schema:
+        default: 30s
+        allOf:
+        - $ref: '#/components/schemas/_types.Duration'
+      style: form
+  requestBodies:
+    license.post:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              license:
+                allOf:
+                - $ref: '#/components/schemas/license._types.License'
+              licenses:
+                description: A sequence of one or more JSON documents containing the license information.
+                type: array
+                items:
+                  $ref: '#/components/schemas/license._types.License'
+          examples:
+            PostLicenseRequestExample1:
+              description: 'Run `PUT _license` to update to a basic license. NOTE: These values are invalid; you must substitute the appropriate contents from your license file.
+
+                '
+              value: "{\n  \"licenses\": [\n    {\n      \"uid\":\"893361dc-9749-4997-93cb-802e3d7fa4xx\",\n      \"type\":\"basic\",\n      \"issue_date_in_millis\":1411948800000,\n      \"expiry_date_in_millis\":1914278399999,\n      \"max_nodes\":1,\n      \"issued_to\":\"issuedTo\",\n      \"issuer\":\"issuer\",\n      \"signature\":\"xx\"\n    }\n    ]\n}"
+  responses:
+    license.post-200:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              acknowledge:
+                allOf:
+                - $ref: '#/components/schemas/license.post.Acknowledgement'
+              acknowledged:
+                type: boolean
+              license_status:
+                allOf:
+                - $ref: '#/components/schemas/license._types.LicenseStatus'
+            required:
+            - acknowledged
+            - license_status
+          examples:
+            PostLicenseResponseExample1:
+              description: If you update to a basic license and you previously had a license with more features, you receive this type of response. You must re-submit the API request and set the `acknowledge` parameter to `true`.
+              value: "{\n  \"acknowledged\": false,\n  \"license_status\": \"valid\",\n  \"acknowledge\": {\n    \"message\": \"\\\"\\\"\\\"This license update requires acknowledgement. To acknowledge the license, please read the following messages and update the license again, this time with the \\\"acknowledge=true\\\" parameter:\\\"\\\"\\\"\",\n    \"watcher\": [\n      \"Watcher will be disabled\"\n    ],\n    \"logstash\": [\n      \"Logstash will no longer poll for centrally-managed pipelines\"\n    ],\n    \"security\": [\n      \"The following X-Pack security functionality will be disabled ...\"\n    ]\n  }\n}"
+  securitySchemes:
+    apiKeyAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+      description: "Elasticsearch APIs support key-based authentication.\nYou must create an API key and use the encoded value in the request header.\nFor example:\n\n\n```\ncurl -X GET \"${ES_URL}/_cat/indices?v=true\" \\\n  -H \"Authorization: ApiKey ${API_KEY}\"\n```\n\nTo get API keys, use the `/_security/api_key` APIs.\n"
+    basicAuth:
+      scheme: basic
+      type: http
+    bearerAuth:
+      scheme: bearer
+      type: http
+      description: 'Elasticsearch APIs support the use of bearer tokens in the `Authorization` HTTP header to authenticate with the API.
+
+        For examples, refer to [Token-based authentication services](https://www.elastic.co/docs/deploy-manage/users-roles/cluster-or-deployment-auth/token-based-authentication-services)
+
+        '

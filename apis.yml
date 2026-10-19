@@ -214,36 +214,537 @@ apis:
   contact:
   - FN: PyOD Maintainers
     url: https://github.com/yzhao062/pyod/issues
-- aid: anomaly-detection:anomaly-detection-changepoint-api
-  name: Anomaly Detection ChangePoint API
-  description: Trend change-point detection.
+- aid: anomaly-detection:anomaly-detection-analytics-api
+  name: Anomaly Detection Analytics API
+  description: >-
+    The behavioral analytics APIs let you create and manage analytics collections and view their data.
+    Use them to analyze users’ search and click behavior, improve result relevance, and identify content
+    gaps.
   humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
   baseURL: https://api.cognitive.microsoft.com
   tags:
-  - ChangePoint
+  - analytics
   properties:
   - type: OpenAPI
-    url: openapi/anomaly-detection-changepoint-api-openapi.yml
-- aid: anomaly-detection:anomaly-detection-multivariate-api
-  name: Anomaly Detection Multivariate API
-  description: Multivariate anomaly detection across correlated signals.
+    url: openapi/anomaly-detection-analytics-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-cat-api
+  name: Anomaly Detection Cat API
+  description: >-
+    The compact and aligned text (CAT) APIs aim are intended only for human consumption using the Kibana
+    console or command line. They are not intended for use by applications. For application consumption,
+    it's recommend to use a corresponding JSON API.
+
+    All the cat commands accept a query string parameter `help` to see all the headers and info they provide,
+    and the `/_cat` command alone lists all the available commands.
   humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
   baseURL: https://api.cognitive.microsoft.com
   tags:
-  - Multivariate
+  - cat
   properties:
   - type: OpenAPI
-    url: openapi/anomaly-detection-multivariate-api-openapi.yml
-- aid: anomaly-detection:anomaly-detection-univariate-api
-  name: Anomaly Detection Univariate API
-  description: Anomaly detection on a single time series.
+    url: openapi/anomaly-detection-cat-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ccr-api
+  name: Anomaly Detection Ccr API
+  description: >-
+    The cross-cluster replication (CCR) APIs let you run replication operations, such as creating and
+    managing follower indices or auto-follow patterns. Use CCR to replicate indices across clusters to
+    maintain search availability during outages, reduce indexing impact, and lower search latency by serving
+    requests closer to users.
   humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
   baseURL: https://api.cognitive.microsoft.com
   tags:
-  - Univariate
+  - ccr
   properties:
   - type: OpenAPI
-    url: openapi/anomaly-detection-univariate-api-openapi.yml
+    url: openapi/anomaly-detection-ccr-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-cluster-api
+  name: Anomaly Detection Cluster API
+  description: >-
+    The cluster APIs enable you to retrieve information about your infrastructure on cluster, node, or
+    shard level. You can manage cluster settings and voting configuration exceptions, collect node statistics
+    and retrieve node information.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - cluster
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-cluster-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-connector-api
+  name: Anomaly Detection Connector API
+  description: >-
+    The connector and sync jobs APIs provide a convenient way to create and manage Elastic connectors
+    and sync jobs in an internal index.
+
+    Connectors are Elasticsearch integrations for syncing content from third-party data sources, which
+    can be deployed on Elastic Cloud or hosted on your own infrastructure.
+
+    This API provides an alternative to relying solely on Kibana UI for connector and sync job management.
+    The API comes with a set of validations and assertions to ensure that the state representation in
+    the internal index remains valid.
+
+    This API requires the `manage_connector` privilege or, for read-only endpoints, the `monitor_connector`
+    privilege.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - connector
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-connector-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-data-stream-api
+  name: Anomaly Detection data stream API
+  description: >-
+    The data stream APIs enable you to create and manage data streams and data stream lifecycles. A data
+    stream lets you store append-only time series data across multiple indices while giving you a single
+    named resource for requests. Data streams are well-suited for logs, events, metrics, and other continuously
+    generated data.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - data stream
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-data-stream-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-document-api
+  name: Anomaly Detection Document API
+  description: The document APIs enable you to create and manage documents in an Elasticsearch index.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - document
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-document-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-enrich-api
+  name: Anomaly Detection Enrich API
+  description: >-
+    The enrich APIs enable you to manage enrich policies. An enrich policy is a set of configuration options
+    used to add the right enrich data to the right incoming documents.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - enrich
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-enrich-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-eql-api
+  name: Anomaly Detection Eql API
+  description: >-
+    Event Query Language (EQL) is a query language for event-based time series data, such as logs, metrics,
+    and traces.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - eql
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-eql-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-esql-api
+  name: Anomaly Detection Esql API
+  description: >-
+    The Elasticsearch Query Language (ES|QL) provides a powerful way to filter, transform, and analyze
+    data stored in Elasticsearch, and in the future in other runtimes.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - esql
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-esql-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-features-api
+  name: Anomaly Detection Features API
+  description: >-
+    The feature APIs enable you to introspect and manage features provided by Elasticsearch and Elasticsearch
+    plugins.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - features
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-features-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-fleet-api
+  name: Anomaly Detection Fleet API
+  description: >-
+    The Fleet APIs support Fleet’s use of Elasticsearch as a data store for internal agent and action
+    data.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - fleet
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-fleet-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-graph-api
+  name: Anomaly Detection Graph API
+  description: >-
+    The graph explore API enables you to extract and summarize information about the documents and terms
+    in an Elasticsearch data stream or index.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - graph
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-graph-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-health-report-api
+  name: Anomaly Detection Health Report API
+  description: >-
+    The cluster - health API provides you a report with the health status of an Elasticsearch cluster.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - health_report
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-health-report-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ilm-api
+  name: Anomaly Detection Ilm API
+  description: >-
+    The index lifecycle management APIs enable you to set up policies to automatically manage the index
+    lifecycle.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ilm
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ilm-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-indices-api
+  name: Anomaly Detection Indices API
+  description: >-
+    Index APIs enable you to manage individual indices, index settings, aliases, mappings, and index templates.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - indices
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-indices-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-inference-api
+  name: Anomaly Detection Inference API
+  description: >-
+    Inference APIs enable you to use certain services, such as built-in machine learning models (ELSER,
+    E5), models uploaded through Eland, Cohere, OpenAI, Azure, Google AI Studio or Hugging Face. For built-in
+    models and models uploaded through Eland, the inference APIs offer an alternative way to use and manage
+    trained models. However, if you do not plan to use the inference APIs to use these models or if you
+    want to use non-NLP models, use the machine learning trained model APIs.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - inference
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-inference-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-info-api
+  name: Anomaly Detection Info API
+  description: The info API provides basic build, version, and cluster information.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - info
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-info-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ingest-api
+  name: Anomaly Detection Ingest API
+  description: >-
+    Ingest APIs enable you to manage tasks and resources related to ingest pipelines and processors.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ingest
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ingest-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-license-api
+  name: Anomaly Detection License API
+  description: Licensing APIs enable you to manage your licenses.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - license
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-license-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-logstash-api
+  name: Anomaly Detection Logstash API
+  description: >-
+    Logstash APIs enable you to manage pipelines that are used by Logstash Central Management.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - logstash
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-logstash-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-migration-api
+  name: Anomaly Detection Migration API
+  description: The migration APIs power Kibana's Upgrade Assistant feature.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - migration
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-migration-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ml-anomaly-api
+  name: Anomaly Detection ml anomaly API
+  description: >-
+    The machine learning anomaly detection APIs enable you to perform anomaly detection activities.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ml anomaly
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ml-anomaly-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ml-api
+  name: Anomaly Detection Ml API
+  description: >-
+    The machine learning APIs enable you to retrieve information related to the Elastic Stack machine
+    learning features.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ml
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ml-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ml-data-frame-api
+  name: Anomaly Detection ml data frame API
+  description: >-
+    The machine learning data frame analytics APIs enable you to perform data frame analytics activities.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ml data frame
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ml-data-frame-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-ml-trained-model-api
+  name: Anomaly Detection ml trained model API
+  description: >-
+    The machine learning trained models APIs enable you to perform model management operations.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - ml trained model
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-ml-trained-model-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-query-rules-api
+  name: Anomaly Detection Query Rules API
+  description: >-
+    Query rules enable you to configure per-query rules that are applied at query time to queries that
+    match the specific rule. Query rules are organized into rulesets, collections of query rules that
+    are matched against incoming queries. Query rules are applied using the rule query.
+
+    If a query matches one or more rules in the ruleset, the query is re-written to apply the rules before
+    searching. This allows pinning documents for only queries that match a specific term. Alternatively,
+    you can use the [Query Rules UI](https://www.elastic.co/docs/solutions/search/query-rules-ui) to manage
+    query rules.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - query_rules
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-query-rules-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-reindex-api
+  name: Anomaly Detection Reindex API
+  description: >-
+    The reindex APIs enable you to copy documents from a source to a destination and to manage reindex
+    tasks.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - reindex
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-reindex-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-rollup-api
+  name: Anomaly Detection Rollup API
+  description: >-
+    The rollup APIs enable you to create, manage, and retrieve information about rollup jobs.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - rollup
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-rollup-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-script-api
+  name: Anomaly Detection Script API
+  description: >-
+    Use the script support APIs to get a list of supported script contexts and languages. Use the stored
+    script APIs to manage stored scripts and search templates.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - script
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-script-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-search-api
+  name: Anomaly Detection Search API
+  description: >-
+    The search APIs enable you to search and aggregate data stored in Elasticsearch indices and data streams.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - search
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-search-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-search-application-api
+  name: Anomaly Detection Search Application API
+  description: >-
+    The search application APIs enable you to manage tasks and resources related to Search Applications.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - search_application
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-search-application-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-searchable-snapshots-api
+  name: Anomaly Detection Searchable Snapshots API
+  description: The searchable snapshots APIs enable you to perform searchable snapshots operations.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - searchable_snapshots
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-searchable-snapshots-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-security-api
+  name: Anomaly Detection Security API
+  description: >-
+    The security APIs enable you to perform security activities, and add, update, retrieve, and remove
+    application privileges, role mappings, and roles. You can also create and update API keys and create
+    and invalidate bearer tokens.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - security
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-security-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-slm-api
+  name: Anomaly Detection Slm API
+  description: >-
+    Snapshot lifecycle management (SLM) APIs enable you to set up policies to automatically take snapshots
+    and control how long they are retained.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - slm
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-slm-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-snapshot-api
+  name: Anomaly Detection Snapshot API
+  description: >-
+    Snapshot and restore APIs enable you to set up snapshot repositories, manage snapshot backups, and
+    restore snapshots to a running cluster.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - snapshot
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-snapshot-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-sql-api
+  name: Anomaly Detection Sql API
+  description: >-
+    Elasticsearch's SQL APIs enable you to run SQL queries on Elasticsearch indices and data streams.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - sql
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-sql-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-streams-api
+  name: Anomaly Detection Streams API
+  description: The streams API from Anomaly Detection — 3 operation(s) for streams.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - streams
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-streams-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-synonyms-api
+  name: Anomaly Detection Synonyms API
+  description: >-
+    The synonyms management API provides a convenient way to define and manage synonyms in an internal
+    system index. Related synonyms can be grouped in a "synonyms set". Create as many synonym sets as
+    you need.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - synonyms
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-synonyms-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-tasks-api
+  name: Anomaly Detection Tasks API
+  description: >-
+    The task management APIs enable you to retrieve information about tasks or cancel tasks running in
+    a cluster.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-tasks-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-text-structure-api
+  name: Anomaly Detection Text Structure API
+  description: >-
+    The text structure APIs enable you to find the structure of a text field in an Elasticsearch index.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - text_structure
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-text-structure-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-transform-api
+  name: Anomaly Detection Transform API
+  description: The transform APIs enable you to create and manage transforms.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - transform
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-transform-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-watcher-api
+  name: Anomaly Detection Watcher API
+  description: >-
+    You can use Watcher to watch for changes or anomalies in your data and perform the necessary actions
+    in response.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - watcher
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-watcher-api-openapi.yml
+- aid: anomaly-detection:anomaly-detection-xpack-api
+  name: Anomaly Detection Xpack API
+  description: The usage API provides usage information about the installed X-Pack features.
+  humanURL: https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview
+  baseURL: https://api.cognitive.microsoft.com
+  tags:
+  - xpack
+  properties:
+  - type: OpenAPI
+    url: openapi/anomaly-detection-xpack-api-openapi.yml
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
