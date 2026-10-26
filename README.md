@@ -1,0 +1,233 @@
+# Anomaly Detection (anomaly-detection)
+
+<!-- API-EVANGELIST-PROVENANCE:BEGIN -->
+> ### About this repository
+>
+> **This is not our API.** This repository is an independent, third-party profile of a company's
+> **publicly available** API surface, maintained by [API Evangelist](https://apievangelist.com).
+> API Evangelist does not operate, host, resell, or support this company's APIs, and is not
+> affiliated with or endorsed by the company unless stated on the profile.
+>
+> **Where the information came from.** Everything here is assembled from material a member of the
+> public can reach with a browser and no credentials — the company's own website, developer portal
+> and documentation, the specifications it publishes for public use (OpenAPI, AsyncAPI, JSON Schema,
+> `apis.json`, `llms.txt` and similar), its public repositories, and its public status, pricing and
+> changelog pages. **Nothing here is obtained by breaching a system, defeating an access control, or
+> using credentials of any kind.**
+>
+> **The rating is an independent assessment.** The Kin Score and Agent Readiness rating are
+> independently calculated scores of a company's *public* API artifacts, produced by API Evangelist
+> against a published rubric. They are not certifications, endorsements, security assessments, or
+> audits, and they score published artifacts — not the quality, safety, or security of the software.
+>
+> **Corrections, re-scores, and removal are free.** No partnership, contract, or purchase is
+> required, and you do not need to justify the request.
+>
+> - **Something wrong?** Open an issue on this repository, or email
+>   [info@apievangelist.com](mailto:info@apievangelist.com).
+> - **Published something new?** Ask for a re-score and we will re-run the rating.
+> - **Want the listing taken down?** Say so and we will honor it. The profile is reduced to your
+>   company name, a factual description, and a link to your own site, and the company is recorded as
+>   **unrated** — never scored zero for having asked.
+>
+> **Response times.** Acknowledgement within **one business day**; removal or restriction within
+> **two business days**; corrections and re-scores within **five business days**.
+>
+> **Not from the company, and here with a question?** You are welcome here — we would rather be the
+> front line and point you the right way than have a good report go nowhere. What this repository
+> can answer is narrow, though, so it is worth knowing who you are actually looking for:
+>
+> - **A question about how the API works, an account, billing, or a bug in the service** — that is
+>   the company's own support, not us. We profile this API; we do not operate it and cannot see
+>   your account.
+> - **A bug in an open-source project we only catalog** — file it on that project's own repository.
+>   This has happened with a real and correct bug report that reached us instead of the people who
+>   could fix it, which helped nobody.
+> - **Anything about this listing itself** — the description, the tags, the rating, a missing or
+>   wrong artifact — is ours. Open an issue here.
+> - **Not sure, or something general about API Evangelist or APIs.io** — open an issue on the
+>   [APIs.io Inbox](https://github.com/api-search/inbox) and we will route it.
+>
+> **This repository contains no software, and we will never ask you to download anything.** There is
+> no build, release, installer, or binary here — only text and machine-readable API descriptions, so
+> there is nothing here that can be "corrupt" or need "repairing". Any issue, comment, or email
+> claiming otherwise and offering a download link is not from us and is hostile. Do not follow the
+> link; it is a lure. Report it to GitHub and, if you like, tell us at
+> [info@apievangelist.com](mailto:info@apievangelist.com) so we can take it down.
+>
+> **On a security or compliance team?** Email
+> [info@apievangelist.com](mailto:info@apievangelist.com) with *security* in the subject line and
+> you will get a person, not a form. We will tell you exactly which public URLs this profile was
+> built from so your team can see the same surface we did, and we will take the listing down on
+> request while you work through it.
+>
+> Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
+<!-- API-EVANGELIST-PROVENANCE:END -->
+
+A curated collection of APIs, tools, and platforms for detecting anomalies in data streams, time series, and multivariate metrics. Covers cloud ML services, observability platforms, and open-source frameworks used for fraud detection, predictive maintenance, IoT monitoring, and security analytics.
+
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml)
+
+## Tags
+
+- Anomaly Detection
+- Artificial Intelligence
+- Data Science
+- Fraud Detection
+- Machine Learning
+- Monitoring
+- Observability
+- Outlier Detection
+- Pattern Recognition
+- Security
+- Time Series
+
+## Timestamps
+
+- **Created:** Sun Jan 14 2024 19:00:00 GMT-0500 (Eastern Standard Time)
+- **Modified:** Sat Apr 18 2026 20:00:00 GMT-0400 (Eastern Daylight Time)
+
+## APIs
+
+### Azure AI Anomaly Detector
+
+Azure AI Anomaly Detector is a managed REST API service that enables monitoring and detection of anomalies in time series data without requiring machine learning expertise. Supports univariate batch and streaming detection, multivariate detection using Graph Attention Networks for up to 300 correlated signals, and change-point detection. The service is being retired on 1 October 2026 in favor of Microsoft Fabric real-time intelligence.
+
+- **Human URL:** [https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview)
+- **Base URL:** `https://api.cognitive.microsoft.com`
+
+#### Tags
+
+- Anomaly Detection
+- Azure
+- Machine Learning
+- Microsoft
+- Multivariate
+- Time Series
+- Univariate
+
+#### Properties
+
+- [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview)
+- [API Reference](https://learn.microsoft.com/en-us/rest/api/anomalydetector/)
+- [Quickstart](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/quickstarts/client-libraries)
+- [Tutorials](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/tutorials/batch-anomaly-detection-powerbi)
+- [GitHub Repository](https://github.com/microsoft/anomaly-detector)
+- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Elasticsearch Anomaly Detection API
+
+Elasticsearch Machine Learning APIs provide a comprehensive suite of anomaly detection capabilities for time series data stored in Elasticsearch indices. Supports creating and managing anomaly detection jobs and datafeeds, accessing bucket, record, category, and influencer results, model snapshots, calendars, scheduled events, and forecasting. Part of the Elastic Stack ML feature set available in subscriptions.
+
+- **Human URL:** [https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html)
+- **Base URL:** `https://your-elasticsearch-host:9200`
+
+#### Tags
+
+- Anomaly Detection
+- Elasticsearch
+- Machine Learning
+- Monitoring
+- Time Series
+
+#### Properties
+
+- [Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html)
+- [API Reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-ad-apis.html)
+- [Getting Started](https://www.elastic.co/guide/en/machine-learning/current/ml-ad-overview.html)
+- [GitHub Organization](https://github.com/elastic)
+- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Datadog Anomaly Monitor API
+
+Datadog's Monitors API supports anomaly detection monitors that identify unusual metric behavior using historical pattern analysis including trends, day-of-week, and time-of-day seasonality. Offers three detection algorithms — Basic, Agile (SARIMA), and Robust (seasonal-trend decomposition) — configurable via REST API. Available across regional endpoints for US, EU, AP1, AP2, GOV, US3, and US5 deployments.
+
+- **Human URL:** [https://docs.datadoghq.com/monitors/types/anomaly/](https://docs.datadoghq.com/monitors/types/anomaly/)
+- **Base URL:** `https://api.datadoghq.com`
+
+#### Tags
+
+- Anomaly Detection
+- Datadog
+- Monitoring
+- Observability
+- Time Series
+
+#### Properties
+
+- [Documentation](https://docs.datadoghq.com/monitors/types/anomaly/)
+- [API Reference](https://docs.datadoghq.com/api/latest/monitors/)
+- [Authentication](https://docs.datadoghq.com/api/latest/authentication/)
+- [GitHub Organization](https://github.com/DataDog)
+- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### AWS Lookout for Metrics
+
+Amazon Lookout for Metrics is a fully managed ML service that automatically detects anomalies in business and operational data. It connects to data sources including Amazon S3, Amazon Redshift, Amazon CloudWatch, and SaaS applications, learns each metric's normal behavior, and sends alerts when anomalies are detected. Provides root cause analysis grouping related anomalies for faster diagnosis.
+
+- **Human URL:** [https://aws.amazon.com/lookout-for-metrics/](https://aws.amazon.com/lookout-for-metrics/)
+- **Base URL:** `https://lookoutmetrics.us-east-1.amazonaws.com`
+
+#### Tags
+
+- Amazon Web Services
+- Anomaly Detection
+- AWS
+- Business Metrics
+- Machine Learning
+
+#### Properties
+
+- [Documentation](https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-welcome.html)
+- [API Reference](https://docs.aws.amazon.com/lookoutmetrics/latest/api/Welcome.html)
+- [Getting Started](https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-gettingstarted.html)
+- [Pricing](https://aws.amazon.com/lookout-for-metrics/pricing/)
+- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### PyOD (Python Outlier Detection)
+
+PyOD is a comprehensive and scalable Python library for detecting outliers/anomalies in multivariate data. It includes more than 40 detection algorithms including deep learning approaches (AutoEncoder, VAE), proximity-based methods (LOF, CBLOF), linear models (PCA, OCSVM), and ensemble methods (IForest, LOCI). Widely used in research and production for fraud detection, intrusion detection, medical anomaly detection, and data quality monitoring.
+
+- **Human URL:** [https://pyod.readthedocs.io/](https://pyod.readthedocs.io/)
+- **Base URL:** `https://pypi.org/project/pyod/`
+
+#### Tags
+
+- Anomaly Detection
+- Data Science
+- Machine Learning
+- Open Source
+- Outlier Detection
+- Python
+
+#### Properties
+
+- [Documentation](https://pyod.readthedocs.io/en/latest/)
+- [API Reference](https://pyod.readthedocs.io/en/latest/pyod.html)
+- [GitHub Repository](https://github.com/yzhao062/pyod)
+- [SDK](https://pypi.org/project/pyod/)
+- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+## Common Properties
+
+- [GitHub Organization](https://github.com/api-evangelist/anomaly-detection)
+- [Best Practices](https://pyod.readthedocs.io/en/latest/faq.html)
+- [Blog](https://techcommunity.microsoft.com/t5/AI-Customer-Engineering-Team/Introducing-Azure-Anomaly-Detector-API/ba-p/490162)
+- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-anomaly-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-time-series-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-detection-job-schema.json) — [JSON Schema](https://json-schema.org/specification)
+- [Vocabulary](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/vocabulary/anomaly-detection-vocabulary.yaml)
+- [Features](undefined)
+- [Use Cases](undefined)
+- [Integrations](undefined)
+
+## Maintainers
+
+**FN:** Kin Lane
+**Email:** info@apievangelist.com
+**URL:** https://apievangelist.com
