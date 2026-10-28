@@ -1,4 +1,4 @@
-# Anomaly Detection (anomaly-detection)
+# Anomaly Detection
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,168 +66,131 @@
 
 A curated collection of APIs, tools, and platforms for detecting anomalies in data streams, time series, and multivariate metrics. Covers cloud ML services, observability platforms, and open-source frameworks used for fraud detection, predictive maintenance, IoT monitoring, and security analytics.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/apis.yml)
+**Areas:** Anomaly Detection · Artificial Intelligence · Data Science · Fraud Prevention · Machine Learning · Monitoring · Observability · Outlier Detection · Pattern Recognition · Security · Time Series
 
-## Tags
+## Anomaly Detection on APIs.io
 
-- Anomaly Detection
-- Artificial Intelligence
-- Data Science
-- Fraud Detection
-- Machine Learning
-- Monitoring
-- Observability
-- Outlier Detection
-- Pattern Recognition
-- Security
-- Time Series
+Everything profiled for Anomaly Detection is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/anomaly-detection/](https://apis.io/providers/anomaly-detection/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (8)
 
-- **Created:** Sun Jan 14 2024 19:00:00 GMT-0500 (Eastern Standard Time)
-- **Modified:** Sat Apr 18 2026 20:00:00 GMT-0400 (Eastern Daylight Time)
+- [Azure AI Anomaly Detector](https://apis.io/apis/anomaly-detection/azure-ai-anomaly-detector/) — Azure AI Anomaly Detector is a managed REST API service that enables monitoring and detection of anomalies in time series data without requiring machine…
+- [Elasticsearch Anomaly Detection API](https://apis.io/apis/anomaly-detection/elasticsearch-anomaly-detection-api/) — Elasticsearch Machine Learning APIs provide a comprehensive suite of anomaly detection capabilities for time series data stored in Elasticsearch indices.…
+- [Datadog Anomaly Monitor API](https://apis.io/apis/anomaly-detection/datadog-anomaly-monitor-api/) — Datadog's Monitors API supports anomaly detection monitors that identify unusual metric behavior using historical pattern analysis including trends,…
+- [AWS Lookout for Metrics](https://apis.io/apis/anomaly-detection/aws-lookout-for-metrics/) — Amazon Lookout for Metrics is a fully managed ML service that automatically detects anomalies in business and operational data. It connects to data sources…
+- [PyOD (Python Outlier Detection)](https://apis.io/apis/anomaly-detection/pyod-python-outlier-detection/) — PyOD is a comprehensive and scalable Python library for detecting outliers/anomalies in multivariate data. It includes more than 40 detection algorithms…
+- [Anomaly Detection ChangePoint API](https://apis.io/apis/anomaly-detection/anomaly-detection-changepoint-api/) — Trend change-point detection.
+- [Anomaly Detection Multivariate API](https://apis.io/apis/anomaly-detection/anomaly-detection-multivariate-api/) — Multivariate anomaly detection across correlated signals.
+- [Anomaly Detection Univariate API](https://apis.io/apis/anomaly-detection/anomaly-detection-univariate-api/) — Anomaly detection on a single time series.
 
-## APIs
+### Published properties
 
-### Azure AI Anomaly Detector
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Azure AI Anomaly Detector is a managed REST API service that enables monitoring and detection of anomalies in time series data without requiring machine learning expertise. Supports univariate batch and streaming detection, multivariate detection using Graph Attention Networks for up to 300 correlated signals, and change-point detection. The service is being retired on 1 October 2026 in favor of Microsoft Fabric real-time intelligence.
+#### Agentic access (1)
 
-- **Human URL:** [https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview)
-- **Base URL:** `https://api.cognitive.microsoft.com`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Anomaly Detection Agentic Access](https://apis.io/agentic-access/anomaly-detection/anomaly-detection-agentic-access/)
 
-- Anomaly Detection
-- Azure
-- Machine Learning
-- Microsoft
-- Multivariate
-- Time Series
-- Univariate
+#### JSON Schema (3)
 
-#### Properties
+The data models the API reads and writes.
 
-- [Documentation](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/overview)
-- [API Reference](https://learn.microsoft.com/en-us/rest/api/anomalydetector/)
-- [Quickstart](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/quickstarts/client-libraries)
-- [Tutorials](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/tutorials/batch-anomaly-detection-powerbi)
-- [GitHub Repository](https://github.com/microsoft/anomaly-detector)
-- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Anomaly](https://apis.io/schemas/anomaly-detection/anomaly-detection-anomaly/)
+- [DetectionJob](https://apis.io/schemas/anomaly-detection/anomaly-detection-detection-job/)
+- [TimeSeries](https://apis.io/schemas/anomaly-detection/anomaly-detection-time-series/)
 
-### Elasticsearch Anomaly Detection API
+#### JSON Structure (3)
 
-Elasticsearch Machine Learning APIs provide a comprehensive suite of anomaly detection capabilities for time series data stored in Elasticsearch indices. Supports creating and managing anomaly detection jobs and datafeeds, accessing bucket, record, category, and influencer results, model snapshots, calendars, scheduled events, and forecasting. Part of the Elastic Stack ML feature set available in subscriptions.
+Data models expressed in JSON Structure.
 
-- **Human URL:** [https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html)
-- **Base URL:** `https://your-elasticsearch-host:9200`
+- [Anomaly Detection Anomaly Structure](https://apis.io/json-structure/anomaly-detection/anomaly-detection-anomaly-structure/)
+- [Anomaly Detection Detection Job Structure](https://apis.io/json-structure/anomaly-detection/anomaly-detection-detection-job-structure/)
+- [Anomaly Detection Time Series Structure](https://apis.io/json-structure/anomaly-detection/anomaly-detection-time-series-structure/)
 
-#### Tags
+#### JSON-LD (1)
 
-- Anomaly Detection
-- Elasticsearch
-- Machine Learning
-- Monitoring
-- Time Series
+Linked-data contexts for the provider's vocabulary.
 
-#### Properties
+- [Anomaly Detection Context](https://apis.io/jsonld/anomaly-detection/anomaly-detection-context/)
 
-- [Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-apis.html)
-- [API Reference](https://www.elastic.co/guide/en/elasticsearch/reference/current/ml-ad-apis.html)
-- [Getting Started](https://www.elastic.co/guide/en/machine-learning/current/ml-ad-overview.html)
-- [GitHub Organization](https://github.com/elastic)
-- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Vocabulary (1)
 
-### Datadog Anomaly Monitor API
+The provider's domain terms, defined.
 
-Datadog's Monitors API supports anomaly detection monitors that identify unusual metric behavior using historical pattern analysis including trends, day-of-week, and time-of-day seasonality. Offers three detection algorithms — Basic, Agile (SARIMA), and Robust (seasonal-trend decomposition) — configurable via REST API. Available across regional endpoints for US, EU, AP1, AP2, GOV, US3, and US5 deployments.
+- [Anomaly Detection Vocabulary](https://apis.io/vocabularies/anomaly-detection/anomaly-detection-vocabulary/)
 
-- **Human URL:** [https://docs.datadoghq.com/monitors/types/anomaly/](https://docs.datadoghq.com/monitors/types/anomaly/)
-- **Base URL:** `https://api.datadoghq.com`
+#### Examples (3)
 
-#### Tags
+Example requests and responses.
 
-- Anomaly Detection
-- Datadog
-- Monitoring
-- Observability
-- Time Series
+- [Anomaly Detection Anomaly Example](https://apis.io/examples/anomaly-detection/anomaly-detection-anomaly-example/)
+- [Anomaly Detection Detection Job Example](https://apis.io/examples/anomaly-detection/anomaly-detection-detection-job-example/)
+- [Anomaly Detection Time Series Example](https://apis.io/examples/anomaly-detection/anomaly-detection-time-series-example/)
 
-#### Properties
+#### Collections (4)
 
-- [Documentation](https://docs.datadoghq.com/monitors/types/anomaly/)
-- [API Reference](https://docs.datadoghq.com/api/latest/monitors/)
-- [Authentication](https://docs.datadoghq.com/api/latest/authentication/)
-- [GitHub Organization](https://github.com/DataDog)
-- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Postman and Open Collection request collections.
 
-### AWS Lookout for Metrics
+- [Azure AI Anomaly Detector API](https://apis.io/collections/anomaly-detection/open-anomaly-detection/)
+- [Azure AI Anomaly Detector ChangePoint API](https://apis.io/collections/anomaly-detection/open-anomaly-detection-changepoint-api/)
+- [Azure AI Anomaly Detector ChangePoint Multivariate API](https://apis.io/collections/anomaly-detection/open-anomaly-detection-multivariate-api/)
+- [Azure AI Anomaly Detector ChangePoint Univariate API](https://apis.io/collections/anomaly-detection/open-anomaly-detection-univariate-api/)
 
-Amazon Lookout for Metrics is a fully managed ML service that automatically detects anomalies in business and operational data. It connects to data sources including Amazon S3, Amazon Redshift, Amazon CloudWatch, and SaaS applications, learns each metric's normal behavior, and sends alerts when anomalies are detected. Provides root cause analysis grouping related anomalies for faster diagnosis.
+#### Governance rules (1)
 
-- **Human URL:** [https://aws.amazon.com/lookout-for-metrics/](https://aws.amazon.com/lookout-for-metrics/)
-- **Base URL:** `https://lookoutmetrics.us-east-1.amazonaws.com`
+Spectral rulesets for the provider's contracts.
 
-#### Tags
+- [Anomaly Detection — jsonschema rules](https://apis.io/rules/anomaly-detection/anomaly-detection-jsonschema-spectral-rules/)
 
-- Amazon Web Services
-- Anomaly Detection
-- AWS
-- Business Metrics
-- Machine Learning
+#### Security (3)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [Documentation](https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-welcome.html)
-- [API Reference](https://docs.aws.amazon.com/lookoutmetrics/latest/api/Welcome.html)
-- [Getting Started](https://docs.aws.amazon.com/lookoutmetrics/latest/dev/lookoutmetrics-gettingstarted.html)
-- [Pricing](https://aws.amazon.com/lookout-for-metrics/pricing/)
-- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Anomaly Detection Authentication](https://apis.io/security/anomaly-detection/anomaly-detection-authentication/)
+- [Anomaly Detection Domain Security](https://apis.io/security/anomaly-detection/anomaly-detection-domain-security/)
+- [Anomaly Detection Vulnerability Disclosure](https://apis.io/security/anomaly-detection/anomaly-detection-vulnerability-disclosure/)
 
-### PyOD (Python Outlier Detection)
+#### Plans and pricing (1)
 
-PyOD is a comprehensive and scalable Python library for detecting outliers/anomalies in multivariate data. It includes more than 40 detection algorithms including deep learning approaches (AutoEncoder, VAE), proximity-based methods (LOF, CBLOF), linear models (PCA, OCSVM), and ensemble methods (IForest, LOCI). Widely used in research and production for fraud detection, intrusion detection, medical anomaly detection, and data quality monitoring.
+Published plans, tiers and prices.
 
-- **Human URL:** [https://pyod.readthedocs.io/](https://pyod.readthedocs.io/)
-- **Base URL:** `https://pypi.org/project/pyod/`
+- [Anomaly Detection Plans Pricing](https://apis.io/plans/anomaly-detection/anomaly-detection-plans-pricing/)
 
-#### Tags
+#### Rate limits (1)
 
-- Anomaly Detection
-- Data Science
-- Machine Learning
-- Open Source
-- Outlier Detection
-- Python
+Published request limits.
 
-#### Properties
+- [Anomaly Detection Rate Limits](https://apis.io/rate-limits/anomaly-detection/anomaly-detection-rate-limits/)
 
-- [Documentation](https://pyod.readthedocs.io/en/latest/)
-- [API Reference](https://pyod.readthedocs.io/en/latest/pyod.html)
-- [GitHub Repository](https://github.com/yzhao062/pyod)
-- [SDK](https://pypi.org/project/pyod/)
-- [Postman Collection](collections/anomaly-detection.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/anomaly-detection.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### FinOps (1)
 
-## Common Properties
+What the API costs to run, by operation.
 
-- [GitHub Organization](https://github.com/api-evangelist/anomaly-detection)
-- [Best Practices](https://pyod.readthedocs.io/en/latest/faq.html)
+- [Anomaly Detection Finops](https://apis.io/finops/anomaly-detection/anomaly-detection-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Blog](https://techcommunity.microsoft.com/t5/AI-Customer-Engineering-Team/Introducing-Azure-Anomaly-Detector-API/ba-p/490162)
-- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-anomaly-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-time-series-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [JSON Schema](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/json-schema/anomaly-detection-detection-job-schema.json) — [JSON Schema](https://json-schema.org/specification)
-- [Vocabulary](https://raw.githubusercontent.com/api-evangelist/anomaly-detection/refs/heads/main/vocabulary/anomaly-detection-vocabulary.yaml)
-- [Features](undefined)
-- [Use Cases](undefined)
-- [Integrations](undefined)
+- [GitHub](https://github.com/api-evangelist/anomaly-detection)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** info@apievangelist.com
-**URL:** https://apievangelist.com
+**Unrated** — no public website could be reached for this company, so there was almost nothing to measure and nothing a reader could check.
+
+This is not a score of zero. No rating is published for this company. If that is wrong because something public exists that we missed, say so on this repository or email [info@apievangelist.com](mailto:info@apievangelist.com) and it will be re-run — free, and no justification needed.
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Anomaly Detection: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/anomaly-detection/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
