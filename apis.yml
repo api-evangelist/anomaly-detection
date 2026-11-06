@@ -33,7 +33,7 @@ accessModel:
   - plans
   - authentication
   - security
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/anomaly-detection.png
 created: 2024-01-15 00:00:00+00:00
